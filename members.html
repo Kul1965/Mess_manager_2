@@ -1,1 +1,505 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Members | CRPF Smart Mess Manager</title>
+<style>
+:root{--g:#176747;--deep:#10563e;--bg:#f2f6f3;--white:#fff;--text:#214d3b;--muted:#78857e;--border:#dce5df;--red:#bd3942}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:Arial,Helvetica,sans-serif}
+button,input,select,textarea{font:inherit}
+button,a{cursor:pointer}
+a{text-decoration:none;color:inherit}
+.hero{background:linear-gradient(120deg,#10583e,#176747);color:white;padding:23px 20px}
+.hero small{letter-spacing:2px;font-weight:bold;color:#d5e9dc}
+.hero h1{font-size:25px;margin:13px 0 8px}
+.hero p{margin:0;color:#e0eee5;font-size:14px}
+.nav{display:flex;gap:8px;overflow-x:auto;padding:13px 15px;background:white;border-bottom:1px solid var(--border)}
+.nav a{white-space:nowrap;padding:13px 18px;border-radius:12px;font-weight:bold;font-size:13px;color:#506257}
+.nav a.active,.nav a:hover{background:var(--g);color:white}
+main{max-width:1100px;margin:auto;padding:22px 15px 40px}
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:20px}
+.top h2{margin:0 0 7px;font-size:26px}
+.muted{color:var(--muted);font-size:13px}
+.btn{border:0;border-radius:9px;padding:12px 16px;font-weight:bold;font-size:13px;display:inline-block}
+.primary{background:var(--g);color:white}
+.secondary{background:#e6f2e9;color:var(--g)}
+.danger{background:#fff0f0;color:var(--red)}
+.panel{background:white;border:1px solid var(--border);border-radius:16px;padding:18px;margin-bottom:18px}
+.search{width:100%;padding:13px 14px;border:1px solid var(--border);border-radius:10px;background:#fff;outline-color:var(--g)}
+.member-list{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
+.card{background:white;border:1px solid var(--border);border-radius:14px;padding:15px;min-width:0}
+.person{display:flex;gap:13px;align-items:center;margin-bottom:14px}
+.avatar{width:65px;height:65px;flex-shrink:0;border-radius:13px;object-fit:cover;background:#e6f2e9;border:1px solid var(--border)}
+.person h3{font-size:16px;margin:0 0 6px;overflow-wrap:anywhere}
+.person p{font-size:12px;color:var(--muted);margin:0 0 5px;overflow-wrap:anywhere}
+.tag{display:inline-block;border-radius:20px;padding:5px 9px;background:#e5f5e9;color:#216443;font-size:11px;font-weight:bold}
+.tag.inactive{background:#ffeded;color:#a3343b}
+.details{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:12px 0}
+.detail{background:#f6f9f6;border-radius:8px;padding:9px;min-width:0}
+.detail small{display:block;color:var(--muted);font-size:10px;margin-bottom:5px}
+.detail strong{font-size:12px;overflow-wrap:anywhere}
+.actions{display:flex;flex-wrap:wrap;gap:7px;margin-top:13px}
+.actions button{padding:9px 11px;font-size:12px}
+.empty{text-align:center;padding:35px 10px;color:var(--muted);grid-column:1/-1}
+.count{font-size:12px;color:var(--muted);margin:12px 0}
+dialog{border:0;border-radius:17px;padding:0;width:min(620px,95vw);max-height:90vh;overflow:auto;color:var(--text);box-shadow:0 15px 70px #0003}
+dialog::backdrop{background:#102b4677}
+.modal-head{padding:18px 20px;background:var(--g);color:white;display:flex;justify-content:space-between;align-items:center;gap:10px}
+.modal-head h2{font-size:19px;margin:0}
+.close{border:0;background:#ffffff20;color:white;border-radius:8px;padding:7px 11px}
+.modal-body{padding:20px}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.field{min-width:0}
+.field.full{grid-column:1/-1}
+label{display:block;font-size:12px;font-weight:bold;margin-bottom:7px}
+input,select,textarea{width:100%;padding:11px;border:1px solid #d7e2da;border-radius:9px;background:white;color:var(--text);outline-color:var(--g)}
+textarea{resize:vertical;min-height:75px}
+.preview{width:82px;height:82px;object-fit:cover;border-radius:12px;border:1px solid var(--border);background:#edf5ef;display:block;margin-bottom:8px}
+.form-buttons{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}
+.view-line{padding:12px 0;border-bottom:1px solid #e7eee9;overflow-wrap:anywhere}
+.view-line small{display:block;color:var(--muted);margin-bottom:5px;font-size:11px}
+.view-photo{width:105px;height:105px;object-fit:cover;border-radius:14px}
+.footer{text-align:center;padding:20px;color:var(--muted);font-size:11px}
+@media(max-width:550px){.member-list{grid-template-columns:1fr}.hero h1{font-size:22px}.form-grid{grid-template-columns:1fr}.field.full{grid-column:auto}.panel{padding:13px}.top h2{font-size:24px}}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <small>MESS MANAGEMENT SYSTEM</small>
+  <h1>🛡️ CRPF SMART MESS MANAGER</h1>
+  <p>Member register — add, view, edit and manage jawan details</p>
+</header>
+
+<nav class="nav">
+  <a href="index.html">Dashboard</a>
+  <a class="active" href="members.html">Members</a>
+  <a href="store.html">Ration Store</a>
+  <a href="purchases.html">Purchases</a>
+  <a href="recipes.html">Recipes</a>
+  <a href="meals.html">Meals</a>
+  <a href="accounts.html">Accounts</a>
+  <a href="reports.html">Reports</a>
+  <a href="backup.html">Backup</a>
+</nav>
+
+<main>
+  <div class="top">
+    <div>
+      <h2>Members / Jawan</h2>
+      <div class="muted">Jawan ka record ek jagah manage karein.</div>
+    </div>
+    <button class="btn primary" id="addBtn">＋ Add Member</button>
+  </div>
+
+  <section class="panel">
+    <input class="search" id="search" type="search" placeholder="Search name, Service ID, rank, unit or mobile...">
+    <div class="count" id="count">0 members</div>
+    <div class="member-list" id="memberList"></div>
+  </section>
+</main>
+
+<footer class="footer">CRPF Smart Mess Manager · Members</footer>
+
+<dialog id="editDialog">
+  <div class="modal-head">
+    <h2 id="formTitle">Add Member</h2>
+    <button class="close" type="button" data-close="editDialog">✕</button>
+  </div>
+  <div class="modal-body">
+    <form id="memberForm">
+      <input type="hidden" id="memberId">
+      <div class="form-grid">
+        <div class="field full">
+          <label for="photo">Member Photo (optional)</label>
+          <img id="photoPreview" class="preview" alt="Photo preview">
+          <input type="file" id="photo" accept="image/*">
+          <small class="muted">Photo browser mein save hogi. Image size kam kiya jayega.</small>
+          <button type="button" class="btn secondary" id="removePhoto" style="margin-top:8px">Remove Photo</button>
+        </div>
+        <div class="field">
+          <label for="serviceId">Service / Member ID *</label>
+          <input id="serviceId" required maxlength="60" placeholder="e.g. CRPF001">
+        </div>
+        <div class="field">
+          <label for="fullName">Full Name *</label>
+          <input id="fullName" required maxlength="100" placeholder="Jawan ka poora naam">
+        </div>
+        <div class="field">
+          <label for="rank">Rank *</label>
+          <select id="rank" required>
+            <option value="">Select Rank</option>
+            <option>Constable</option>
+            <option>Head Constable</option>
+            <option>ASI</option>
+            <option>SI</option>
+            <option>Inspector</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="unit">Unit</label>
+          <input id="unit" maxlength="80" placeholder="Unit name / number">
+        </div>
+        <div class="field">
+          <label for="mobile">Mobile Number</label>
+          <input id="mobile" type="tel" maxlength="25" placeholder="Mobile with country code">
+        </div>
+        <div class="field">
+          <label for="monthlyLimit">Monthly Limit (Rs)</label>
+          <input id="monthlyLimit" type="number" min="0" step="0.01" value="4000">
+        </div>
+        <div class="field">
+          <label for="joiningDate">Joining Date</label>
+          <input id="joiningDate" type="date">
+        </div>
+        <div class="field">
+          <label for="status">Status</label>
+          <select id="status">
+            <option>Active</option>
+            <option>Transferred</option>
+            <option>Inactive</option>
+          </select>
+        </div>
+        <div class="field full">
+          <label for="notes">Notes</label>
+          <textarea id="notes" maxlength="1000" placeholder="Optional notes"></textarea>
+        </div>
+      </div>
+      <div class="form-buttons">
+        <button class="btn primary" type="submit">Save Member</button>
+        <button class="btn secondary" type="button" data-close="editDialog">Cancel</button>
+      </div>
+    </form>
+  </div>
+</dialog>
+
+<dialog id="viewDialog">
+  <div class="modal-head">
+    <h2>Member Details</h2>
+    <button class="close" type="button" data-close="viewDialog">✕</button>
+  </div>
+  <div class="modal-body" id="viewBody"></div>
+</dialog>
+
+<script>
+"use strict";
+
+/*
+  Shared storage:
+  Existing prototype data is preserved.
+  New member fields are added without deleting other modules' data.
+*/
+const KEY_OPTIONS = [
+  "crpfMessProfessionalV1",
+  "crpfMessPrototypeV2"
+];
+
+let storageKey = KEY_OPTIONS.find(k => localStorage.getItem(k)) || KEY_OPTIONS[0];
+let photoData = "";
+let searchText = "";
+
+function readData(){
+  try{
+    const raw=localStorage.getItem(storageKey);
+    if(!raw) return {};
+    const parsed=JSON.parse(raw);
+    return parsed && typeof parsed==="object" ? parsed : {};
+  }catch(error){
+    alert("Saved data read nahi ho saka. Backup check karein.");
+    return {};
+  }
+}
+
+function saveData(data){
+  try{
+    localStorage.setItem(storageKey,JSON.stringify(data));
+    return true;
+  }catch(error){
+    alert("Data save nahi hua. Browser storage full ho sakti hai. Photo chhoti karein ya backup bana kar space free karein.");
+    return false;
+  }
+}
+
+function members(){
+  return Array.isArray(readData().members) ? readData().members : [];
+}
+
+function esc(value){
+  return String(value??"").replace(/[&<>"']/g,ch=>({
+    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+  }[ch]));
+}
+
+function uid(){
+  return "m_"+Date.now().toString(36)+"_"+Math.random().toString(36).slice(2,8);
+}
+
+function money(value){
+  return "Rs "+(Number(value)||0).toLocaleString("en-IN",{
+    minimumFractionDigits:2,maximumFractionDigits:2
+  });
+}
+
+function avatar(member){
+  return member.photo || "";
+}
+
+function initials(name){
+  return String(name||"J").trim().split(/\s+/).slice(0,2).map(x=>x[0]||"").join("").toUpperCase();
+}
+
+function placeholder(name){
+  const letter=initials(name)||"J";
+  const svg='<svg xmlns="http://www.w3.org/2000/svg" width="120" height="120"><rect width="100%" height="100%" rx="16" fill="#e6f2e9"/><text x="50%" y="55%" text-anchor="middle" font-size="38" font-family="Arial" fill="#176747">'+letter+'</text></svg>';
+  return "data:image/svg+xml;charset=UTF-8,"+encodeURIComponent(svg);
+}
+
+function render(){
+  const list=document.getElementById("memberList");
+  const query=searchText.trim().toLowerCase();
+  const all=members();
+  const filtered=all.filter(m=>{
+    return [
+      m.serviceId,m.name,m.fullName,m.rank,m.unit,m.mobile,m.status
+    ].some(v=>String(v||"").toLowerCase().includes(query));
+  });
+
+  document.getElementById("count").textContent=
+    filtered.length+" shown · "+all.length+" total members";
+
+  if(!filtered.length){
+    list.innerHTML='<div class="empty">👥<br><br><strong>No members found</strong><br><br>“Add Member” dabakar naya record banayein.</div>';
+    return;
+  }
+
+  list.innerHTML=filtered.map(m=>{
+    const id=esc(m.id);
+    const name=esc(m.name||m.fullName||"Unnamed member");
+    const active=String(m.status||"Active")==="Active";
+    const image=avatar(m)||placeholder(m.name||m.fullName);
+    return `
+      <article class="card">
+        <div class="person">
+          <img class="avatar" src="${image}" alt="Member photo" onerror="this.onerror=null;this.src='${placeholder(m.name||m.fullName)}'">
+          <div style="min-width:0">
+            <h3>${name}</h3>
+            <p>${esc(m.rank||"Rank not set")} · ID: ${esc(m.serviceId||"—")}</p>
+            <span class="tag ${active?"":"inactive"}">${esc(m.status||"Active")}</span>
+          </div>
+        </div>
+        <div class="details">
+          <div class="detail"><small>UNIT</small><strong>${esc(m.unit||"—")}</strong></div>
+          <div class="detail"><small>MOBILE</small><strong>${esc(m.mobile||"—")}</strong></div>
+          <div class="detail"><small>MONTHLY LIMIT</small><strong>${money(m.monthlyLimit??4000)}</strong></div>
+          <div class="detail"><small>JOINING DATE</small><strong>${esc(m.joiningDate||"—")}</strong></div>
+        </div>
+        <div class="actions">
+          <button class="btn secondary" data-action="view" data-id="${id}">View</button>
+          <button class="btn primary" data-action="edit" data-id="${id}">Edit</button>
+          <button class="btn danger" data-action="delete" data-id="${id}">Delete</button>
+        </div>
+      </article>`;
+  }).join("");
+}
+
+function openAdd(){
+  document.getElementById("memberForm").reset();
+  document.getElementById("memberId").value="";
+  document.getElementById("monthlyLimit").value="4000";
+  document.getElementById("status").value="Active";
+  document.getElementById("formTitle").textContent="Add Member";
+  photoData="";
+  updatePhotoPreview();
+  document.getElementById("editDialog").showModal();
+}
+
+function openEdit(id){
+  const m=members().find(x=>String(x.id)===String(id));
+  if(!m) return alert("Member nahi mila.");
+
+  document.getElementById("memberId").value=m.id;
+  document.getElementById("serviceId").value=m.serviceId||"";
+  document.getElementById("fullName").value=m.name||m.fullName||"";
+  document.getElementById("rank").value=m.rank||"";
+  document.getElementById("unit").value=m.unit||"";
+  document.getElementById("mobile").value=m.mobile||"";
+  document.getElementById("monthlyLimit").value=m.monthlyLimit??4000;
+  document.getElementById("joiningDate").value=m.joiningDate||"";
+  document.getElementById("status").value=m.status||"Active";
+  document.getElementById("notes").value=m.notes||"";
+  photoData=m.photo||"";
+  updatePhotoPreview();
+  document.getElementById("formTitle").textContent="Edit Member";
+  document.getElementById("editDialog").showModal();
+}
+
+function updatePhotoPreview(){
+  document.getElementById("photoPreview").src=
+    photoData||placeholder(document.getElementById("fullName").value);
+}
+
+async function compressImage(file){
+  if(!file.type.startsWith("image/")) throw new Error("Please choose an image.");
+  const image=new Image();
+  const url=URL.createObjectURL(file);
+  try{
+    await new Promise((resolve,reject)=>{
+      image.onload=resolve;
+      image.onerror=reject;
+      image.src=url;
+    });
+    const max=500;
+    const scale=Math.min(1,max/Math.max(image.width,image.height));
+    const canvas=document.createElement("canvas");
+    canvas.width=Math.max(1,Math.round(image.width*scale));
+    canvas.height=Math.max(1,Math.round(image.height*scale));
+    canvas.getContext("2d").drawImage(image,0,0,canvas.width,canvas.height);
+    return canvas.toDataURL("image/jpeg",0.72);
+  }finally{
+    URL.revokeObjectURL(url);
+  }
+}
+
+document.getElementById("photo").addEventListener("change",async event=>{
+  const file=event.target.files[0];
+  if(!file) return;
+  try{
+    photoData=await compressImage(file);
+    updatePhotoPreview();
+  }catch(error){
+    alert("Photo open nahi hui. Doosri image try karein.");
+    event.target.value="";
+  }
+});
+
+document.getElementById("removePhoto").addEventListener("click",()=>{
+  photoData="";
+  document.getElementById("photo").value="";
+  updatePhotoPreview();
+});
+
+document.getElementById("fullName").addEventListener("input",()=>{
+  if(!photoData) updatePhotoPreview();
+});
+
+document.getElementById("memberForm").addEventListener("submit",event=>{
+  event.preventDefault();
+
+  const data=readData();
+  if(!Array.isArray(data.members)) data.members=[];
+
+  const id=document.getElementById("memberId").value;
+  const serviceId=document.getElementById("serviceId").value.trim();
+  const name=document.getElementById("fullName").value.trim();
+
+  if(!serviceId||!name) return alert("Service ID aur Full Name zaroor bharein.");
+
+  const duplicate=data.members.find(m=>
+    String(m.serviceId||"").toLowerCase()===serviceId.toLowerCase() &&
+    String(m.id)!==String(id)
+  );
+  if(duplicate) return alert("Yeh Service ID pehle se maujood hai.");
+
+  const old=data.members.find(m=>String(m.id)===String(id));
+  const record={
+    ...(old||{}),
+    id:id||uid(),
+    serviceId,
+    name,
+    fullName:name,
+    rank:document.getElementById("rank").value,
+    unit:document.getElementById("unit").value.trim(),
+    mobile:document.getElementById("mobile").value.trim(),
+    monthlyLimit:Math.max(0,Number(document.getElementById("monthlyLimit").value)||0),
+    joiningDate:document.getElementById("joiningDate").value,
+    status:document.getElementById("status").value,
+    notes:document.getElementById("notes").value.trim(),
+    photo:photoData
+  };
+
+  if(id){
+    const index=data.members.findIndex(m=>String(m.id)===String(id));
+    if(index<0) return alert("Member record nahi mila. List refresh karein.");
+    data.members[index]=record;
+  }else{
+    data.members.push(record);
+  }
+
+  if(!saveData(data)) return;
+  document.getElementById("editDialog").close();
+  render();
+  alert(id?"Member update ho gaya.":"Member save ho gaya.");
+});
+
+function viewMember(id){
+  const m=members().find(x=>String(x.id)===String(id));
+  if(!m) return alert("Member nahi mila.");
+
+  const body=document.getElementById("viewBody");
+  body.innerHTML=`
+    <div style="text-align:center;margin-bottom:18px">
+      <img class="view-photo" src="${avatar(m)||placeholder(m.name||m.fullName)}" alt="Member photo">
+      <h2 style="margin:12px 0 5px">${esc(m.name||m.fullName||"Unnamed member")}</h2>
+      <span class="tag">${esc(m.status||"Active")}</span>
+    </div>
+    ${viewLine("Service / Member ID",m.serviceId)}
+    ${viewLine("Rank",m.rank)}
+    ${viewLine("Unit",m.unit)}
+    ${viewLine("Mobile",m.mobile)}
+    ${viewLine("Monthly Limit",money(m.monthlyLimit??4000))}
+    ${viewLine("Joining Date",m.joiningDate)}
+    ${viewLine("Status",m.status||"Active")}
+    ${viewLine("Notes",m.notes)}
+    <div class="form-buttons">
+      <button class="btn primary" id="viewEditBtn">Edit Member</button>
+      <button class="btn secondary" type="button" data-close="viewDialog">Close</button>
+    </div>`;
+  document.getElementById("viewEditBtn").addEventListener("click",()=>{
+    document.getElementById("viewDialog").close();
+    openEdit(id);
+  });
+  document.getElementById("viewDialog").showModal();
+}
+
+function viewLine(label,value){
+  return `<div class="view-line"><small>${esc(label)}</small>${esc(value||"—")}</div>`;
+}
+
+function deleteMember(id){
+  const data=readData();
+  const member=(data.members||[]).find(m=>String(m.id)===String(id));
+  if(!member) return alert("Member nahi mila.");
+
+  if(!confirm("Kya "+(member.name||member.fullName||"is member")+" ko delete karna hai? Purane account/meal records apne aap delete nahi honge.")) return;
+
+  data.members=data.members.filter(m=>String(m.id)!==String(id));
+  if(saveData(data)){
+    render();
+    alert("Member delete ho gaya.");
+  }
+}
+
+document.getElementById("addBtn").addEventListener("click",openAdd);
+document.getElementById("search").addEventListener("input",event=>{
+  searchText=event.target.value;
+  render();
+});
+
+document.getElementById("memberList").addEventListener("click",event=>{
+  const button=event.target.closest("button[data-action]");
+  if(!button) return;
+  const id=button.dataset.id;
+  if(button.dataset.action==="view") viewMember(id);
+  if(button.dataset.action==="edit") openEdit(id);
+  if(button.dataset.action==="delete") deleteMember(id);
+});
+
+document.addEventListener("click",event=>{
+  const button=event.target.closest("[data-close]");
+  if(button){
+    const dialog=document.getElementById(button.dataset.close);
+    if(dialog) dialog.close

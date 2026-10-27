@@ -1,1 +1,308 @@
 
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CRPF Smart Mess Manager - Backup</title>
+<style>
+:root{--g:#176747;--deep:#10563e;--bg:#f2f6f3;--text:#214d3b;--muted:#78857e;--border:#dce5df;--red:#bd3942}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:Arial,sans-serif;font-size:14px}
+header{background:linear-gradient(120deg,#10583e,#176747);color:white;padding:20px}
+header h1{margin:0 0 7px;font-size:23px}
+header p{margin:0;line-height:1.5}
+nav{display:flex;gap:7px;overflow-x:auto;background:white;padding:10px;border-bottom:1px solid var(--border)}
+nav a{white-space:nowrap;text-decoration:none;color:var(--g);padding:10px 13px;border:1px solid var(--border);border-radius:8px;font-weight:bold}
+nav a.active{background:var(--g);color:white}
+main{max-width:850px;margin:auto;padding:14px}
+.card{background:white;border:1px solid var(--border);border-radius:12px;padding:16px;margin-bottom:14px}
+h2{font-size:19px;margin:0 0 12px}
+p{line-height:1.6}
+.muted{color:var(--muted)}
+button,input{width:100%;padding:12px;border:1px solid var(--border);border-radius:8px;background:white;color:var(--text);font:inherit;margin:5px 0}
+button{background:var(--g);color:white;border:0;font-weight:bold;cursor:pointer}
+button.secondary{background:white;color:var(--g);border:1px solid var(--g)}
+button.danger{background:var(--red)}
+.status{padding:12px;background:#edf6ef;border:1px solid var(--border);border-radius:8px;white-space:pre-wrap;overflow-wrap:anywhere}
+.warning{background:#fff8e8;border:1px solid #efdfb8;padding:12px;border-radius:9px;line-height:1.6}
+.stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.stat{border:1px solid var(--border);border-radius:9px;padding:12px}
+.stat small{display:block;color:var(--muted);margin-bottom:7px}
+.stat strong{font-size:20px;color:var(--g);overflow-wrap:anywhere}
+@media(min-width:600px){.stats{grid-template-columns:repeat(4,minmax(0,1fr))}}
+</style>
+</head>
+<body>
+<header>
+<h1>CRPF SMART MESS MANAGER</h1>
+<p>Full Data Backup & Restore · Local Browser Storage</p>
+</header>
+
+<nav>
+<a href="index.html">Dashboard</a>
+<a href="members.html">Members</a>
+<a href="store.html">Store</a>
+<a href="recipes.html">Recipes</a>
+<a href="meals.html">Meals</a>
+<a href="accounts.html">Accounts</a>
+<a href="reports.html">Reports</a>
+<a href="backup.html" class="active">Backup</a>
+</nav>
+
+<main>
+<section class="card">
+<h2>Saved Data Overview</h2>
+<p class="muted">Check the data found in this browser before making a backup.</p>
+<div class="stats">
+<div class="stat"><small>Members</small><strong id="members">0</strong></div>
+<div class="stat"><small>Store Items</small><strong id="items">0</strong></div>
+<div class="stat"><small>Purchases</small><strong id="purchases">0</strong></div>
+<div class="stat"><small>Recipes</small><strong id="recipes">0</strong></div>
+<div class="stat"><small>Meals</small><strong id="meals">0</strong></div>
+<div class="stat"><small>Account Entries</small><strong id="ledger">0</strong></div>
+<div class="stat"><small>Storage Keys</small><strong id="keys">0</strong></div>
+<div class="stat"><small>Backup Status</small><strong id="backupStatus" style="font-size:14px">Not saved</strong></div>
+</div>
+<p id="status" class="status" style="margin-top:12px">Ready.</p>
+</section>
+
+<section class="card">
+<h2>1. Download Full Backup</h2>
+<p>Download all data keys saved by this project in the current browser into one JSON file. Keep that file safely on your phone.</p>
+<button id="backupBtn" type="button">Download Full Backup (JSON)</button>
+<button id="refreshBtn" class="secondary" type="button">Refresh Data Overview</button>
+</section>
+
+<section class="card">
+<h2>2. Restore from Backup</h2>
+<p>Select a JSON backup previously downloaded from this page. The restore process will check the file before writing anything.</p>
+<input id="backupFile" type="file" accept=".json,application/json">
+<div class="warning">
+<strong>Important:</strong> Restore can replace data stored under matching keys. First download a fresh backup of the current browser data. Restore only a file that you trust and that belongs to this software.
+</div>
+<button id="restoreBtn" type="button">Restore Selected Backup</button>
+</section>
+
+<section class="card">
+<h2>3. Check Storage Keys</h2>
+<p class="muted">This page checks the known CRPF Smart Mess data keys and also includes other localStorage keys in the backup file. It does not send your data online.</p>
+<button id="keysBtn" class="secondary" type="button">Show Saved Keys</button>
+<div id="keyList" class="status" style="margin-top:10px">Press Show Saved Keys.</div>
+</section>
+
+<section class="card">
+<h2>Backup Safety</h2>
+<ul>
+<li>Save a backup before updating any HTML page.</li>
+<li>Keep more than one copy of important backup files.</li>
+<li>Do not share a backup containing confidential member information.</li>
+<li>JSON backup is data, not a copy of all your HTML source files.</li>
+<li>Data saved in another browser, device or server will not automatically be included.</li>
+</ul>
+</section>
+</main>
+
+<script>
+"use strict";
+
+const KNOWN_KEYS=[
+ "crpfMessProfessionalV1",
+ "crpfMessPrototypeV2"
+];
+
+const $=id=>document.getElementById(id);
+
+function setStatus(message){
+  $("status").textContent=message;
+}
+function readStorage(){
+  const result={};
+  const errors=[];
+  for(let i=0;i<localStorage.length;i++){
+    const key=localStorage.key(i);
+    if(key===null)continue;
+    try{
+      const raw=localStorage.getItem(key);
+      result[key]={
+        type:"string",
+        value:raw
+      };
+    }catch(e){
+      errors.push(key+": "+e.message);
+    }
+  }
+  return {data:result,errors};
+}
+function parseData(key){
+  try{
+    const raw=localStorage.getItem(key);
+    if(!raw)return null;
+    return JSON.parse(raw);
+  }catch(e){
+    return null;
+  }
+}
+function arrayLength(data,key){
+  return data&&Array.isArray(data[key])?data[key].length:0;
+}
+function findMainData(){
+  const candidates=KNOWN_KEYS.map(key=>({
+    key,
+    data:parseData(key)
+  })).filter(x=>x.data&&typeof x.data==="object");
+
+  candidates.sort((a,b)=>{
+    const score=d=>["members","items","purchases","recipes","meals","ledger","expenses","handovers"]
+      .reduce((n,k)=>n+arrayLength(d,k),0);
+    return score(b.data)-score(a.data);
+  });
+  return candidates[0]||null;
+}
+function updateOverview(){
+  const all=readStorage();
+  const main=findMainData();
+  const d=main?main.data:{};
+
+  $("members").textContent=arrayLength(d,"members");
+  $("items").textContent=arrayLength(d,"items");
+
+  let purchaseCount=arrayLength(d,"purchases");
+  if(Array.isArray(d.items)){
+    d.items.forEach(item=>{
+      if(Array.isArray(item.purchases))purchaseCount+=item.purchases.length;
+    });
+  }
+  $("purchases").textContent=purchaseCount;
+  $("recipes").textContent=arrayLength(d,"recipes");
+  $("meals").textContent=arrayLength(d,"meals");
+  $("ledger").textContent=arrayLength(d,"ledger");
+  $("keys").textContent=Object.keys(all.data).length;
+
+  $("backupStatus").textContent="Ready";
+  setStatus(
+    "Storage checked.\n"+
+    "Data keys found: "+Object.keys(all.data).length+"\n"+
+    "Main data key: "+(main?main.key:"Not found")+"\n"+
+    "Known CRPF data keys: "+KNOWN_KEYS.filter(k=>localStorage.getItem(k)!==null).join(", ")+"\n"+
+    (all.errors.length?"Read errors: "+all.errors.join("; "):"No storage read errors.")
+  );
+}
+function downloadBlob(content,filename,type){
+  const blob=new Blob([content],{type});
+  const url=URL.createObjectURL(blob);
+  const a=document.createElement("a");
+  a.href=url;
+  a.download=filename;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),1500);
+}
+function createBackup(){
+  const all=readStorage();
+  if(all.errors.length){
+    setStatus("Some storage keys could not be read:\n"+all.errors.join("\n")+"\nBackup was not started.");
+    return;
+  }
+
+  const backup={
+    format:"CRPF_SMART_MESS_FULL_LOCALSTORAGE_BACKUP",
+    version:1,
+    createdAt:new Date().toISOString(),
+    storageType:"localStorage",
+    entries:all.data
+  };
+
+  const filename="CRPF-Mess-Backup-"+new Date().toISOString().replace(/[:.]/g,"-")+".json";
+  downloadBlob(JSON.stringify(backup,null,2),filename,"application/json;charset=utf-8");
+  $("backupStatus").textContent="Downloaded";
+  setStatus("Backup file prepared.\nSaved keys: "+Object.keys(all.data).length+
+    "\nFile: "+filename+
+    "\nCheck your phone's Downloads folder to confirm the file exists.");
+}
+function validateBackup(obj){
+  if(!obj||typeof obj!=="object"||!obj.entries||typeof obj.entries!=="object"||Array.isArray(obj.entries)){
+    throw new Error("This does not look like a backup created by this page.");
+  }
+  if(obj.format!=="CRPF_SMART_MESS_FULL_LOCALSTORAGE_BACKUP"){
+    throw new Error("Backup format is not recognised. No data has been changed.");
+  }
+  for(const [key,entry] of Object.entries(obj.entries)){
+    if(!key||!entry||typeof entry!=="object"||typeof entry.value!=="string"){
+      throw new Error("Invalid storage entry in backup. No data has been changed.");
+    }
+  }
+  return true;
+}
+async function restoreBackup(){
+  const file=$("backupFile").files[0];
+  if(!file){
+    setStatus("Please select a JSON backup file first.");
+    return;
+  }
+
+  let obj;
+  try{
+    obj=JSON.parse(await file.text());
+    validateBackup(obj);
+  }catch(e){
+    setStatus("Backup could not be validated.\n"+e.message);
+    return;
+  }
+
+  const entries=Object.entries(obj.entries);
+  const existingKeys=entries.filter(([key])=>localStorage.getItem(key)!==null).length;
+
+  const confirmed=confirm(
+    "Restore "+entries.length+" storage keys?\n\n"+
+    "Matching keys currently in this browser: "+existingKeys+"\n\n"+
+    "Existing matching data may be replaced. Download a current backup first. Continue?"
+  );
+  if(!confirmed)return;
+
+  /* Keep a temporary in-memory snapshot so this operation can roll back
+     if writing any of the entries fails. */
+  const before={};
+  for(let i=0;i<localStorage.length;i++){
+    const key=localStorage.key(i);
+    if(key!==null)before[key]=localStorage.getItem(key);
+  }
+
+  try{
+    for(const [key,entry] of entries){
+      localStorage.setItem(key,entry.value);
+    }
+    setStatus("Restore completed.\nRestored keys: "+entries.length+
+      "\nReload the software pages to check the records.");
+    updateOverview();
+  }catch(e){
+    try{
+      const currentKeys=[];
+      for(let i=0;i<localStorage.length;i++){
+        const key=localStorage.key(i);
+        if(key!==null)currentKeys.push(key);
+      }
+      currentKeys.forEach(key=>{
+        if(!Object.prototype.hasOwnProperty.call(before,key))localStorage.removeItem(key);
+      });
+      Object.entries(before).forEach(([key,value])=>localStorage.setItem(key,value));
+      setStatus("Restore failed. An attempt was made to restore the previous browser data.\n"+e.message);
+    }catch(rollbackError){
+      setStatus("Restore and rollback encountered an error. Do not clear browser data. Error: "+rollbackError.message);
+    }
+  }
+}
+$("backupBtn").addEventListener("click",createBackup);
+$("refreshBtn").addEventListener("click",updateOverview);
+$("restoreBtn").addEventListener("click",restoreBackup);
+$("keysBtn").addEventListener("click",()=>{
+  const all=readStorage();
+  const list=Object.keys(all.data);
+  $("keyList").textContent=list.length?list.join("\n"):"No localStorage keys found.";
+});
+updateOverview();
+</script>
+</body>
+</html>

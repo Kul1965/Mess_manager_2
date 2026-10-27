@@ -1,1 +1,426 @@
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Store & Purchase | CRPF Smart Mess Manager</title>
+<style>
+:root{--g:#176747;--deep:#10563e;--bg:#f2f6f3;--white:#fff;--text:#214d3b;--muted:#78857e;--border:#dce5df;--red:#bd3942;--orange:#a96113}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:Arial,Helvetica,sans-serif}
+button,input,select,textarea{font:inherit}
+button,a{cursor:pointer}
+a{text-decoration:none;color:inherit}
+.hero{background:linear-gradient(120deg,#10583e,#176747);color:white;padding:23px 20px}
+.hero small{letter-spacing:2px;font-weight:bold;color:#d5e9dc}
+.hero h1{font-size:25px;margin:13px 0 8px}
+.hero p{margin:0;color:#e0eee5;font-size:14px}
+.nav{display:flex;gap:8px;overflow-x:auto;padding:13px 15px;background:white;border-bottom:1px solid var(--border)}
+.nav a{white-space:nowrap;padding:13px 18px;border-radius:12px;font-weight:bold;font-size:13px;color:#506257}
+.nav a.active,.nav a:hover{background:var(--g);color:white}
+main{max-width:1200px;margin:auto;padding:22px 15px 40px}
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:20px}
+.top h2{margin:0 0 7px;font-size:26px}
+.muted{color:var(--muted);font-size:13px;line-height:1.5}
+.btn{border:0;border-radius:9px;padding:12px 15px;font-weight:bold;font-size:13px;display:inline-block}
+.primary{background:var(--g);color:white}
+.secondary{background:#e6f2e9;color:var(--g)}
+.danger{background:#fff0f0;color:var(--red)}
+.orange{background:#fff0dc;color:var(--orange)}
+.tabs{display:flex;gap:9px;flex-wrap:wrap;margin:18px 0}
+.tab{border:1px solid var(--border);border-radius:10px;background:white;color:var(--g);padding:12px 17px;font-weight:bold}
+.tab.active{background:var(--g);color:white}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:12px;margin-bottom:20px}
+.stat{background:white;border:1px solid var(--border);border-radius:13px;padding:16px;border-left:5px solid var(--g)}
+.stat small{display:block;color:var(--muted);font-size:12px}
+.stat strong{display:block;font-size:22px;margin-top:10px;overflow-wrap:anywhere}
+.panel{background:white;border:1px solid var(--border);border-radius:15px;padding:18px;margin-bottom:18px}
+.panel h3{font-size:18px;margin:0 0 16px}
+.filters{display:flex;gap:10px;flex-wrap:wrap;margin-bottom:14px}
+.search{flex:1;min-width:180px}
+input,select,textarea{width:100%;padding:11px;border:1px solid #d7e2da;border-radius:9px;background:white;color:var(--text);outline-color:var(--g)}
+label{display:block;font-size:12px;font-weight:bold;margin-bottom:7px}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.field{min-width:0}
+.full{grid-column:1/-1}
+.table-scroll{overflow-x:auto}
+table{width:100%;border-collapse:collapse;min-width:720px}
+th{background:#edf6ef;text-align:left;padding:13px 11px;font-size:12px;color:#214f3a}
+td{padding:13px 11px;border-bottom:1px solid #e8eee9;font-size:12px}
+.actions{display:flex;flex-wrap:wrap;gap:6px}
+.actions .btn{padding:8px 10px;font-size:11px}
+.tag{display:inline-block;padding:5px 8px;border-radius:20px;background:#e5f5e9;color:#216443;font-size:11px;font-weight:bold}
+.empty{text-align:center;padding:25px 10px;color:var(--muted)}
+.note{padding:12px;background:#edf7ef;border:1px solid #d7e7da;border-radius:10px;font-size:12px;line-height:1.6;margin-top:12px}
+dialog{border:0;border-radius:16px;padding:0;width:min(650px,95vw);max-height:90vh;overflow:auto;color:var(--text);box-shadow:0 15px 70px #0003}
+dialog::backdrop{background:#102b4677}
+.modal-head{padding:17px 20px;background:var(--g);color:white;display:flex;align-items:center;justify-content:space-between;gap:10px}
+.modal-head h2{font-size:19px;margin:0}
+.close{border:0;border-radius:8px;padding:8px 11px;background:#ffffff22;color:white}
+.modal-body{padding:20px}
+.form-buttons{display:flex;gap:10px;flex-wrap:wrap;margin-top:20px}
+.view-line{padding:12px 0;border-bottom:1px solid #e7eee9;font-size:13px;overflow-wrap:anywhere}
+.view-line small{display:block;color:var(--muted);margin-bottom:5px}
+.hidden{display:none!important}
+.footer{text-align:center;padding:20px;color:var(--muted);font-size:11px}
+@media(max-width:750px){.stats{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:500px){.hero h1{font-size:21px}.stats{gap:9px}.stat{padding:12px}.stat strong{font-size:18px}.form-grid{grid-template-columns:1fr}.full{grid-column:auto}.panel{padding:13px}.top h2{font-size:23px}}
+</style>
+</head>
+<body>
+
+<header class="hero">
+  <small>MESS MANAGEMENT SYSTEM</small>
+  <h1>🛡️ CRPF SMART MESS MANAGER</h1>
+  <p>Store items, purchase register and stock management</p>
+</header>
+
+<nav class="nav">
+  <a href="index.html">Dashboard</a>
+  <a href="members.html">Members</a>
+  <a class="active" href="store.html">Store & Purchase</a>
+  <a href="recipes.html">Recipes</a>
+  <a href="meals.html">Meals</a>
+  <a href="accounts.html">Accounts</a>
+  <a href="reports.html">Reports</a>
+  <a href="backup.html">Backup</a>
+</nav>
+
+<main>
+  <div class="top">
+    <div>
+      <h2>Store & Purchase</h2>
+      <div class="muted">Items, purchase history, stock and weighted average rate.</div>
+    </div>
+    <button class="btn primary" id="addItemBtn">＋ Add Store Item</button>
+  </div>
+
+  <section class="stats">
+    <div class="stat"><small>Total Items</small><strong id="itemCount">0</strong></div>
+    <div class="stat"><small>Current Stock Value</small><strong id="stockValue">Rs 0.00</strong></div>
+    <div class="stat"><small>Purchase Records</small><strong id="purchaseCount">0</strong></div>
+    <div class="stat"><small>Low / Empty Stock</small><strong id="lowStock">0</strong></div>
+  </section>
+
+  <div class="tabs">
+    <button class="tab active" data-tab="itemsPanel">Store Items</button>
+    <button class="tab" data-tab="purchasesPanel">Purchase History</button>
+  </div>
+
+  <section class="panel" id="itemsPanel">
+    <h3>Store Register</h3>
+    <div class="filters">
+      <input class="search" id="itemSearch" placeholder="Search item name or unit...">
+      <button class="btn primary" id="addPurchaseBtn">＋ Record Purchase</button>
+    </div>
+    <div class="table-scroll">
+      <table>
+        <thead><tr>
+          <th>Item</th><th>Current Stock</th><th>Base Unit</th>
+          <th>Average Rate / Base Unit</th><th>Stock Value</th><th>Actions</th>
+        </tr></thead>
+        <tbody id="itemsRows"></tbody>
+      </table>
+    </div>
+    <div class="note">Stock quantity is calculated from purchases minus confirmed meal consumption. Purchase history is kept separately for each item.</div>
+  </section>
+
+  <section class="panel hidden" id="purchasesPanel">
+    <h3>Purchase History</h3>
+    <div class="filters">
+      <input class="search" id="purchaseSearch" placeholder="Search item, supplier or invoice...">
+      <button class="btn primary" id="addPurchaseBtn2">＋ Record Purchase</button>
+    </div>
+    <div class="table-scroll">
+      <table>
+        <thead><tr>
+          <th>Date</th><th>Item</th><th>Quantity</th><th>Rate</th>
+          <th>Total</th><th>Supplier / Invoice</th><th>Actions</th>
+        </tr></thead>
+        <tbody id="purchaseRows"></tbody>
+      </table>
+    </div>
+  </section>
+</main>
+
+<footer class="footer">CRPF Smart Mess Manager · Store & Purchase</footer>
+
+<dialog id="itemDialog">
+  <div class="modal-head"><h2 id="itemFormTitle">Add Store Item</h2><button class="close" type="button" data-close="itemDialog">✕ Close</button></div>
+  <div class="modal-body">
+    <form id="itemForm">
+      <input type="hidden" id="itemId">
+      <div class="form-grid">
+        <div class="field full"><label for="itemName">Item Name *</label><input id="itemName" required maxlength="100" placeholder="e.g. Rice"></div>
+        <div class="field"><label for="itemUnit">Purchase Unit *</label>
+          <select id="itemUnit" required>
+            <option value="kg">Kilogram (kg)</option><option value="g">Gram (g)</option>
+            <option value="ltr">Litre (ltr)</option><option value="ml">Millilitre (ml)</option>
+            <option value="pcs">Pieces (pcs)</option>
+          </select>
+        </div>
+        <div class="field"><label for="itemNote">Notes</label><input id="itemNote" maxlength="250" placeholder="Optional"></div>
+      </div>
+      <div class="form-buttons"><button class="btn primary" type="submit">Save Item</button><button class="btn secondary" type="button" data-close="itemDialog">Cancel</button></div>
+    </form>
+  </div>
+</dialog>
+
+<dialog id="purchaseDialog">
+  <div class="modal-head"><h2 id="purchaseFormTitle">Record Purchase</h2><button class="close" type="button" data-close="purchaseDialog">✕ Close</button></div>
+  <div class="modal-body">
+    <form id="purchaseForm">
+      <input type="hidden" id="purchaseId">
+      <div class="form-grid">
+        <div class="field full"><label for="purchaseItem">Store Item *</label><select id="purchaseItem" required></select></div>
+        <div class="field"><label for="purchaseDate">Purchase Date *</label><input id="purchaseDate" type="date" required></div>
+        <div class="field"><label for="purchaseUnit">Quantity Unit *</label>
+          <select id="purchaseUnit"><option value="kg">kg</option><option value="g">g</option><option value="ltr">ltr</option><option value="ml">ml</option><option value="pcs">pcs</option></select>
+        </div>
+        <div class="field"><label for="purchaseQty">Quantity *</label><input id="purchaseQty" type="number" min="0.001" step="any" required placeholder="e.g. 25"></div>
+        <div class="field"><label for="purchaseRate">Rate per selected unit (Rs) *</label><input id="purchaseRate" type="number" min="0" step="any" required placeholder="e.g. 80"></div>
+        <div class="field"><label for="purchaseTotal">Purchase Total (Rs)</label><input id="purchaseTotal" readonly value="Rs 0.00"></div>
+        <div class="field"><label for="supplier">Supplier</label><input id="supplier" maxlength="100" placeholder="Supplier name"></div>
+        <div class="field full"><label for="invoice">Invoice / Bill Number</label><input id="invoice" maxlength="100" placeholder="Optional invoice number"></div>
+        <div class="field full"><label for="purchaseNotes">Notes</label><textarea id="purchaseNotes" maxlength="500" placeholder="Optional purchase notes"></textarea></div>
+      </div>
+      <div class="note" id="unitHint">Quantity and rate are converted into the item's base unit for stock calculation.</div>
+      <div class="form-buttons"><button class="btn primary" type="submit">Save Purchase</button><button class="btn secondary" type="button" data-close="purchaseDialog">Cancel</button></div>
+    </form>
+  </div>
+</dialog>
+
+<dialog id="viewDialog">
+  <div class="modal-head"><h2 id="viewTitle">Details</h2><button class="close" type="button" data-close="viewDialog">✕ Close</button></div>
+  <div class="modal-body" id="viewBody"></div>
+</dialog>
+
+<script>
+"use strict";
+
+const KEYS=["crpfMessProfessionalV1","crpfMessPrototypeV2"];
+let storageKey=KEYS.find(k=>localStorage.getItem(k))||KEYS[0];
+
+const $=id=>document.getElementById(id);
+const arr=x=>Array.isArray(x)?x:[];
+const num=x=>Number.isFinite(Number(x))?Number(x):0;
+const money=x=>"Rs "+num(x).toLocaleString("en-IN",{minimumFractionDigits:2,maximumFractionDigits:2});
+const esc=x=>String(x??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const uid=()=>Date.now().toString(36)+"_"+Math.random().toString(36).slice(2,8);
+const today=()=>new Date().toLocaleDateString("en-CA");
+
+function readData(){
+  try{
+    const raw=localStorage.getItem(storageKey);
+    if(!raw)return {};
+    const data=JSON.parse(raw);
+    return data&&typeof data==="object"?data:{};
+  }catch(e){alert("Saved data read nahi hua. Backup check karein.");return {}}
+}
+function saveData(data){
+  try{localStorage.setItem(storageKey,JSON.stringify(data));return true}
+  catch(e){alert("Save nahi hua. Browser storage full ho sakti hai. Photo ya extra data ka backup check karein.");return false}
+}
+function getData(){
+  const d=readData();
+  if(!Array.isArray(d.items))d.items=[];
+  if(!Array.isArray(d.meals))d.meals=[];
+  return d;
+}
+function baseUnit(unit){
+  if(unit==="kg"||unit==="g")return "g";
+  if(unit==="ltr"||unit==="ml"||unit==="l")return "ml";
+  return "pcs";
+}
+function toBase(qty,unit){
+  qty=num(qty);
+  if(unit==="kg")return qty*1000;
+  if(unit==="ltr"||unit==="l")return qty*1000;
+  return qty;
+}
+function fromBase(qty,unit){
+  qty=num(qty);
+  if(unit==="kg"||unit==="ltr"||unit==="l")return qty/1000;
+  return qty;
+}
+function rateBase(rate,unit){
+  if(unit==="kg"||unit==="ltr"||unit==="l")return num(rate)/1000;
+  return num(rate);
+}
+function formatQty(qty,unit){
+  return fromBase(qty,unit).toLocaleString("en-IN",{maximumFractionDigits:3})+" "+unit;
+}
+function newPurchaseId(){return "p_"+uid()}
+
+function purchaseInfo(p){
+  const qty=num(p.quantityBase);
+  const total=num(p.total);
+  return {qty,total,rate:qty?total/qty:0};
+}
+function allPurchases(data){
+  const result=[];
+  data.items.forEach(item=>{
+    arr(item.purchases).forEach(p=>{
+      result.push({...p,itemId:item.id,itemName:item.name,itemUnit:baseUnit(item.unit||"kg")});
+    });
+  });
+  return result.sort((a,b)=>String(b.date||"").localeCompare(String(a.date||"")));
+}
+function consumedForItem(data,item){
+  let used=0;
+  data.meals.filter(m=>!m.cancelled).forEach(meal=>{
+    arr(meal.ration).forEach(r=>{
+      if(String(r.itemId)===String(item.id))used+=num(r.quantityBase);
+    });
+  });
+  return used;
+}
+function stockFor(data,item){
+  const purchases=arr(item.purchases);
+  const qty=purchases.reduce((s,p)=>s+num(p.quantityBase),0);
+  const value=purchases.reduce((s,p)=>s+num(p.total),0);
+  const avg=qty?value/qty:0;
+  const stock=Math.max(0,qty-consumedForItem(data,item));
+  return {qty:stock,value:stock*avg,avg,totalQty:qty,purchaseValue:value,used:consumedForItem(data,item)};
+}
+function render(){
+  const d=getData();
+  const items=d.items;
+  const purchases=allPurchases(d);
+  let stockValue=0,low=0;
+  items.forEach(item=>{
+    const s=stockFor(d,item);
+    stockValue+=s.value;
+    if(s.qty<=0)low++;
+  });
+  $("itemCount").textContent=items.length;
+  $("stockValue").textContent=money(stockValue);
+  $("purchaseCount").textContent=purchases.length;
+  $("lowStock").textContent=low;
+  renderItems();
+  renderPurchases();
+}
+function renderItems(){
+  const d=getData(),query=$("itemSearch").value.trim().toLowerCase();
+  const items=d.items.filter(i=>(i.name+" "+i.unit).toLowerCase().includes(query));
+  const tbody=$("itemsRows");
+  if(!items.length){
+    tbody.innerHTML='<tr><td colspan="6" class="empty">Koi item nahi hai. “Add Store Item” dabayein.</td></tr>';
+    return;
+  }
+  tbody.innerHTML=items.map(item=>{
+    const s=stockFor(d,item),unit=baseUnit(item.unit||"kg");
+    const stockUnit=unit==="g"?"g":unit==="ml"?"ml":"pcs";
+    return `<tr>
+      <td><strong>${esc(item.name)}</strong><br><span class="muted">${esc(item.note||"")}</span></td>
+      <td>${formatQty(s.qty,stockUnit)}</td>
+      <td>${stockUnit}</td>
+      <td>${money(s.avg)} / ${stockUnit}</td>
+      <td><strong>${money(s.value)}</strong></td>
+      <td><div class="actions">
+        <button class="btn secondary" data-action="viewItem" data-id="${esc(item.id)}">View</button>
+        <button class="btn primary" data-action="editItem" data-id="${esc(item.id)}">Edit</button>
+        <button class="btn orange" data-action="addPurchase" data-id="${esc(item.id)}">＋ Purchase</button>
+        <button class="btn danger" data-action="deleteItem" data-id="${esc(item.id)}">Delete</button>
+      </div></td></tr>`;
+  }).join("");
+}
+function renderPurchases(){
+  const d=getData(),query=$("purchaseSearch").value.trim().toLowerCase();
+  const list=allPurchases(d).filter(p=>
+    [p.itemName,p.supplier,p.invoice,p.date].some(v=>String(v||"").toLowerCase().includes(query))
+  );
+  const tbody=$("purchaseRows");
+  if(!list.length){
+    tbody.innerHTML='<tr><td colspan="7" class="empty">Purchase record nahi hai. “Record Purchase” dabayein.</td></tr>';
+    return;
+  }
+  tbody.innerHTML=list.map(p=>{
+    const unit=p.purchaseUnit||p.unit||p.itemUnit;
+    const shownQty=p.quantity??fromBase(p.quantityBase,unit);
+    const shownRate=p.rate??(num(p.quantityBase)?num(p.total)/num(p.quantityBase):0);
+    return `<tr>
+      <td>${esc(p.date||"—")}</td>
+      <td><strong>${esc(p.itemName)}</strong></td>
+      <td>${num(shownQty).toLocaleString("en-IN",{maximumFractionDigits:3})} ${esc(unit)}</td>
+      <td>${money(shownRate)}</td>
+      <td><strong>${money(p.total)}</strong></td>
+      <td>${esc(p.supplier||"—")}<br><span class="muted">${esc(p.invoice||"")}</span></td>
+      <td><div class="actions">
+        <button class="btn secondary" data-action="viewPurchase" data-id="${esc(p.id)}">View</button>
+        <button class="btn primary" data-action="editPurchase" data-id="${esc(p.id)}">Edit</button>
+        <button class="btn danger" data-action="deletePurchase" data-id="${esc(p.id)}">Delete</button>
+      </div></td></tr>`;
+  }).join("");
+}
+function switchTab(id){
+  ["itemsPanel","purchasesPanel"].forEach(x=>$(x).classList.toggle("hidden",x!==id));
+  document.querySelectorAll(".tab").forEach(b=>b.classList.toggle("active",b.dataset.tab===id));
+}
+document.querySelectorAll(".tab").forEach(b=>b.addEventListener("click",()=>switchTab(b.dataset.tab)));
+
+function openItem(id){
+  $("itemForm").reset();
+  $("itemId").value="";
+  $("itemFormTitle").textContent="Add Store Item";
+  if(id){
+    const item=getData().items.find(x=>String(x.id)===String(id));
+    if(!item)return alert("Item nahi mila.");
+    $("itemId").value=item.id;
+    $("itemName").value=item.name||"";
+    $("itemUnit").value=item.unit||"kg";
+    $("itemNote").value=item.note||"";
+    $("itemFormTitle").textContent="Edit Store Item";
+  }
+  $("itemDialog").showModal();
+}
+$("addItemBtn").addEventListener("click",()=>openItem());
+
+$("itemForm").addEventListener("submit",e=>{
+  e.preventDefault();
+  const d=getData(),id=$("itemId").value,name=$("itemName").value.trim();
+  if(!name)return alert("Item name bharein.");
+  if(d.items.some(i=>i.name.toLowerCase()===name.toLowerCase()&&String(i.id)!==String(id)))
+    return alert("Yeh item pehle se hai.");
+  if(id){
+    const item=d.items.find(i=>String(i.id)===String(id));
+    if(!item)return alert("Item nahi mila.");
+    item.name=name;item.unit=$("itemUnit").value;item.note=$("itemNote").value.trim();
+  }else{
+    d.items.push({id:"i_"+uid(),name,unit:$("itemUnit").value,note:$("itemNote").value.trim(),purchases:[]});
+  }
+  if(saveData(d)){$("itemDialog").close();render();alert(id?"Item update ho gaya.":"Item save ho gaya.");}
+});
+
+function openPurchase(id,itemId){
+  const d=getData();
+  if(!d.items.length)return alert("Pehle Store Item add karein.");
+  $("purchaseForm").reset();
+  $("purchaseId").value="";
+  $("purchaseDate").value=today();
+  $("purchaseUnit").value="kg";
+  $("purchaseTotal").value="Rs 0.00";
+  $("purchaseFormTitle").textContent="Record Purchase";
+  fillItemSelect(itemId);
+  if(id){
+    const found=findPurchase(d,id);
+    if(!found)return alert("Purchase record nahi mila.");
+    const p=found.purchase;
+    $("purchaseId").value=p.id;
+    $("purchaseItem").value=String(found.item.id);
+    $("purchaseDate").value=p.date||today();
+    $("purchaseUnit").value=p.purchaseUnit||p.unit||found.item.unit||"kg";
+    $("purchaseQty").value=p.quantity??fromBase(p.quantityBase,$("purchaseUnit").value);
+    $("purchaseRate").value=p.rate??(num(p.quantityBase)?num(p.total)/num(p.quantityBase):0);
+    $("supplier").value=p.supplier||"";
+    $("invoice").value=p.invoice||"";
+    $("purchaseNotes").value=p.notes||"";
+    $("purchaseFormTitle").textContent="Edit Purchase";
+  }
+  calcTotal();
+  $("purchaseDialog").showModal();
+}
+function fillItemSelect(selected){
+  const items=getData().items;
+  $("purchaseItem").innerHTML=items.map(i=>

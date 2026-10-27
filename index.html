@@ -1,1 +1,593 @@
 
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CRPF Smart Mess Manager</title>
+
+<style>
+:root{
+  --green:#176747;
+  --deep:#10563d;
+  --button:#1b704f;
+  --light:#eaf4ed;
+  --page:#f2f6f3;
+  --white:#fff;
+  --text:#214d3b;
+  --muted:#7b8780;
+  --border:#dce5df;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;
+  font-family:Arial,Helvetica,sans-serif;
+  color:var(--text);
+  background:var(--page);
+}
+a{color:inherit;text-decoration:none}
+button{font:inherit;cursor:pointer}
+.hero{
+  background:linear-gradient(120deg,#10583e,#176747);
+  color:white;
+  padding:30px 25px 32px;
+}
+.hero-inner{max-width:1400px;margin:auto}
+.eyebrow{
+  font-size:12px;font-weight:bold;letter-spacing:2px;
+  color:#d3e8da;margin-bottom:18px;
+}
+.brand{
+  display:flex;align-items:center;gap:10px;
+  font-size:clamp(21px,4vw,32px);
+  font-weight:800;line-height:1.25;
+}
+.shield{font-size:30px}
+.subtitle{
+  margin:14px 0 23px;color:#e0eee5;
+  font-size:15px;line-height:1.5;
+}
+.add-member{
+  width:100%;max-width:500px;
+  border:1px solid #ffffff10;
+  border-radius:15px;
+  padding:19px;
+  background:#ffffff0d;
+  color:white;font-weight:bold;font-size:16px;
+  display:block;text-align:center;
+}
+.add-member:hover{background:#ffffff20}
+.nav-wrap{
+  background:#fff;border-bottom:1px solid var(--border);
+  overflow-x:auto;scrollbar-width:thin;
+}
+.nav{
+  max-width:1400px;margin:auto;
+  padding:16px 19px;
+  display:flex;gap:12px;min-width:max-content;
+}
+.nav a{
+  padding:17px 23px;border-radius:15px;
+  font-size:14px;font-weight:bold;color:#52645a;
+  white-space:nowrap;
+}
+.nav a.active,.nav a:hover{
+  background:var(--button);color:white;
+}
+main{
+  width:100%;max-width:1400px;
+  margin:auto;padding:30px 21px 40px;
+}
+.heading-row{
+  display:flex;align-items:center;
+  justify-content:space-between;gap:12px;
+  margin-bottom:25px;
+}
+.heading-row h1{font-size:30px;margin:0 0 16px}
+.heading-row p{font-size:17px;color:var(--muted);margin:0}
+.live{
+  padding:13px 20px;border-radius:30px;
+  background:#e4f3e9;color:#20583f;
+  font-weight:bold;font-size:14px;white-space:nowrap;
+}
+.stats{
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:18px;margin-bottom:30px;
+}
+.stat{
+  position:relative;overflow:hidden;
+  background:white;border:1px solid var(--border);
+  border-radius:19px;padding:24px 19px 23px 22px;
+  min-height:132px;
+  box-shadow:0 2px 5px #244c3710;
+}
+.stat:before{
+  content:"";position:absolute;
+  left:0;top:0;bottom:0;width:7px;background:var(--green);
+}
+.stat-label{
+  font-size:15px;font-weight:bold;
+  color:#7b8780;line-height:1.4;
+}
+.stat-value{
+  margin-top:22px;font-size:clamp(22px,3vw,31px);
+  font-weight:800;color:#194e38;
+  overflow-wrap:anywhere;
+}
+.section{
+  background:white;border:1px solid var(--border);
+  border-radius:20px;padding:25px 21px;
+  margin-bottom:22px;min-width:0;
+  box-shadow:0 2px 6px #244c3708;
+}
+.section h2{font-size:22px;margin:0 0 20px}
+.section-description{
+  margin:-10px 0 19px;font-size:13px;color:var(--muted);
+  line-height:1.6;
+}
+.table-scroll{overflow-x:auto}
+table{width:100%;border-collapse:collapse;min-width:530px}
+th{
+  text-align:left;background:#edf6ef;
+  color:#214f3a;padding:17px 15px;
+  font-size:13px;text-transform:uppercase;
+}
+td{
+  padding:16px 15px;border-bottom:1px solid #e8eee9;
+  font-size:13px;
+}
+.empty{text-align:center;color:var(--muted);padding:25px 10px}
+.pill{
+  display:inline-block;padding:6px 10px;
+  background:#e6f4e9;border-radius:20px;
+  color:#246543;font-size:11px;font-weight:bold;
+}
+.quick-grid{
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:13px;
+}
+.quick{
+  border:1px solid var(--border);
+  border-radius:13px;padding:17px;
+  background:#fff;display:block;
+}
+.quick:hover{border-color:#8bbda0;background:#f8fcf9}
+.quick-icon{font-size:24px;margin-bottom:11px}
+.quick strong{font-size:14px;display:block;margin-bottom:7px}
+.quick small{font-size:12px;color:var(--muted);line-height:1.5}
+.quick .go{
+  display:block;color:var(--green);
+  font-size:12px;font-weight:bold;margin-top:14px;
+}
+.footer{
+  text-align:center;padding:12px 10px 25px;
+  font-size:11px;color:#7b8780;line-height:1.7;
+}
+.notice{
+  border:1px solid #d7e7da;
+  background:#edf7ef;color:#315d43;
+  border-radius:12px;padding:15px;
+  font-size:12px;line-height:1.7;margin-top:18px;
+}
+.menu-button{
+  display:none;background:white;border:1px solid var(--border);
+  border-radius:9px;padding:9px 12px;color:var(--green);
+}
+@media(min-width:850px){
+  .stats{grid-template-columns:repeat(4,minmax(0,1fr))}
+  .stat{min-height:145px}
+  .quick-grid{grid-template-columns:repeat(4,minmax(0,1fr))}
+}
+@media(max-width:480px){
+  .hero{padding:31px 25px 32px}
+  .eyebrow{font-size:11px}
+  .brand{font-size:24px}
+  .subtitle{font-size:15px}
+  .nav{padding:16px 19px;gap:12px}
+  .nav a{padding:17px 23px;font-size:14px}
+  main{padding:32px 21px 30px}
+  .heading-row{align-items:flex-start}
+  .heading-row h1{font-size:30px}
+  .heading-row p{font-size:17px;line-height:1.5}
+  .live{padding:13px 18px}
+  .stats{gap:18px}
+  .stat{padding:23px 14px 22px 21px;min-height:132px}
+  .stat-label{font-size:14px}
+  .stat-value{font-size:26px;margin-top:21px}
+  .section{padding:25px 21px}
+  .section h2{font-size:22px}
+  .quick{padding:14px 12px}
+}
+</style>
+</head>
+
+<body>
+
+<header class="hero">
+  <div class="hero-inner">
+    <div class="eyebrow">MESS MANAGEMENT SYSTEM</div>
+    <div class="brand">
+      <span class="shield">🛡️</span>
+      <span>CRPF SMART MESS MANAGER</span>
+    </div>
+    <p class="subtitle">Connected store, meals, recipes and accounts</p>
+    <a class="add-member" href="members.html">＋ Add Member</a>
+  </div>
+</header>
+
+<nav class="nav-wrap">
+  <div class="nav">
+    <a class="active" href="index.html">Dashboard</a>
+    <a href="members.html">Members</a>
+    <a href="store.html">Ration Store</a>
+    <a href="recipes.html">Recipes</a>
+    <a href="meals.html">Meals</a>
+    <a href="accounts.html">Accounts</a>
+    <a href="reports.html">Reports</a>
+    <a href="backup.html">Backup</a>
+    <a href="settings.html">Settings</a>
+  </div>
+</nav>
+
+<main>
+  <div class="heading-row">
+    <div>
+      <h1>Dashboard</h1>
+      <p>Mess ka poora hisaab ek jagah.</p>
+    </div>
+    <span class="live">Live totals</span>
+  </div>
+
+  <section class="stats">
+    <article class="stat">
+      <div class="stat-label">Active Members</div>
+      <div class="stat-value" id="activeMembers">0</div>
+    </article>
+    <article class="stat">
+      <div class="stat-label">Payments Collected</div>
+      <div class="stat-value" id="payments">Rs 0.00</div>
+    </article>
+    <article class="stat">
+      <div class="stat-label">Mess Advance</div>
+      <div class="stat-value" id="advance">Rs 0.00</div>
+    </article>
+    <article class="stat">
+      <div class="stat-label">Meal Charges</div>
+      <div class="stat-value" id="charges">Rs 0.00</div>
+    </article>
+    <article class="stat">
+      <div class="stat-label">Ration Consumed Cost</div>
+      <div class="stat-value" id="rationCost">Rs 0.00</div>
+    </article>
+    <article class="stat">
+      <div class="stat-label">Current Stock Value</div>
+      <div class="stat-value" id="stockValue">Rs 0.00</div>
+    </article>
+    <article class="stat">
+      <div class="stat-label">Unpaid Due</div>
+      <div class="stat-value" id="due">Rs 0.00</div>
+    </article>
+    <article class="stat">
+      <div class="stat-label">Meals Recorded</div>
+      <div class="stat-value" id="mealCount">0</div>
+    </article>
+  </section>
+
+  <section class="section">
+    <h2>Member balance summary</h2>
+    <div class="table-scroll">
+      <table>
+        <thead>
+          <tr>
+            <th>Member</th>
+            <th>Charges</th>
+            <th>Advance</th>
+            <th>Payments</th>
+            <th>Due</th>
+          </tr>
+        </thead>
+        <tbody id="memberSummary">
+          <tr><td colspan="5" class="empty">Abhi koi member record nahi hai.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>Quick access</h2>
+    <p class="section-description">Apna kaam shuru karne ke liye module chunein.</p>
+    <div class="quick-grid">
+      <a class="quick" href="members.html">
+        <div class="quick-icon">👥</div>
+        <strong>Members</strong>
+        <small>Jawan details, rank, unit aur photo.</small>
+        <span class="go">Open Members →</span>
+      </a>
+      <a class="quick" href="store.html">
+        <div class="quick-icon">📦</div>
+        <strong>Ration Store</strong>
+        <small>Items, stock aur available quantity.</small>
+        <span class="go">Open Store →</span>
+      </a>
+      <a class="quick" href="purchases.html">
+        <div class="quick-icon">🛒</div>
+        <strong>Purchases</strong>
+        <small>Purchase history, edit, delete aur rates.</small>
+        <span class="go">Open Purchases →</span>
+      </a>
+      <a class="quick" href="recipes.html">
+        <div class="quick-icon">🍲</div>
+        <strong>Recipes</strong>
+        <small>Ingredients aur per-person cost.</small>
+        <span class="go">Open Recipes →</span>
+      </a>
+      <a class="quick" href="meals.html">
+        <div class="quick-icon">🍛</div>
+        <strong>Meals & Ration</strong>
+        <small>Meal planning aur ration calculation.</small>
+        <span class="go">Open Meals →</span>
+      </a>
+      <a class="quick" href="accounts.html">
+        <div class="quick-icon">💰</div>
+        <strong>Accounts</strong>
+        <small>Advance, payments aur member dues.</small>
+        <span class="go">Open Accounts →</span>
+      </a>
+      <a class="quick" href="reports.html">
+        <div class="quick-icon">📊</div>
+        <strong>Reports</strong>
+        <small>Mess ka date-wise record aur reports.</small>
+        <span class="go">Open Reports →</span>
+      </a>
+      <a class="quick" href="backup.html">
+        <div class="quick-icon">💾</div>
+        <strong>Backup & Restore</strong>
+        <small>Data ki backup copy aur restore.</small>
+        <span class="go">Open Backup →</span>
+      </a>
+      <a class="quick" href="settlement.html">
+        <div class="quick-icon">🧾</div>
+        <strong>Advance & Settlement</strong>
+        <small>Final hisaab aur advance adjustment.</small>
+        <span class="go">Open Settlement →</span>
+      </a>
+      <a class="quick" href="commander.html">
+        <div class="quick-icon">⭐</div>
+        <strong>Mess Commander</strong>
+        <small>Commander handover aur verification.</small>
+        <span class="go">Open Commander →</span>
+      </a>
+      <a class="quick" href="settings.html">
+        <div class="quick-icon">⚙️</div>
+        <strong>Settings</strong>
+        <small>Mess details aur monthly limit.</small>
+        <span class="go">Open Settings →</span>
+      </a>
+    </div>
+    <div class="notice">
+      <strong>Data safety:</strong> Yeh Dashboard browser mein saved data padhne ki koshish karta hai. Naye pages ko common data system se connect karna abhi baaki hai. Browser data apne-aap doosre mobile ya computer par nahi aata.
+    </div>
+  </section>
+</main>
+
+<footer class="footer">
+  CRPF Smart Mess Manager<br>
+  Green & White Edition
+</footer>
+
+<script>
+"use strict";
+
+const STORAGE_KEYS = [
+  "crpfMessProfessionalV1",
+  "crpfMessPrototypeV2"
+];
+
+function readData(){
+  for(const key of STORAGE_KEYS){
+    try{
+      const raw=localStorage.getItem(key);
+      if(raw){
+        const data=JSON.parse(raw);
+        if(data && typeof data==="object") return data;
+      }
+    }catch(error){
+      console.warn("Could not read saved data:",error);
+    }
+  }
+  return {};
+}
+
+function arr(value){
+  return Array.isArray(value)?value:[];
+}
+
+function number(value){
+  const n=Number(value);
+  return Number.isFinite(n)?n:0;
+}
+
+function rupees(value){
+  return "Rs "+number(value).toLocaleString("en-IN",{
+    minimumFractionDigits:2,
+    maximumFractionDigits:2
+  });
+}
+
+function show(id,value){
+  const el=document.getElementById(id);
+  if(el) el.textContent=value;
+}
+
+function getMemberId(entry){
+  return String(entry.memberId ?? entry.member_id ?? "");
+}
+
+function getAmount(entry){
+  return number(entry.amount ?? entry.total ?? entry.value);
+}
+
+function getType(entry){
+  return String(entry.type ?? entry.description ?? "").toLowerCase();
+}
+
+function calculate(){
+  const data=readData();
+  const members=arr(data.members);
+  const items=arr(data.items);
+  const recipes=arr(data.recipes);
+  const meals=arr(data.meals);
+  const ledger=arr(data.ledger);
+
+  const active=members.filter(m=>{
+    const status=String(m.status||"Active").toLowerCase();
+    return !["inactive","transferred","deleted","left"].includes(status);
+  });
+
+  let payments=0,advance=0,charges=0;
+
+  ledger.forEach(entry=>{
+    const type=getType(entry);
+    const amount=getAmount(entry);
+
+    if(type.includes("advance")){
+      advance+=amount;
+    }else if(
+      type.includes("payment") ||
+      type.includes("deposit") ||
+      type.includes("credit")
+    ){
+      payments+=amount;
+    }else if(
+      type.includes("charge") ||
+      type.includes("meal")
+    ){
+      charges+=amount;
+    }
+  });
+
+  let purchasedValue=0,purchasedQty=0,usedQty=0;
+  const usageByItem={};
+
+  meals.filter(m=>!m.cancelled).forEach(meal=>{
+    arr(meal.ration).forEach(r=>{
+      const id=String(r.itemId ?? r.item_id ?? "");
+      usageByItem[id]=(usageByItem[id]||0)+number(r.quantityBase);
+    });
+  });
+
+  items.forEach(item=>{
+    const purchases=arr(item.purchases);
+    let qty=0,value=0;
+
+    purchases.forEach(p=>{
+      qty+=number(p.quantityBase);
+      value+=number(p.total);
+    });
+
+    purchasedQty+=qty;
+    purchasedValue+=value;
+
+    const used=number(usageByItem[String(item.id)]);
+    usedQty+=used;
+
+    const average=qty>0?value/qty:0;
+    // Current stock value uses the same base-unit quantities.
+    const remaining=Math.max(0,qty-used);
+    item.__dashboardStockValue=remaining*average;
+  });
+
+  const stockValue=items.reduce(
+    (sum,item)=>sum+number(item.__dashboardStockValue),0
+  );
+
+  // Estimate ration cost from the recorded recipe ingredient costs.
+  let rationCost=0;
+  meals.filter(m=>!m.cancelled).forEach(meal=>{
+    const recipe=recipes.find(r=>String(r.id)===String(meal.recipeId));
+    if(recipe){
+      const perServing=number(recipe.costPerServing ?? recipe.cost);
+      const servings=number(meal.servings);
+      rationCost+=perServing*servings;
+    }
+  });
+
+  const mealCharges=ledger
+    .filter(e=>{
+      const t=getType(e);
+      return t.includes("charge")||t.includes("meal");
+    })
+    .reduce((sum,e)=>sum+getAmount(e),0);
+
+  // Use ledger totals when available.
+  const totalCharges=mealCharges || charges;
+  const totalDue=Math.max(0,totalCharges-payments-advance);
+
+  show("activeMembers",active.length);
+  show("payments",rupees(payments));
+  show("advance",rupees(advance));
+  show("charges",rupees(totalCharges));
+  show("rationCost",rupees(rationCost));
+  show("stockValue",rupees(stockValue));
+  show("due",rupees(totalDue));
+  show("mealCount",meals.filter(m=>!m.cancelled).length);
+
+  renderMembers(active,ledger);
+}
+
+function renderMembers(members,ledger){
+  const tbody=document.getElementById("memberSummary");
+  tbody.replaceChildren();
+
+  if(!members.length){
+    const tr=document.createElement("tr");
+    const td=document.createElement("td");
+    td.colSpan=5;
+    td.className="empty";
+    td.textContent="Abhi koi member record nahi hai.";
+    tr.appendChild(td);
+    tbody.appendChild(tr);
+    return;
+  }
+
+  members.forEach(member=>{
+    let charges=0,advance=0,payments=0;
+    const id=String(member.id ?? member.memberId ?? "");
+
+    ledger.filter(e=>getMemberId(e)===id).forEach(e=>{
+      const type=getType(e);
+      const amount=getAmount(e);
+      if(type.includes("advance")) advance+=amount;
+      else if(
+        type.includes("payment") ||
+        type.includes("deposit") ||
+        type.includes("credit")
+      ) payments+=amount;
+      else if(type.includes("charge")||type.includes("meal")) charges+=amount;
+    });
+
+    const due=Math.max(0,charges-advance-payments);
+    const tr=document.createElement("tr");
+
+    [
+      member.name || member.fullName || member.full_name || "Unnamed member",
+      rupees(charges),
+      rupees(advance),
+      rupees(payments),
+      rupees(due)
+    ].forEach(value=>{
+      const td=document.createElement("td");
+      td.textContent=value;
+      tr.appendChild(td);
+    });
+
+    tbody.appendChild(tr);
+  });
+}
+
+calculate();
+</script>
+
+</body>
+</html>

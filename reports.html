@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>CRPF Smart Mess Manager - Reports</title>
 <style>
-:root{--g:#176747;--deep:#10563e;--bg:#f2f6f3;--text:#214d3b;--muted:#78857e;--border:#dce5df;--red:#bd3942}
+:root{--g:#176747;--deep:#10563e;--bg:#f2f6f3;--text:#214d3b;--muted:#78857e;--border:#dce5df}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--text);font-family:Arial,sans-serif;font-size:14px}
 header{background:linear-gradient(120deg,#10583e,#176747);color:white;padding:20px}
@@ -30,12 +30,13 @@ button{background:var(--g);color:white;border:0;font-weight:bold;cursor:pointer}
 button.secondary{background:white;color:var(--g);border:1px solid var(--g)}
 .actions{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:10px}
 .tablewrap{overflow-x:auto}
-table{border-collapse:collapse;width:100%;min-width:680px}
-th,td{padding:11px 9px;border-bottom:1px solid var(--border);text-align:left;vertical-align:top}
+table{border-collapse:collapse;width:100%;min-width:620px}
+th,td{padding:10px 9px;border-bottom:1px solid var(--border);text-align:left;vertical-align:top}
 th{background:#edf6ef;color:var(--deep)}
 .tag{display:inline-block;background:#e6f3eb;color:var(--g);padding:4px 7px;border-radius:5px;font-size:12px}
 .muted{color:var(--muted);line-height:1.5}
 .empty{text-align:center;color:var(--muted);padding:22px}
+.ration-total{font-weight:bold;background:#edf6ef}
 @media(min-width:650px){.stats{grid-template-columns:repeat(4,minmax(0,1fr))}.filters{grid-template-columns:repeat(4,minmax(0,1fr))}}
 @media print{body{background:white;font-size:10px}nav,.no-print,footer{display:none!important}main{padding:0}.card{break-inside:avoid;border:1px solid #bbb}table{min-width:0;font-size:9px}th,td{padding:5px}}
 </style>
@@ -49,7 +50,6 @@ th{background:#edf6ef;color:var(--deep)}
 <nav class="no-print">
 <a href="index.html">Dashboard</a>
 <a href="members.html">Members</a>
-<a href="mess-staff.html">Mess staff</a>
 <a href="store.html">Store & Purchase</a>
 <a href="recipes.html">Recipes</a>
 <a href="meals.html">Meals</a>
@@ -61,7 +61,10 @@ th{background:#edf6ef;color:var(--deep)}
 
 <main>
 <div class="note">
-<strong>Important:</strong> This page reads saved browser records and does not change the original data. Store stock is calculated from purchase quantities minus recorded meal consumption. Please verify reports against the original register before using them for official settlement.
+<strong>Report instructions:</strong> Select a report and enter From Date and To Date.
+For one day's report, enter the same date in both fields. For multiple days, select the
+start and end dates. Ration totals are calculated from saved Meals records; original data
+is not changed.
 </div>
 
 <section class="stats">
@@ -80,7 +83,8 @@ th{background:#edf6ef;color:var(--deep)}
 <option value="item">Store Stock Record</option>
 <option value="purchase">Purchase Record</option>
 <option value="recipe">Recipe Record</option>
-<option value="meal">Meals & Ration Record</option>
+<option value="meal">Meals Record</option>
+<option value="ration">Daily Ration Summary</option>
 <option value="ledger">Advance & Accounts</option>
 <option value="expense">Other Expenses</option>
 <option value="handover">Commander Handover</option>
@@ -90,20 +94,22 @@ th{background:#edf6ef;color:var(--deep)}
 <input id="toDate" type="date" aria-label="To date">
 </div>
 <div class="actions">
-<button id="applyBtn">Show Report</button>
-<button class="secondary" id="resetBtn">Reset Filters</button>
+<button id="applyBtn" type="button">Show Report</button>
+<button class="secondary" id="resetBtn" type="button">Reset Filters</button>
 </div>
 </section>
 
 <section class="card">
 <h2 id="reportHeading">Complete Mess Report</h2>
-<p id="summary" class="muted">Loading...</p>
+<p id="summary" class="muted">Loading saved records...</p>
+
 <div class="stats" style="margin:12px 0">
 <div class="stat"><small>Visible Entries</small><strong id="visibleCount">0</strong></div>
-<div class="stat"><small>Visible Amount Total (Rs)</small><strong id="amountTotal">0</strong></div>
+<div class="stat"><small>Visible Amount Total (Rs)</small><strong id="amountTotal">0.00</strong></div>
 <div class="stat"><small>First Date</small><strong id="firstDate" style="font-size:14px">—</strong></div>
 <div class="stat"><small>Last Date</small><strong id="lastDate" style="font-size:14px">—</strong></div>
 </div>
+
 <div class="tablewrap">
 <table>
 <thead><tr><th>Date</th><th>Record Type</th><th>Name / Item</th><th>Details</th><th>Amount (Rs)</th></tr></thead>
@@ -111,23 +117,36 @@ th{background:#edf6ef;color:var(--deep)}
 </table>
 </div>
 <div id="empty" class="empty" hidden>No matching records found.</div>
+
 <div class="actions no-print">
-<button id="printBtn">Print / Save PDF</button>
-<button id="csvBtn">Download CSV</button>
+<button id="printBtn" type="button">Print / Save PDF</button>
+<button id="csvBtn" type="button">Download CSV</button>
 </div>
+</section>
+
+<section class="card" id="rationCard">
+<h2>Daily Ration Summary</h2>
+<p id="rationSummary" class="muted">Select dates above and press Show Report.</p>
+<div class="tablewrap">
+<table>
+<thead><tr><th>Date</th><th>Ration Item</th><th>Total Quantity</th><th>Unit</th></tr></thead>
+<tbody id="rationBody"></tbody>
+</table>
+</div>
+<div id="rationEmpty" class="empty" hidden>No ration quantities found for this date range.</div>
 </section>
 
 <section class="card">
 <h2>Financial Register Summary</h2>
-<p class="muted">These totals include recognized saved entries only. They are not a substitute for checking the original accounts.</p>
+<p class="muted">Recorded totals from saved entries. Check the original register before official settlement.</p>
 <div class="tablewrap">
 <table>
 <thead><tr><th>Register</th><th>Recorded Total (Rs)</th><th>Record Count</th></tr></thead>
 <tbody>
-<tr><td>Purchases</td><td id="purchaseTotal">0</td><td id="purchaseCount">0</td></tr>
-<tr><td>Member Payments / Deposits</td><td id="depositTotal">0</td><td id="depositCount">0</td></tr>
-<tr><td>Member Charges</td><td id="chargeTotal">0</td><td id="chargeCount">0</td></tr>
-<tr><td>Other Expenses</td><td id="expenseTotal">0</td><td id="expenseCount">0</td></tr>
+<tr><td>Purchases</td><td id="purchaseTotal">0.00</td><td id="purchaseCount">0</td></tr>
+<tr><td>Member Payments / Deposits</td><td id="depositTotal">0.00</td><td id="depositCount">0</td></tr>
+<tr><td>Member Charges</td><td id="chargeTotal">0.00</td><td id="chargeCount">0</td></tr>
+<tr><td>Other Expenses</td><td id="expenseTotal">0.00</td><td id="expenseCount">0</td></tr>
 </tbody>
 </table>
 </div>
@@ -135,10 +154,11 @@ th{background:#edf6ef;color:var(--deep)}
 
 <section class="card no-print">
 <h3>Refresh Saved Records</h3>
-<p class="muted">Refresh the report after adding a purchase, meal, payment or member record.</p>
-<button id="refreshBtn">Refresh Reports</button>
+<p class="muted">Press refresh after saving a new purchase, meal, payment or member record.</p>
+<button id="refreshBtn" type="button">Refresh Reports</button>
 </section>
 </main>
+
 <footer class="muted" style="text-align:center;padding:18px">CRPF Smart Mess Manager · Reports</footer>
 
 <script>
@@ -147,78 +167,107 @@ th{background:#edf6ef;color:var(--deep)}
 const KEYS=["crpfMessProfessionalV1","crpfMessPrototypeV2"];
 const $=id=>document.getElementById(id);
 const arr=x=>Array.isArray(x)?x:[];
-const val=(o,keys,fallback="")=>{
-  for(const k of keys)if(o&&o[k]!==undefined&&o[k]!==null&&o[k]!=="")return o[k];
-  return fallback;
-};
-const str=x=>x===null||x===undefined?"":typeof x==="object"?"":String(x);
 const num=x=>x!==""&&x!==null&&x!==undefined&&Number.isFinite(Number(x))?Number(x):0;
+const str=x=>x===null||x===undefined?"":typeof x==="object"?"":String(x);
 const money=x=>num(x).toLocaleString("en-IN",{minimumFractionDigits:2,maximumFractionDigits:2});
 
+function val(o,keys,fallback=""){
+  for(const k of keys){
+    if(o&&o[k]!==undefined&&o[k]!==null&&o[k]!=="")return o[k];
+  }
+  return fallback;
+}
 function read(key){
   try{
     const raw=localStorage.getItem(key);
-    if(!raw)return {};
+    if(!raw)return null;
     const d=JSON.parse(raw);
-    return d&&typeof d==="object"?d:{};
-  }catch(e){return {}}
+    return d&&typeof d==="object"?d:null;
+  }catch(e){return null}
 }
+
+/* Choose the main saved data set instead of blindly combining two copies.
+   This prevents the same records in both old keys appearing twice. */
 function loadData(){
-  const sources=KEYS.map(read);
-  const d={};
-  const keys=["members","items","purchases","recipes","meals","ledger","expenses","handovers"];
-  keys.forEach(k=>{
-    const seen=new Set();
-    d[k]=[];
-    sources.forEach(s=>arr(s[k]).forEach(v=>{
-      const sig=v&&v.id!==undefined?k+":"+String(v.id):k+":"+JSON.stringify(v);
-      if(!seen.has(sig)){seen.add(sig);d[k].push(v);}
-    }));
+  const sources=KEYS.map(read).filter(Boolean);
+  if(!sources.length)return {
+    members:[],items:[],purchases:[],recipes:[],meals:[],
+    ledger:[],expenses:[],handovers:[]
+  };
+
+  sources.sort((a,b)=>{
+    const score=d=>["members","items","purchases","recipes","meals","ledger","expenses","handovers"]
+      .reduce((n,k)=>n+arr(d[k]).length,0);
+    return score(b)-score(a);
   });
+
+  const d=sources[0];
+  ["members","items","purchases","recipes","meals","ledger","expenses","handovers"]
+    .forEach(k=>{if(!Array.isArray(d[k]))d[k]=[]});
   return d;
 }
+
 function dateOf(o){
   let s=str(val(o,["date","joiningDate","createdAt","confirmedAt","updatedAt","timestamp"],""));
   if(s.includes("T"))s=s.split("T")[0];
   return /^\d{4}-\d{2}-\d{2}$/.test(s)?s:"";
 }
 function baseUnit(unit){
-  if(unit==="kg"||unit==="g")return "g";
-  if(unit==="ltr"||unit==="l"||unit==="litre"||unit==="liter"||unit==="ml")return "ml";
+  unit=str(unit).toLowerCase();
+  if(["kg","g","gram","grams"].includes(unit))return "g";
+  if(["ltr","l","litre","liter","litres","liters","ml"].includes(unit))return "ml";
   return "pcs";
 }
 function toBase(qty,unit){
   qty=num(qty);
-  if(unit==="kg"||unit==="ltr"||unit==="l"||unit==="litre"||unit==="liter")return qty*1000;
+  unit=str(unit).toLowerCase();
+  if(["kg","ltr","l","litre","liter","litres","liters"].includes(unit))return qty*1000;
   return qty;
 }
-function baseQuantity(p,item){
-  // Prefer the exact base quantity used by the Store page.
-  if(p.quantityBase!==undefined&&p.quantityBase!==null&&p.quantityBase!=="")
-    return num(p.quantityBase);
-
-  // Compatibility fallback for older purchase entries.
-  const qty=val(p,["quantity","qty"],"");
-  const unit=str(val(p,["purchaseUnit","unit"],item.unit||""));
-  if(qty==="")return 0;
-  if(baseUnit(unit)!==baseUnit(item.unit||unit))return 0;
-  return toBase(qty,unit);
+function displayQty(q){
+  return num(q).toLocaleString("en-IN",{maximumFractionDigits:3});
+}
+function memberName(o){
+  return str(val(o,["memberName","fullName","name","nameOfMember","serviceId","memberId"],""));
 }
 function purchaseTotal(p){
   if(p.total!==undefined&&p.total!==null&&p.total!=="")return num(p.total);
-  const qty=num(val(p,["quantity","qty"],0));
-  const rate=num(val(p,["rate","unitRate"],0));
-  return qty*rate;
+  if(p.totalCost!==undefined&&p.totalCost!==null&&p.totalCost!=="")return num(p.totalCost);
+  return num(val(p,["quantity","qty"],0))*num(val(p,["rate","unitRate"],0));
 }
-function mealConsumption(d,item){
+function purchaseEntries(){
+  const out=[],seen=new Set();
+  data.items.forEach(i=>arr(i.purchases).forEach(p=>{
+    const sig=p.id!==undefined?"id:"+p.id:JSON.stringify([i.id,p.date,p.quantity,p.rate,p.total,p.invoice]);
+    if(seen.has(sig))return;
+    seen.add(sig);
+    out.push({p,item:i,itemName:val(i,["name","itemName"],"Purchase item")});
+  }));
+  data.purchases.forEach(p=>{
+    const sig=p.id!==undefined?"id:"+p.id:JSON.stringify([p.itemId,p.itemName,p.date,p.quantity,p.rate,p.total,p.invoice]);
+    if(seen.has(sig))return;
+    seen.add(sig);
+    const item=data.items.find(i=>String(i.id)===String(p.itemId));
+    out.push({p,item:item||{unit:val(p,["purchaseUnit","unit"],"pcs")},itemName:val(p,["itemName","name"],item?item.name:"Purchase item")});
+  });
+  return out;
+}
+function baseQuantity(p,item){
+  if(p.quantityBase!==undefined&&p.quantityBase!==null&&p.quantityBase!=="")return num(p.quantityBase);
+  const q=val(p,["quantity","qty"],"");
+  const unit=str(val(p,["purchaseUnit","unit"],item.unit||""));
+  if(q==="")return 0;
+  if(baseUnit(unit)!==baseUnit(item.unit||unit))return 0;
+  return toBase(q,unit);
+}
+function mealConsumption(item){
   let used=0;
-  arr(d.meals).forEach(m=>{
+  data.meals.forEach(m=>{
     if(m.cancelled===true||String(m.status||"").toLowerCase()==="cancelled")return;
     arr(m.ration).forEach(r=>{
       if(String(r.itemId)===String(item.id)){
-        if(r.quantityBase!==undefined&&r.quantityBase!==null&&r.quantityBase!==""){
-          used+=num(r.quantityBase);
-        }else{
+        if(r.quantityBase!==undefined&&r.quantityBase!==null&&r.quantityBase!=="")used+=num(r.quantityBase);
+        else{
           const q=val(r,["quantity","qty"],"");
           const unit=str(val(r,["unit","purchaseUnit"],item.unit||""));
           if(q!==""&&baseUnit(unit)===baseUnit(item.unit||unit))used+=toBase(q,unit);
@@ -228,147 +277,224 @@ function mealConsumption(d,item){
   });
   return used;
 }
-function storeStock(d,item){
+function storeStock(item){
   const ps=arr(item.purchases);
   const purchased=ps.reduce((s,p)=>s+baseQuantity(p,item),0);
-  const purchaseValue=ps.reduce((s,p)=>s+purchaseTotal(p),0);
-  const average=purchased>0?purchaseValue/purchased:0;
-  const used=mealConsumption(d,item);
-  const stock=Math.max(0,purchased-used);
-  return {purchased,purchaseValue,average,used,stock,value:stock*average,unit:baseUnit(item.unit||"pcs")};
+  const value=ps.reduce((s,p)=>s+purchaseTotal(p),0);
+  const avg=purchased>0?value/purchased:0;
+  const stock=Math.max(0,purchased-mealConsumption(item));
+  return {stock,avg,value:stock*avg,unit:baseUnit(item.unit||"pcs")};
 }
-function memberName(o){
-  return str(val(o,["memberName","fullName","name","nameOfMember","serviceId","memberId"],""));
-}
-let data={},records=[],visible=[];
+
+let data={},records=[],visible=[],rationRows=[];
 
 function add(type,label,o,details,amount){
-  o=o||{};
-  records.push({date:dateOf(o),type,label:str(label)||type,details:str(details),
-    amount:amount===null||amount===undefined||amount===""?"":num(amount)});
+  records.push({
+    date:dateOf(o),type,label:str(label)||type,details:str(details),
+    amount:amount===null||amount===undefined||amount===""?"":num(amount)
+  });
 }
-function collect(){
-  data=loadData();records=[];
 
-  arr(data.members).forEach(m=>{
+function collect(){
+  data=loadData();
+  records=[];
+
+  data.members.forEach(m=>{
     add("member",memberName(m)||"Member",m,
       [val(m,["serviceId","memberId"]),val(m,["rank"]),val(m,["duty"]),val(m,["status"])]
       .filter(Boolean).join(" · "),"");
   });
 
-  arr(data.items).forEach(i=>{
-    const s=storeStock(data,i);
+  data.items.forEach(i=>{
+    const s=storeStock(i);
     add("item",val(i,["name","itemName"],"Store item"),i,
-      "Current Stock: "+s.stock.toLocaleString("en-IN",{maximumFractionDigits:3})+
-      " "+s.unit+" · Average Rate: Rs "+s.average.toFixed(4)+"/"+s.unit+
+      "Current Stock: "+displayQty(s.stock)+" "+s.unit+
+      " · Average Rate: Rs "+s.avg.toFixed(4)+"/"+s.unit+
       " · Stock Value: Rs "+money(s.value),s.value);
-
-    // Purchase details are included in the Purchase Register below.
   });
 
-  // Collect top-level purchases. Nested item purchases are included too,
-  // unless the same purchase ID already exists.
-  const purchaseEntries=[];
-  const seenPurchases=new Set();
-  arr(data.items).forEach(i=>arr(i.purchases).forEach(p=>{
-    const id=p.id!==undefined?String(p.id):JSON.stringify([i.id,p.date,p.quantity,p.rate,p.total,p.invoice]);
-    if(!seenPurchases.has(id)){
-      seenPurchases.add(id);
-      purchaseEntries.push({p,itemName:val(i,["name","itemName"],"Purchase item"),item:i});
-    }
-  }));
-  arr(data.purchases).forEach(p=>{
-    const id=p.id!==undefined?String(p.id):JSON.stringify([p.itemId,p.itemName,p.date,p.quantity,p.rate,p.total,p.invoice]);
-    if(!seenPurchases.has(id)){
-      seenPurchases.add(id);
-      const item=arr(data.items).find(i=>String(i.id)===String(p.itemId));
-      purchaseEntries.push({p,itemName:val(p,["itemName","name"],item?item.name:"Purchase item"),item:item||{unit:val(p,["purchaseUnit","unit"],"pcs")}});
-    }
-  });
-  purchaseEntries.forEach(({p,itemName,item})=>{
+  purchaseEntries().forEach(({p,itemName,item})=>{
     const q=val(p,["quantity","qty"],"");
     const unit=val(p,["purchaseUnit","unit"],item.unit||"");
     add("purchase",itemName,p,
       "Quantity: "+str(q)+" "+str(unit)+
-      " · Rate: Rs "+money(val(p,["rate"],0))+
+      " · Rate: Rs "+money(val(p,["rate","unitRate"],0))+
       (p.supplier?" · Supplier: "+str(p.supplier):"")+
       (p.invoice?" · Bill: "+str(p.invoice):""),
       purchaseTotal(p));
   });
 
-  arr(data.recipes).forEach(r=>{
+  data.recipes.forEach(r=>{
     add("recipe",val(r,["name","recipeName"],"Recipe"),r,
       "Ingredients: "+arr(r.ingredients).length,"");
   });
-  arr(data.meals).forEach(m=>{
+
+  data.meals.forEach(m=>{
+    const rationCount=arr(m.ration).length;
     add("meal",val(m,["recipeName","type"],"Meal"),m,
       "Meal: "+str(val(m,["type"],""))+
       " · Servings: "+str(val(m,["servings"],""))+
-      " · Members: "+arr(val(m,["attendance","members"],[])).length+
+      " · Ration items: "+rationCount+
       " · Status: "+str(val(m,["status"],"")),
-      val(m,["totalCost","amount"],""));
+      val(m,["totalCost","cost","amount"],""));
   });
-  arr(data.ledger).forEach(l=>{
+
+  data.ledger.forEach(l=>{
     add("ledger",memberName(l)||val(l,["description","transactionType","type"],"Account entry"),l,
       str(val(l,["description","transactionType","type"],"Account entry")),
       val(l,["amount","total"],""));
   });
-  arr(data.expenses).forEach(e=>{
+
+  data.expenses.forEach(e=>{
     add("expense",val(e,["name","title","description"],"Other expense"),e,
       str(val(e,["category","notes"],"")),
       val(e,["amount","total"],""));
   });
-  arr(data.handovers).forEach(h=>{
+
+  data.handovers.forEach(h=>{
     add("handover",val(h,["commanderName","name","title"],"Commander handover"),h,
       str(val(h,["notes","remarks","fromCommander"],"Handover record")),
       val(h,["amount","cash","cashAmount"],""));
   });
 
-  $("memberCount").textContent=arr(data.members).length;
-  $("itemCount").textContent=arr(data.items).length;
-  $("mealCount").textContent=arr(data.meals).length;
-  $("ledgerCount").textContent=arr(data.ledger).length;
-  financialSummary(purchaseEntries);
+  $("memberCount").textContent=data.members.length;
+  $("itemCount").textContent=data.items.length;
+  $("mealCount").textContent=data.meals.length;
+  $("ledgerCount").textContent=data.ledger.length;
+
+  financialSummary();
   render();
 }
-function financialSummary(purchaseEntries){
-  $("purchaseTotal").textContent=money(purchaseEntries.reduce((s,x)=>s+purchaseTotal(x.p),0));
-  $("purchaseCount").textContent=purchaseEntries.length;
 
-  const deposits=arr(data.ledger).filter(l=>{
+function financialSummary(){
+  const ps=purchaseEntries();
+  $("purchaseTotal").textContent=money(ps.reduce((s,x)=>s+purchaseTotal(x.p),0));
+  $("purchaseCount").textContent=ps.length;
+
+  const deposits=data.ledger.filter(l=>{
     const t=str(val(l,["transactionType","type"],"")).toLowerCase();
     return t==="deposit"||t==="payment"||t==="advance";
   });
-  const charges=arr(data.ledger).filter(l=>{
+  const charges=data.ledger.filter(l=>{
     const t=str(val(l,["transactionType","type"],"")).toLowerCase();
     return t.includes("charge")||t==="meal";
   });
+
   $("depositTotal").textContent=money(deposits.reduce((s,x)=>s+num(val(x,["amount","total"],0)),0));
   $("depositCount").textContent=deposits.length;
   $("chargeTotal").textContent=money(charges.reduce((s,x)=>s+num(val(x,["amount","total"],0)),0));
   $("chargeCount").textContent=charges.length;
-  $("expenseTotal").textContent=money(arr(data.expenses).reduce((s,x)=>s+num(val(x,["amount","total"],0)),0));
-  $("expenseCount").textContent=arr(data.expenses).length;
+  $("expenseTotal").textContent=money(data.expenses.reduce((s,x)=>s+num(val(x,["amount","total"],0)),0));
+  $("expenseCount").textContent=data.expenses.length;
 }
+
+function selectedRange(){
+  return {from:$("fromDate").value,to:$("toDate").value};
+}
+function withinDate(date,from,to){
+  if(from&&(!date||date<from))return false;
+  if(to&&(!date||date>to))return false;
+  return true;
+}
+function rationName(r){
+  const item=data.items.find(i=>String(i.id)===String(r.itemId));
+  return str(val(r,["itemName","name"],item?val(item,["name","itemName"],"Ration item"):"Ration item"));
+}
+function rationQuantity(r){
+  if(r.quantityBase!==undefined&&r.quantityBase!==null&&r.quantityBase!==""){
+    const item=data.items.find(i=>String(i.id)===String(r.itemId));
+    return {qty:num(r.quantityBase),unit:baseUnit(item?item.unit:val(r,["unit"],"pcs"))};
+  }
+  const q=val(r,["quantity","qty","requiredQuantity"],"");
+  const unit=str(val(r,["unit","purchaseUnit"],"pcs"));
+  if(q==="")return {qty:0,unit:baseUnit(unit)};
+  return {qty:toBase(q,unit),unit:baseUnit(unit)};
+}
+function buildRation(){
+  const {from,to}=selectedRange();
+  const q=$("search").value.trim().toLowerCase();
+  const perDay=new Map();
+  const totals=new Map();
+
+  data.meals.forEach(m=>{
+    const date=dateOf(m);
+    if(!withinDate(date,from,to))return;
+    if(m.cancelled===true||String(m.status||"").toLowerCase()==="cancelled")return;
+
+    arr(m.ration).forEach(r=>{
+      const name=rationName(r);
+      if(q&&!name.toLowerCase().includes(q))return;
+      const info=rationQuantity(r);
+      if(!info.qty)return;
+
+      const key=name+"|"+info.unit;
+      const dayKey=date+"|"+key;
+
+      if(!perDay.has(dayKey))perDay.set(dayKey,{date,name,unit:info.unit,qty:0});
+      perDay.get(dayKey).qty+=info.qty;
+
+      if(!totals.has(key))totals.set(key,{name,unit:info.unit,qty:0});
+      totals.get(key).qty+=info.qty;
+    });
+  });
+
+  const rows=Array.from(perDay.values()).sort((a,b)=>a.date.localeCompare(b.date)||a.name.localeCompare(b.name));
+  const totalRows=Array.from(totals.values()).sort((a,b)=>a.name.localeCompare(b.name));
+  rationRows=rows;
+
+  const body=$("rationBody");
+  body.replaceChildren();
+
+  rows.forEach(r=>{
+    const tr=document.createElement("tr");
+    [r.date,r.name,displayQty(r.qty),r.unit].forEach(v=>{
+      const td=document.createElement("td");td.textContent=v;tr.appendChild(td);
+    });
+    body.appendChild(tr);
+  });
+
+  if(totalRows.length){
+    const tr=document.createElement("tr");tr.className="ration-total";
+    const td1=document.createElement("td");td1.colSpan=2;td1.textContent="DATE RANGE TOTAL";
+    tr.appendChild(td1);
+    const td2=document.createElement("td");
+    td2.textContent=totalRows.map(r=>r.name+": "+displayQty(r.qty)+" "+r.unit).join(" | ");
+    tr.appendChild(td2);
+    const td3=document.createElement("td");td3.textContent="All items";
+    tr.appendChild(td3);body.appendChild(tr);
+  }
+
+  $("rationEmpty").hidden=rows.length!==0;
+  const period=from||to?(from||"Beginning")+" to "+(to||"Latest"):"All saved dates";
+  $("rationSummary").textContent=period+" · "+rows.length+" daily item entries · "+totalRows.length+" different ration items. Date-wise quantities and range totals are shown above.";
+}
+
 function render(){
   const q=$("search").value.trim().toLowerCase();
-  const type=$("reportType").value,from=$("fromDate").value,to=$("toDate").value;
-  const headings={all:"Complete Mess Report",member:"Members Record",item:"Store Stock Record",
-    purchase:"Purchase Record",recipe:"Recipe Record",meal:"Meals & Ration Record",
-    ledger:"Advance & Accounts Record",expense:"Other Expenses Record",handover:"Commander Handover Record"};
+  const type=$("reportType").value;
+  const {from,to}=selectedRange();
+
+  const headings={
+    all:"Complete Mess Report",member:"Members Record",item:"Store Stock Record",
+    purchase:"Purchase Record",recipe:"Recipe Record",meal:"Meals Record",
+    ration:"Daily Ration Summary",ledger:"Advance & Accounts Record",
+    expense:"Other Expenses Record",handover:"Commander Handover Record"
+  };
 
   visible=records.filter(r=>{
-    if(type!=="all"&&r.type!==type)return false;
-    if(from&&(!r.date||r.date<from))return false;
-    if(to&&(!r.date||r.date>to))return false;
+    if(type!=="all"&&type!=="ration"&&r.type!==type)return false;
+    if(type==="ration")return false;
+    if(!withinDate(r.date,from,to))return false;
     return !q||[r.date,r.type,r.label,r.details,r.amount].join(" ").toLowerCase().includes(q);
-  }).sort((a,b)=>b.date.localeCompare(a.date));
+  }).sort((a,b)=>b.date.localeCompare(a.date)||a.type.localeCompare(b.type)||a.label.localeCompare(b.label));
 
   $("reportHeading").textContent=headings[type]||"Mess Report";
-  $("summary").textContent="Showing "+visible.length+" of "+records.length+
-    " saved entries. Store stock quantities are calculated from purchase and meal records.";
+  $("summary").textContent="Showing "+visible.length+" matching entries from "+records.length+
+    " saved entries. The ration table below shows daily quantities and the total for the selected date range.";
+
   $("visibleCount").textContent=visible.length;
   $("amountTotal").textContent=money(visible.reduce((s,r)=>s+num(r.amount),0));
+
   const dates=visible.map(r=>r.date).filter(Boolean).sort();
   $("firstDate").textContent=dates[0]||"—";
   $("lastDate").textContent=dates[dates.length-1]||"—";
@@ -378,39 +504,52 @@ function render(){
     const tr=document.createElement("tr");
     [r.date||"—",r.type,r.label,r.details||"—",r.amount===""?"—":money(r.amount)].forEach((v,i)=>{
       const td=document.createElement("td");
-      if(i===1){const tag=document.createElement("span");tag.className="tag";tag.textContent=v;td.appendChild(tag);}
-      else td.textContent=v;
+      if(i===1){
+        const tag=document.createElement("span");tag.className="tag";tag.textContent=v;td.appendChild(tag);
+      }else td.textContent=v;
       tr.appendChild(td);
     });
     body.appendChild(tr);
   });
   $("empty").hidden=visible.length!==0;
+
+  $("rationCard").style.display=(type==="all"||type==="ration"||type==="meal")?"block":"block";
+  buildRation();
 }
+
 function csvEscape(v){
   let s=String(v??"");
   if(/^[=+\-@]/.test(s))s="'"+s;
   return '"'+s.replace(/"/g,'""')+'"';
 }
+
+/* One handler per button. Typing/changing a filter updates the report once. */
 $("applyBtn").addEventListener("click",render);
-["reportType","search","fromDate","toDate"].forEach(id=>{
-  $(id).addEventListener("input",render);
-  $(id).addEventListener("change",render);
-});
 $("resetBtn").addEventListener("click",()=>{
-  $("reportType").value="all";$("search").value="";
-  $("fromDate").value="";$("toDate").value="";render();
+  $("reportType").value="all";
+  $("search").value="";
+  $("fromDate").value="";
+  $("toDate").value="";
+  render();
+});
+["reportType","search","fromDate","toDate"].forEach(id=>{
+  $(id).addEventListener("change",render);
 });
 $("printBtn").addEventListener("click",()=>window.print());
 $("csvBtn").addEventListener("click",()=>{
   const rows=[["Date","Record Type","Name / Item","Details","Amount (Rs)"]];
   visible.forEach(r=>rows.push([r.date,r.type,r.label,r.details,r.amount]));
+  const {from,to}=selectedRange();
   const blob=new Blob(["\uFEFF"+rows.map(r=>r.map(csvEscape).join(",")).join("\r\n")],{type:"text/csv;charset=utf-8"});
   const url=URL.createObjectURL(blob),a=document.createElement("a");
-  a.href=url;a.download="CRPF-Mess-Report-"+new Date().toISOString().slice(0,10)+".csv";
+  a.href=url;
+  a.download="CRPF-Mess-Report-"+(from||"start")+"-to-"+(to||"latest")+".csv";
   document.body.appendChild(a);a.click();a.remove();
   setTimeout(()=>URL.revokeObjectURL(url),1000);
 });
 $("refreshBtn").addEventListener("click",collect);
+
+/* Load the saved data once on opening the page. */
 collect();
 </script>
 </body>

@@ -1,513 +1,471 @@
 
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>CRPF Smart Mess - Accounts</title>
+<title>CRPF Smart Mess Manager - Accounts</title>
 <style>
-:root{--g:#176747;--deep:#10563e;--bg:#f2f6f3;--white:#fff;--text:#214d3b;--muted:#78857e;--border:#dce5df;--red:#bd3942;--light:#e6f2eb;--wa:#16865b}
+:root{--g:#176747;--deep:#10563e;--bg:#f2f6f3;--white:#fff;--text:#214d3b;--muted:#78857e;--border:#dce5df;--red:#bd3942;--orange:#a96810}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);font-family:Arial,sans-serif;color:var(--text)}
-header{background:var(--g);color:white;padding:18px 15px}
-header h2{margin:0 0 6px;font-size:22px}
-header p{margin:0;font-size:13px}
-nav{display:flex;gap:7px;overflow-x:auto;background:white;padding:10px;border-bottom:1px solid var(--border)}
-nav a{white-space:nowrap;text-decoration:none;color:var(--g);padding:9px 12px;border:1px solid var(--border);border-radius:8px;font-size:13px;font-weight:bold}
-nav a.active{background:var(--g);color:white}
-main{max-width:1150px;margin:auto;padding:14px}
-.card,.stat{background:white;border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:13px}
-.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
-.stat small{display:block;color:var(--muted);font-size:12px;margin-bottom:8px}
-.stat strong{font-size:19px;overflow-wrap:anywhere}
-h3{margin:0 0 13px;font-size:17px}
-input,select,textarea{width:100%;padding:11px;border:1px solid #cbd8cf;border-radius:8px;font-size:14px;background:white;color:var(--text)}
-button{border:0;border-radius:8px;padding:10px 12px;background:var(--g);color:white;font-weight:bold;font-size:13px;cursor:pointer}
-button.secondary{background:var(--light);color:var(--g);border:1px solid var(--border)}
-button.danger{background:#fff0f0;color:var(--red);border:1px solid #f0cccc}
-button.whatsapp{background:var(--wa)}
-button:disabled{opacity:.5;cursor:not-allowed}
-.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
-.field{margin-bottom:12px}
-label{display:block;font-size:13px;font-weight:bold;margin-bottom:6px}
-.small{font-size:12px;color:var(--muted)}
-.toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
-.toolbar input{flex:1;min-width:170px}
-.table-wrap{overflow-x:auto}
-table{width:100%;border-collapse:collapse;min-width:700px}
-th,td{text-align:left;padding:10px 8px;border-bottom:1px solid var(--border);font-size:13px;vertical-align:middle}
-th{background:#f5f9f6;color:var(--g)}
-.actions{display:flex;gap:5px;flex-wrap:wrap}
-.actions button{padding:7px 9px}
-.badge{display:inline-block;background:var(--light);color:var(--g);padding:5px 8px;border-radius:20px;font-size:11px}
-.badge.due{background:#fff0f0;color:var(--red)}
-.badge.paid{background:#d8f2e3;color:#176747}
-.badge.partial{background:#fff4d8;color:#815d08}
-.empty{text-align:center;padding:25px;color:var(--muted)}
-.hidden{display:none!important}
-.summary{background:var(--light);border-radius:9px;padding:12px;margin:12px 0}
-.line{display:flex;justify-content:space-between;gap:12px;padding:7px 0;font-size:13px}
-.line.total{border-top:1px solid #c6ded0;font-weight:bold;font-size:16px;margin-top:5px;padding-top:12px}
-.dialog{border:0;border-radius:14px;width:min(700px,95vw);max-height:90vh;padding:0;box-shadow:0 10px 50px #0003}
-.dialog::backdrop{background:#10291dcc}
-.modal-head{padding:15px;background:var(--g);color:white;display:flex;align-items:center;justify-content:space-between}
-.modal-head h3{margin:0}
-.modal-body{padding:15px;overflow:auto}
-.modal-foot{display:flex;gap:8px;justify-content:flex-end;padding:12px 15px;border-top:1px solid var(--border)}
-.member-top{display:flex;gap:14px;align-items:center;margin-bottom:15px}
-.avatar{width:76px;height:76px;flex-shrink:0;object-fit:cover;border-radius:12px;background:var(--light)}
-.detail-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
-.detail{padding:10px;background:#f6f9f7;border-radius:8px;overflow-wrap:anywhere}
-.detail small{display:block;color:var(--muted);font-size:11px;margin-bottom:5px}
-.detail b{font-size:14px}
-@media(max-width:650px){
- main{padding:9px}.stats{grid-template-columns:repeat(2,minmax(0,1fr))}
- .stat{padding:11px}.grid,.detail-grid{grid-template-columns:1fr}
- .member-top{align-items:flex-start}
+header{background:var(--deep);color:white;padding:18px 15px}
+header h2{margin:0 0 5px;font-size:21px}
+header p{margin:0;font-size:13px;opacity:.9}
+nav{display:flex;gap:8px;overflow-x:auto;background:var(--g);padding:10px}
+nav a{color:white;text-decoration:none;white-space:nowrap;padding:8px 12px;border-radius:7px;font-size:13px}
+nav a.active,nav a:hover{background:white;color:var(--g)}
+main{max-width:1100px;margin:auto;padding:14px}
+h3{margin:0 0 13px}
+.card{background:white;border:1px solid var(--border);border-radius:12px;padding:15px;margin-bottom:14px;box-shadow:0 2px 7px #163c2710}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-bottom:14px}
+.stat{background:white;border:1px solid var(--border);border-radius:11px;padding:13px}
+.stat small{display:block;color:var(--muted);margin-bottom:8px}
+.stat strong{font-size:20px;overflow-wrap:anywhere}
+label{display:block;font-size:13px;font-weight:bold;margin:9px 0 5px}
+input,select,textarea{width:100%;padding:11px;border:1px solid var(--border);border-radius:8px;background:white;color:var(--text);font-size:15px}
+button,.btn{border:0;border-radius:8px;padding:10px 13px;background:var(--g);color:white;font-size:14px;cursor:pointer;text-decoration:none;display:inline-block}
+button.secondary,.btn.secondary{background:#e8f0eb;color:var(--g)}
+button.danger{background:var(--red)}
+button.orange{background:var(--orange)}
+button:disabled{opacity:.45}
+.actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.muted{color:var(--muted);font-size:13px}
+.tablewrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th,td{padding:10px 8px;border-bottom:1px solid var(--border);text-align:left;vertical-align:top}
+th{background:#f1f6f2;white-space:nowrap}
+td button{margin:2px;padding:7px 9px}
+.pill{display:inline-block;padding:4px 8px;border-radius:20px;background:#e4f3e9;color:var(--g);font-size:12px}
+.pill.due{background:#ffeded;color:var(--red)}
+.billhead{text-align:center;border-bottom:2px solid var(--g);padding-bottom:12px;margin-bottom:14px}
+.billhead h2{margin:0 0 5px}
+.billtotal{background:#edf6ef;padding:13px;border-radius:8px;margin-top:12px}
+.billtotal p{display:flex;justify-content:space-between;gap:10px;margin:7px 0}
+.empty{text-align:center;color:var(--muted);padding:20px}
+hr{border:0;border-top:1px solid var(--border);margin:14px 0}
+@media(min-width:700px){.stats{grid-template-columns:repeat(4,minmax(0,1fr))}.grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+@media print{
+  body{background:white;color:#111}
+  header,nav,.no-print,.stats,.screen-only{display:none!important}
+  main{padding:0;max-width:none}
+  #billPanel{display:block!important;border:0;box-shadow:none;padding:0}
+  .card{box-shadow:none;border:0}
+  #billPanel table th{background:#eee!important}
 }
 </style>
 </head>
 <body>
 <header>
-  <h2>💳 CRPF Smart Mess</h2>
-  <p>Jawan Accounts · Payments · Balance Due · WhatsApp Reminder</p>
+  <h2>CRPF Smart Mess Manager</h2>
+  <p>Jawan Accounts · Payments · Monthly Bill</p>
 </header>
 
-<nav>
+<nav class="no-print">
   <a href="index.html">Dashboard</a>
   <a href="members.html">Members</a>
-  <a href="store.html">Store & Purchase</a>
+  <a href="store.html">Store</a>
   <a href="recipes.html">Recipes</a>
   <a href="meals.html">Meals</a>
-  <a class="active" href="accounts.html">Accounts</a>
+  <a href="accounts.html" class="active">Accounts</a>
   <a href="settlement.html">Settlement</a>
-  <a href="commander.html">Commander</a>
-  <a href="reports.html">Reports</a>
-  <a href="backup.html">Backup</a>
 </nav>
 
 <main>
-  <div class="stats">
-    <div class="stat"><small>Active Jawans</small><strong id="memberCount">0</strong></div>
-    <div class="stat"><small>Total Meal Charges</small><strong id="chargeTotal">Rs 0.00</strong></div>
-    <div class="stat"><small>Total Payments</small><strong id="paymentTotal">Rs 0.00</strong></div>
-    <div class="stat"><small>Total Outstanding</small><strong id="dueTotal">Rs 0.00</strong></div>
-  </div>
+  <div id="notice" class="muted no-print" style="margin:4px 0 12px"></div>
 
-  <section class="card">
-    <h3>Jawan Account Register</h3>
-    <div class="toolbar">
-      <input id="search" placeholder="🔎 Search name, service ID or rank">
-      <select id="filter" style="max-width:170px">
-        <option value="all">All Members</option>
-        <option value="due">Only Due</option>
-        <option value="paid">Paid / No Due</option>
-      </select>
+  <section class="stats">
+    <div class="stat"><small>Active Members</small><strong id="sMembers">0</strong></div>
+    <div class="stat"><small>Total Meal Charges</small><strong id="sCharges">Rs 0</strong></div>
+    <div class="stat"><small>Total Payments</small><strong id="sPaid">Rs 0</strong></div>
+    <div class="stat"><small>Total Outstanding Due</small><strong id="sDue">Rs 0</strong></div>
+  </section>
+
+  <section class="card no-print">
+    <h3>Find Jawan Account</h3>
+    <div class="grid">
+      <div>
+        <label>Search by name or Service ID</label>
+        <input id="search" placeholder="Name / Service ID" oninput="renderMembers()">
+      </div>
+      <div>
+        <label>Select Jawan</label>
+        <select id="memberSelect" onchange="selectMember()">
+          <option value="">-- Select Jawan --</option>
+        </select>
+      </div>
+      <div>
+        <label>Bill Month</label>
+        <input id="billMonth" type="month" onchange="makeBill()">
+      </div>
     </div>
-    <div class="table-wrap">
+    <div class="actions">
+      <button onclick="showBill()">View Monthly Bill</button>
+      <button class="secondary" onclick="printBill()">Print / Save PDF</button>
+      <button class="secondary" onclick="shareBill()">Share Bill on WhatsApp</button>
+    </div>
+    <p class="muted">Pehle jawan aur mahina select karein. Bill mein sirf usi mahine ka hisab aayega.</p>
+  </section>
+
+  <section class="card no-print">
+    <h3>Member Balances</h3>
+    <div class="tablewrap">
       <table>
-        <thead>
-          <tr><th>Jawan</th><th>Meal Charges</th><th>Paid</th><th>Balance Due</th><th>Status</th><th>Actions</th></tr>
-        </thead>
-        <tbody id="accountRows"></tbody>
+        <thead><tr>
+          <th>Service ID / Name</th><th>Rank</th><th>Monthly Limit</th>
+          <th>Charges</th><th>Paid</th><th>Due</th><th>Action</th>
+        </tr></thead>
+        <tbody id="memberRows"></tbody>
       </table>
     </div>
-    <div id="empty" class="empty hidden">No matching members found. Add jawans in Members first.</div>
-    <p class="small">Account details Members aur confirmed Meals se calculate hote hain. Payment record karne par paid amount history mein save hota hai.</p>
+  </section>
+
+  <section class="card no-print" id="paymentPanel">
+    <h3>Receive Payment</h3>
+    <p class="muted">Jab asal mein paisa mile tabhi payment entry karein. Partial payment bhi daal sakte hain.</p>
+    <form id="paymentForm">
+      <div class="grid">
+        <div><label>Jawan</label><select id="payMember" required></select></div>
+        <div><label>Payment Date</label><input id="payDate" type="date" required></div>
+        <div><label>Amount Received (Rs)</label><input id="payAmount" type="number" min="0.01" step="0.01" required placeholder="Actual amount"></div>
+        <div><label>Payment Method</label>
+          <select id="payMode"><option>Cash</option><option>Bank</option><option>Online</option><option>Other</option></select>
+        </div>
+        <div><label>Receipt / Reference (optional)</label><input id="payRef" placeholder="Receipt number"></div>
+        <div><label>Remarks (optional)</label><input id="payNote" placeholder="Payment details"></div>
+      </div>
+      <div class="actions"><button type="submit">Save Payment</button></div>
+    </form>
+  </section>
+
+  <section class="card no-print" id="ledgerPanel">
+    <h3>Account Transaction History</h3>
+    <div class="grid">
+      <div><label>Filter Jawan</label><select id="ledgerMember" onchange="renderLedger()"></select></div>
+      <div><label>Filter Month</label><input id="ledgerMonth" type="month" onchange="renderLedger()"></div>
+    </div>
+    <div class="tablewrap" style="margin-top:12px">
+      <table><thead><tr><th>Date</th><th>Jawan</th><th>Details</th><th>Type</th><th>Amount</th></tr></thead>
+      <tbody id="ledgerRows"></tbody></table>
+    </div>
+  </section>
+
+  <section class="card" id="billPanel">
+    <div class="billhead">
+      <h2>MESS MONTHLY BILL</h2>
+      <div>CRPF Smart Mess Manager</div>
+      <p class="muted">Member meal charges and payment statement</p>
+    </div>
+    <div id="billContent" class="empty">Jawan aur mahina select karke “View Monthly Bill” dabayein.</div>
   </section>
 </main>
 
-<!-- MEMBER ACCOUNT VIEW -->
-<dialog id="viewDialog" class="dialog">
-  <div class="modal-head">
-    <h3>Member Account & Details</h3>
-    <button class="secondary" onclick="closeDialog('viewDialog')">✕</button>
-  </div>
-  <div class="modal-body" id="viewBody"></div>
-  <div class="modal-foot">
-    <button class="secondary" onclick="closeDialog('viewDialog')">Close</button>
-  </div>
-</dialog>
-
-<!-- PAYMENT ENTRY -->
-<dialog id="paymentDialog" class="dialog">
-  <div class="modal-head">
-    <h3 id="paymentTitle">Record Payment</h3>
-    <button class="secondary" onclick="closeDialog('paymentDialog')">✕</button>
-  </div>
-  <form id="paymentForm">
-    <div class="modal-body">
-      <input type="hidden" id="paymentMemberId">
-      <div class="summary">
-        <div class="line"><span>Member</span><b id="paymentMemberName">—</b></div>
-        <div class="line"><span>Outstanding Due</span><b id="paymentDue">Rs 0.00</b></div>
-      </div>
-      <div class="field">
-        <label for="paymentAmount">Amount Received (Rs) *</label>
-        <input id="paymentAmount" type="number" min="0.01" step="0.01" required>
-      </div>
-      <div class="grid">
-        <div class="field">
-          <label for="paymentDate">Payment Date</label>
-          <input id="paymentDate" type="date" required>
-        </div>
-        <div class="field">
-          <label for="paymentMode">Payment Method</label>
-          <select id="paymentMode">
-            <option>Cash</option><option>Bank Transfer</option>
-            <option>Digital Payment</option><option>Other</option>
-          </select>
-        </div>
-      </div>
-      <div class="field">
-        <label for="paymentNote">Note (optional)</label>
-        <input id="paymentNote" maxlength="150" placeholder="Receipt number or note">
-      </div>
-      <p class="small">Full due milne par PAID dabayein. Partial payment ho to sirf actual received amount likhein.</p>
-    </div>
-    <div class="modal-foot">
-      <button type="button" class="secondary" onclick="closeDialog('paymentDialog')">Cancel</button>
-      <button type="submit">Save Payment</button>
-    </div>
-  </form>
-</dialog>
-
 <script>
-"use strict";
+(function(){
+'use strict';
+const KEYS=['crpfMessProfessionalV1','crpfMessPrototypeV2','crpfMessGreenV1','crpfSmartMessManagerSimpleV1'];
+let KEY='';
+let data={members:[],items:[],recipes:[],meals:[],ledger:[],expenses:[],settings:{}};
 
-const KEYS=["crpfMessProfessionalV1","crpfMessPrototypeV2"];
-let storageKey=KEYS[0];
-let data={};
-let paymentEditId=null;
-
-const $=id=>document.getElementById(id);
-
-function today(){
-  const d=new Date();
-  return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+function parseStore(k){
+  try{
+    const d=JSON.parse(localStorage.getItem(k)||'null');
+    if(d && typeof d==='object') return d;
+  }catch(e){}
+  return null;
 }
-function makeId(){
-  return "p"+Date.now().toString(36)+Math.random().toString(36).slice(2,7);
+function score(d){
+  if(!d)return -1;
+  let n=0;
+  ['members','items','recipes','meals','ledger','finance','expenses'].forEach(k=>{
+    if(Array.isArray(d[k])) n+=d[k].length?10:1;
+  });
+  return n;
 }
-function esc(v){
-  return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-}
-function money(v){return "Rs "+(Number(v)||0).toFixed(2)}
-
-function loadData(){
-  storageKey=KEYS.find(k=>localStorage.getItem(k))||KEYS[0];
-  try{data=JSON.parse(localStorage.getItem(storageKey)||"{}")}catch(e){data={}}
-  if(!data||typeof data!=="object"||Array.isArray(data))data={};
-  ["members","meals","ledger","items","recipes"].forEach(k=>{
+function load(){
+  let best=null,bestScore=-1;
+  KEYS.forEach(k=>{
+    const d=parseStore(k);
+    if(d && score(d)>bestScore){best=d;bestScore=score(d);KEY=k;}
+  });
+  if(!best){KEY=KEYS[0];best={};}
+  data=best;
+  ['members','items','recipes','meals','ledger','expenses','finance','handovers','limitHistory'].forEach(k=>{
     if(!Array.isArray(data[k]))data[k]=[];
   });
+  if(!data.settings || typeof data.settings!=='object')data.settings={};
 }
-function saveData(){
+function save(){
   try{
-    localStorage.setItem(storageKey,JSON.stringify(data));
+    localStorage.setItem(KEY,JSON.stringify(data));
+    document.getElementById('notice').textContent='Saved in this browser ('+KEY+').';
     return true;
   }catch(e){
-    alert("Data save nahi hua. Browser storage full ho sakta hai.");
+    alert('Save nahi ho paya. Browser storage full ho sakta hai. Pehle backup karein.');
     return false;
   }
 }
-
-function memberKey(m){
-  return String(m.id??m.memberId??m.serviceId??m.fullName??m.name??"");
+function id(){return 'acc_'+Date.now().toString(36)+'_'+Math.random().toString(36).slice(2,7);}
+function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+function money(n){return 'Rs '+(Number(n)||0).toLocaleString('en-IN',{minimumFractionDigits:2,maximumFractionDigits:2});}
+function amount(x){return Number(x?.amount??x?.total??x?.cost??0)||0;}
+function dateNow(){return new Date().toISOString().slice(0,10);}
+function currentMonth(){return dateNow().slice(0,7);}
+function monthOf(v){return String(v||'').slice(0,7);}
+function memberId(m){return String(m?.id??m?.memberId??m?.serviceId??m?.memberCode??'');}
+function memberName(m){return m?.name||m?.fullName||m?.memberName||m?.serviceName||'Unnamed member';}
+function serviceId(m){return m?.serviceId||m?.memberCode||m?.serviceNo||m?.id||'—';}
+function rank(m){return m?.rank||m?.designation||'—';}
+function limit(m){return Number(m?.monthlyLimit??m?.limit??4000)||4000;}
+function memberById(idv){
+  return data.members.find(m=>memberId(m)===String(idv))||null;
 }
-function memberName(m){
-  return m.fullName||m.name||m.serviceId||"Unnamed jawan";
+function activeMembers(){
+  return data.members.filter(m=>!['inactive','transferred','left'].includes(String(m.status||'active').toLowerCase()));
 }
-function isActive(m){
-  return !m.status||["active","present"].includes(String(m.status).toLowerCase());
+function typeOf(t){
+  const s=String(t?.transactionType||t?.type||t?.kind||'').toLowerCase();
+  if(['deposit','payment','credit','received','member_payment','advance','income'].includes(s))return 'payment';
+  if(['charge','meal_charge','debit','expense','meal'].includes(s))return 'charge';
+  return s.includes('payment')||s.includes('deposit')?'payment':s.includes('charge')?'charge':'other';
 }
-function findMember(id){
-  return data.members.find(m=>memberKey(m)===String(id));
+function memberMatches(t,mid){
+  const candidates=[t?.memberId,t?.member_id,t?.memberCode,t?.serviceId,t?.jawanId,t?.member?.id];
+  return candidates.some(v=>v!==undefined&&v!==null&&String(v)===String(mid));
 }
-function ledgerMemberId(t){
-  return String(t.memberId??t.jawanId??t.serviceId??"");
+function ledgerRowsFor(mid,month){
+  return data.ledger.filter(t=>memberMatches(t,mid)&&(!month||monthOf(t.date||t.createdAt)===month));
 }
-function isPayment(t){
-  const type=String(t.transactionType||t.type||"").toLowerCase();
-  return ["payment","deposit","credit","received","member_payment"].includes(type)
-    || t.kind==="payment";
+function isCancelled(meal){return ['cancelled','canceled','void'].includes(String(meal.status||'').toLowerCase());}
+function attendanceIds(meal){
+  return (meal.attendance||meal.members||meal.memberIds||[]).map(x=>{
+    if(typeof x==='object')return String(x.memberId??x.id??x.serviceId??'');
+    return String(x);
+  });
 }
-function isMealCharge(t){
-  const type=String(t.transactionType||t.type||"").toLowerCase();
-  return ["charge","meal_charge","debit","meal"].includes(type)
-    && !isPayment(t);
+function mealCost(meal){return Number(meal.totalCost??meal.cost??meal.amount??0)||0;}
+function mealChargeForMember(meal,mid){
+  if(isCancelled(meal))return 0;
+  const attendees=attendanceIds(meal);
+  if(!attendees.includes(String(mid)))return 0;
+  const linked=data.ledger.some(t=>typeOf(t)==='charge'&&memberMatches(t,mid)&&String(t.mealId||t.referenceId||'')===String(meal.id));
+  if(linked)return 0;
+  return attendees.length?mealCost(meal)/attendees.length:0;
 }
-function transactionAmount(t){return Math.abs(Number(t.amount??t.value??0)||0)}
-
-function mealMemberKeys(meal){
-  return Array.isArray(meal.attendance)?meal.attendance.map(String):[];
-}
-function mealCostPerMember(meal){
-  const total=Math.max(0,Number(meal.totalCost)||0);
-  const keys=mealMemberKeys(meal);
-  if(!keys.length)return 0;
-  // The current meal module splits total meal cost equally between selected jawans.
-  return total/keys.length;
-}
-
-function getAccount(member){
-  const key=memberKey(member);
-  let charges=0,payments=0;
-  const transactions=[];
-
-  // Charges created by the Meals page.
-  data.ledger.filter(t=>ledgerMemberId(t)===key).forEach(t=>{
-    if(isPayment(t)){
-      const amount=transactionAmount(t);
-      payments+=amount;
-      transactions.push({
-        date:t.date||"",
-        description:t.description||"Payment received",
-        kind:"payment",amount
-      });
-    }else if(isMealCharge(t)){
-      const amount=transactionAmount(t);
-      charges+=amount;
-      transactions.push({
-        date:t.date||"",
-        description:t.description||"Meal charge",
-        kind:"charge",amount
+function allTransactions(mid,month){
+  const rows=[];
+  ledgerRowsFor(mid,month).forEach(t=>{
+    const typ=typeOf(t);
+    if(typ==='charge'||typ==='payment'){
+      rows.push({
+        date:t.date||t.createdAt||'',
+        type:typ,
+        amount:amount(t),
+        description:t.description||t.note||t.remarks||(typ==='charge'?'Meal charge':'Payment received'),
+        mealId:t.mealId||t.referenceId||'',
+        source:t
       });
     }
   });
-
-  // Count confirmed meal attendance directly only when a linked ledger
-  // charge for that meal does not already exist, avoiding duplicate charges.
-  const meals=data.meals.filter(m=>
-    m.status!=="cancelled" &&
-    mealMemberKeys(m).includes(key)
-  );
-
-  meals.forEach(meal=>{
-    const hasLinkedCharge=data.ledger.some(t=>
-      String(t.mealId||"")===String(meal.id) &&
-      ledgerMemberId(t)===key &&
-      isMealCharge(t)
-    );
-    if(!hasLinkedCharge){
-      const amount=mealCostPerMember(meal);
-      charges+=amount;
-      transactions.push({
-        date:meal.date||"",
-        description:(meal.type||"Meal")+" - "+(meal.recipeName||""),
-        kind:"charge",amount
-      });
-    }
+  data.meals.filter(m=>!isCancelled(m)&&(!month||monthOf(m.date)===month)).forEach(m=>{
+    const c=mealChargeForMember(m,mid);
+    if(c>0)rows.push({
+      date:m.date||'',type:'charge',amount:c,
+      description:(m.type||'Meal')+' - '+(m.recipeName||m.recipe||'Meal'),
+      mealId:m.id,source:m
+    });
   });
-
-  // Legacy member account balances are not guessed or silently added.
-  const due=Math.max(0,charges-payments);
-  const credit=Math.max(0,payments-charges);
-
-  transactions.sort((a,b)=>String(b.date).localeCompare(String(a.date)));
-  return {charges,payments,due,credit,transactions};
+  rows.sort((a,b)=>String(a.date).localeCompare(String(b.date)));
+  return rows;
 }
-
-function statusFor(account){
-  if(account.due>0.005 && account.payments>0)return ["Partial","partial"];
-  if(account.due>0.005)return ["Due","due"];
-  return ["Paid","paid"];
-}
-
-function render(){
-  loadData();
-  const members=data.members.filter(isActive);
-  let totalCharges=0,totalPayments=0,totalDue=0;
-
-  const rows=members.map(m=>{
-    const account=getAccount(m);
-    totalCharges+=account.charges;
-    totalPayments+=account.payments;
-    totalDue+=account.due;
-    return {m,account};
-  });
-
-  $("memberCount").textContent=members.length;
-  $("chargeTotal").textContent=money(totalCharges);
-  $("paymentTotal").textContent=money(totalPayments);
-  $("dueTotal").textContent=money(totalDue);
-
-  const q=$("search").value.trim().toLowerCase();
-  const filter=$("filter").value;
-  const filtered=rows.filter(({m,account})=>{
-    const hay=(memberName(m)+" "+(m.serviceId||"")+" "+(m.rank||"")).toLowerCase();
-    if(q&&!hay.includes(q))return false;
-    if(filter==="due"&&account.due<=0.005)return false;
-    if(filter==="paid"&&account.due>0.005)return false;
-    return true;
-  });
-
-  $("accountRows").innerHTML=filtered.map(({m,account})=>{
-    const [status,cls]=statusFor(account);
-    const key=memberKey(m);
-    return `<tr>
-      <td><b>${esc(memberName(m))}</b><br><span class="small">${esc(m.serviceId||m.id||"")}</span></td>
-      <td>${money(account.charges)}</td>
-      <td>${money(account.payments)}</td>
-      <td><b>${money(account.due)}</b></td>
-      <td><span class="badge ${cls}">${status}</span></td>
-      <td><div class="actions">
-        <button class="secondary" onclick="viewMember('${esc(key)}')">View</button>
-        ${account.due>0.005?`<button onclick="quickPaid('${esc(key)}')">PAID</button><button class="whatsapp" onclick="sendReminder('${esc(key)}')">WhatsApp</button>`:`<button class="secondary" onclick="viewMember('${esc(key)}')">History</button>`}
-      </div></td>
-    </tr>`;
-  }).join("");
-
-  $("empty").classList.toggle("hidden",filtered.length>0);
-}
-
-function viewMember(id){
-  loadData();
-  const m=findMember(id);
-  if(!m)return alert("Member nahi mila.");
-  const a=getAccount(m);
-  const [status,cls]=statusFor(a);
-  const transactions=a.transactions;
-  const photo=m.photo||m.photoData||m.image||"";
-
-  $("viewBody").innerHTML=`
-    <div class="member-top">
-      ${photo?`<img class="avatar" src="${esc(photo)}" alt="Member photo">`:`<div class="avatar" style="display:grid;place-items:center;font-size:28px">👤</div>`}
-      <div><h3 style="margin-bottom:6px">${esc(memberName(m))}</h3>
-        <span class="badge">${esc(m.rank||"Rank not set")}</span>
-        <span class="badge ${cls}">${status}</span>
-      </div>
-    </div>
-
-    <h3>Member Details</h3>
-    <div class="detail-grid">
-      ${detail("Service / Member ID",m.serviceId||m.memberId||m.id)}
-      ${detail("Full Name",memberName(m))}
-      ${detail("Rank",m.rank)}
-      ${detail("Unit",m.unit)}
-      ${detail("Mobile",m.mobile)}
-      ${detail("Joining Date",m.joiningDate)}
-      ${detail("Status",m.status||"Active")}
-      ${detail("Monthly Limit",m.monthlyLimit!=null?money(m.monthlyLimit):"Not set")}
-      ${detail("Notes",m.notes)}
-    </div>
-
-    <h3 style="margin-top:20px">Complete Mess Account</h3>
-    <div class="detail-grid">
-      ${detail("Total Meal Charges",money(a.charges))}
-      ${detail("Total Paid",money(a.payments))}
-      ${detail("Balance Due",money(a.due))}
-      ${detail("Advance / Credit",money(a.credit))}
-    </div>
-
-    <div class="actions" style="margin-top:13px">
-      ${a.due>0.005?`<button onclick="quickPaid('${esc(memberKey(m))}')">PAID — Full Due</button><button class="whatsapp" onclick="sendReminder('${esc(memberKey(m))}')">WhatsApp Reminder</button>`:""}
-      ${a.due>0.005?`<button class="secondary" onclick="openPayment('${esc(memberKey(m))}',false)">Partial Payment</button>`:""}
-    </div>
-
-    <h3 style="margin-top:20px">Account Transactions</h3>
-    ${transactions.length?`
-      <div class="table-wrap"><table style="min-width:440px">
-      <thead><tr><th>Date</th><th>Details</th><th>Amount</th></tr></thead>
-      <tbody>${transactions.map(t=>`<tr>
-        <td>${esc(t.date||"—")}</td>
-        <td>${esc(t.description)}<br><span class="badge ${t.kind==="payment"?"paid":"due"}">${t.kind==="payment"?"Payment":"Charge"}</span></td>
-        <td>${money(t.amount)}</td>
-      </tr>`).join("")}</tbody></table></div>
-    `:'<div class="empty">No transactions recorded yet.</div>'}
-  `;
-  $("viewDialog").showModal();
-}
-function detail(label,value){
-  return `<div class="detail"><small>${esc(label)}</small><b>${esc(value||"—")}</b></div>`;
-}
-
-function quickPaid(id){
-  openPayment(id,true);
-}
-function openPayment(id,fullDue){
-  loadData();
-  const m=findMember(id);
-  if(!m)return alert("Member nahi mila.");
-  const a=getAccount(m);
-  if(a.due<=0.005)return alert("Is jawan ka koi outstanding due nahi hai.");
-  paymentEditId=null;
-  $("paymentMemberId").value=memberKey(m);
-  $("paymentMemberName").textContent=memberName(m);
-  $("paymentDue").textContent=money(a.due);
-  $("paymentAmount").value=fullDue?a.due.toFixed(2):"";
-  $("paymentAmount").max=a.due.toFixed(2);
-  $("paymentDate").value=today();
-  $("paymentMode").value="Cash";
-  $("paymentNote").value="";
-  $("paymentTitle").textContent=fullDue?"Confirm Full Payment":"Record Payment";
-  $("paymentDialog").showModal();
-}
-
-$("paymentForm").addEventListener("submit",e=>{
-  e.preventDefault();
-  loadData();
-
-  const id=$("paymentMemberId").value;
-  const m=findMember(id);
-  if(!m)return alert("Member nahi mila.");
-  const account=getAccount(m);
-  const amount=Number($("paymentAmount").value);
-  if(!Number.isFinite(amount)||amount<=0)return alert("Valid payment amount likhein.");
-  if(amount>account.due+0.005)return alert("Payment outstanding due se zyada nahi ho sakti. Advance ke liye alag approved entry chahiye.");
-
-  const entry={
-    id:makeId(),
-    date:$("paymentDate").value||today(),
-    memberId:m.id??m.memberId??m.serviceId,
-    memberName:memberName(m),
-    type:"deposit",
-    transactionType:"payment",
-    amount:Number(amount.toFixed(2)),
-    paymentMode:$("paymentMode").value,
-    description:"Payment received"+($("paymentNote").value.trim()?" - "+$("paymentNote").value.trim():"")
+function totals(mid,month){
+  const rows=allTransactions(mid,month);
+  return {
+    charges:rows.filter(t=>t.type==='charge').reduce((s,t)=>s+t.amount,0),
+    paid:rows.filter(t=>t.type==='payment').reduce((s,t)=>s+t.amount,0),
+    rows
   };
-
-  if(!Array.isArray(data.ledger))data.ledger=[];
+}
+function populateSelects(){
+  const opts=activeMembers().map(m=>`<option value="${esc(memberId(m))}">${esc(memberName(m))} (${esc(serviceId(m))})</option>`).join('');
+  ['memberSelect','payMember','ledgerMember'].forEach((idv,i)=>{
+    const el=document.getElementById(idv),old=el.value;
+    const first=i===2?'All jawans':'-- Select Jawan --';
+    el.innerHTML=(i===2?'<option value="">All jawans</option>':'<option value="">'+first+'</option>')+opts;
+    if([...el.options].some(o=>o.value===old))el.value=old;
+  });
+}
+function renderMembers(){
+  const q=document.getElementById('search').value.toLowerCase().trim();
+  const rows=activeMembers().filter(m=>(memberName(m)+' '+serviceId(m)+' '+rank(m)).toLowerCase().includes(q));
+  document.getElementById('memberRows').innerHTML=rows.map(m=>{
+    const mid=memberId(m),t=totals(mid,''),due=t.charges-t.paid;
+    return `<tr>
+      <td><b>${esc(serviceId(m))}</b><br>${esc(memberName(m))}</td>
+      <td>${esc(rank(m))}</td>
+      <td>${money(limit(m))}</td>
+      <td>${money(t.charges)}</td><td>${money(t.paid)}</td>
+      <td><span class="pill ${due>0?'due':''}">${money(due)}</span></td>
+      <td><button onclick="openMember('${esc(mid)}')">View</button><button class="secondary" onclick="quickBill('${esc(mid)}')">Bill</button></td>
+    </tr>`;
+  }).join('')||'<tr><td colspan="7" class="empty">Member record nahi mila. Pehle Members page mein jawan add karein.</td></tr>';
+}
+function renderStats(){
+  const ms=activeMembers();
+  let ch=0,pa=0;
+  ms.forEach(m=>{const t=totals(memberId(m),'');ch+=t.charges;pa+=t.paid;});
+  document.getElementById('sMembers').textContent=ms.length;
+  document.getElementById('sCharges').textContent=money(ch);
+  document.getElementById('sPaid').textContent=money(pa);
+  document.getElementById('sDue').textContent=money(ch-pa);
+}
+function selectMember(){
+  const mid=document.getElementById('memberSelect').value;
+  if(mid)document.getElementById('payMember').value=mid;
+  makeBill();
+}
+function openMember(mid){
+  document.getElementById('memberSelect').value=mid;
+  document.getElementById('payMember').value=mid;
+  makeBill();
+  document.getElementById('billPanel').scrollIntoView({behavior:'smooth'});
+}
+function quickBill(mid){
+  document.getElementById('memberSelect').value=mid;
+  makeBill();showBill();
+}
+function makeBill(){
+  const mid=document.getElementById('memberSelect').value;
+  const month=document.getElementById('billMonth').value||currentMonth();
+  const out=document.getElementById('billContent');
+  if(!mid){out.innerHTML='<div class="empty">Pehle jawan select karein.</div>';return;}
+  const m=memberById(mid);
+  if(!m){out.innerHTML='<div class="empty">Member record nahi mila.</div>';return;}
+  const t=totals(mid,month),due=t.charges-t.paid;
+  const rows=t.rows;
+  out.innerHTML=`
+    <div>
+      <div class="grid">
+        <div><b>Jawan Name</b><br>${esc(memberName(m))}</div>
+        <div><b>Service ID</b><br>${esc(serviceId(m))}</div>
+        <div><b>Rank</b><br>${esc(rank(m))}</div>
+        <div><b>Bill Month</b><br>${esc(month)}</div>
+      </div>
+      <hr>
+      <h3>Item / Meal-wise Account</h3>
+      <div class="tablewrap">
+        <table><thead><tr><th>Date</th><th>Details</th><th>Type</th><th>Amount</th></tr></thead>
+        <tbody>${rows.map(r=>`<tr>
+          <td>${esc(r.date||'—')}</td><td>${esc(r.description)}</td>
+          <td>${r.type==='payment'?'Payment':'Charge'}</td>
+          <td>${money(r.amount)}</td>
+        </tr>`).join('')||'<tr><td colspan="4" class="empty">Is month ka transaction nahi hai.</td></tr>'}</tbody>
+        </table>
+      </div>
+      <div class="billtotal">
+        <p><span>Total meal charges</span><b>${money(t.charges)}</b></p>
+        <p><span>Total payment received</span><b>${money(t.paid)}</b></p>
+        <p><span>Monthly limit (reference only)</span><b>${money(limit(m))}</b></p>
+        <hr>
+        <p><strong>${due>=0?'Balance Due':'Advance / Credit'}</strong><strong>${money(Math.abs(due))}</strong></p>
+      </div>
+      <p class="muted">Yeh bill browser mein maujood records se bana hai. Monthly limit ko charge mein nahi joda gaya.</p>
+    </div>`;
+}
+function showBill(){
+  if(!document.getElementById('memberSelect').value){alert('Pehle jawan select karein.');return;}
+  makeBill();
+  document.getElementById('billPanel').scrollIntoView({behavior:'smooth'});
+}
+function printBill(){
+  if(!document.getElementById('memberSelect').value){alert('Pehle jawan select karein.');return;}
+  makeBill();
+  window.print();
+}
+function shareBill(){
+  const mid=document.getElementById('memberSelect').value;
+  if(!mid){alert('Pehle jawan select karein.');return;}
+  const m=memberById(mid),month=document.getElementById('billMonth').value||currentMonth(),t=totals(mid,month),due=t.charges-t.paid;
+  const message=[
+    'CRPF Smart Mess Manager - Monthly Bill',
+    'Jawan: '+memberName(m),
+    'Service ID: '+serviceId(m),
+    'Rank: '+rank(m),
+    'Month: '+month,
+    'Meal Charges: '+money(t.charges),
+    'Payment Received: '+money(t.paid),
+    (due>=0?'Balance Due: ':'Advance/Credit: ')+money(Math.abs(due))
+  ].join('\n');
+  const phone=String(m.mobile||m.phone||m.mobileNumber||'').replace(/\D/g,'');
+  const url='https://wa.me/'+phone+'?text='+encodeURIComponent(message);
+  if(phone.length>=8)window.open(url,'_blank');
+  else if(confirm('Member ke record mein mobile number nahi mila. WhatsApp share menu kholein?'))window.open('https://wa.me/?text='+encodeURIComponent(message),'_blank');
+}
+function renderLedger(){
+  const mid=document.getElementById('ledgerMember').value;
+  const month=document.getElementById('ledgerMonth').value;
+  const members=data.members;
+  let list=[];
+  members.forEach(m=>{
+    if(mid&&memberId(m)!==mid)return;
+    allTransactions(memberId(m),month||'').forEach(t=>list.push({...t,memberName:memberName(m)}));
+  });
+  list.sort((a,b)=>String(b.date).localeCompare(String(a.date)));
+  document.getElementById('ledgerRows').innerHTML=list.map(t=>`<tr>
+    <td>${esc(t.date||'—')}</td><td>${esc(t.memberName)}</td>
+    <td>${esc(t.description)}</td><td>${t.type==='payment'?'Payment':'Charge'}</td>
+    <td>${money(t.amount)}</td>
+  </tr>`).join('')||'<tr><td colspan="5" class="empty">Transaction nahi mila.</td></tr>';
+}
+document.getElementById('paymentForm').addEventListener('submit',function(e){
+  e.preventDefault();
+  const mid=document.getElementById('payMember').value;
+  const m=memberById(mid);
+  const amt=Number(document.getElementById('payAmount').value);
+  if(!m){alert('Jawan select karein.');return;}
+  if(!Number.isFinite(amt)||amt<=0){alert('Sahi payment amount dalein.');return;}
+  const entry={
+    id:id(),date:document.getElementById('payDate').value||dateNow(),
+    memberId:mid,memberName:memberName(m),
+    type:'deposit',transactionType:'payment',amount:amt,
+    paymentMode:document.getElementById('payMode').value,
+    description:'Payment received - '+document.getElementById('payMode').value,
+    reference:document.getElementById('payRef').value.trim(),
+    notes:document.getElementById('payNote').value.trim()
+  };
   data.ledger.push(entry);
-
-  if(!saveData())return;
-  closeDialog("paymentDialog");
-  render();
-  alert("Payment record ho gayi. Balance dobara calculate kar diya gaya.");
+  if(!save()){data.ledger.pop();return;}
+  alert('Payment save ho gaya: '+money(amt));
+  this.reset();
+  document.getElementById('payDate').value=dateNow();
+  document.getElementById('payMember').value=mid;
+  document.getElementById('memberSelect').value=mid;
+  renderAll();makeBill();
 });
-
-function sendReminder(id){
-  loadData();
-  const m=findMember(id);
-  if(!m)return alert("Member nahi mila.");
-  const a=getAccount(m);
-  if(a.due<=0.005)return alert("Is jawan ka koi due nahi hai.");
-  let phone=String(m.mobile||m.phone||"").replace(/[^\d]/g,"");
-  if(phone.startsWith("00"))phone=phone.slice(2);
-  if(phone.length<8)return alert("Member ke View mein valid mobile number hona chahiye.");
-
-  const message=
-    "Namaste "+memberName(m)+",\n"+
-    "Aapke CRPF Smart Mess account mein Rs "+a.due.toFixed(2)+" baaki hain.\n"+
-    "Total charges: Rs "+a.charges.toFixed(2)+"\n"+
-    "Total paid: Rs "+a.payments.toFixed(2)+"\n"+
-    "Kripya baki rakam jama karne par mess in-charge ko suchit karein.\nDhanyavaad.";
-  window.open("https://wa.me/"+phone+"?text="+encodeURIComponent(message),"_blank");
+function renderAll(){
+  populateSelects();
+  renderMembers();
+  renderStats();
+  renderLedger();
 }
+window.selectMember=selectMember;
+window.renderMembers=renderMembers;
+window.renderLedger=renderLedger;
+window.openMember=openMember;
+window.quickBill=quickBill;
+window.makeBill=makeBill;
+window.showBill=showBill;
+window.printBill=printBill;
+window.shareBill=shareBill;
 
-function closeDialog(id){
-  const d=$(id);
-  if(d&&d.open)d.close();
-}
-document.querySelectorAll("dialog").forEach(d=>{
-  d.addEventListener("click",e=>{if(e.target===d)d.close()});
-});
-$("search").addEventListener("input",render);
-$("filter").addEventListener("change",render);
-
-render();
+load();
+document.getElementById('billMonth').value=currentMonth();
+document.getElementById('payDate').value=dateNow();
+document.getElementById('ledgerMonth').value=currentMonth();
+renderAll();
+makeBill();
+})();
 </script>
 </body>
 </html>

@@ -1,1 +1,575 @@
 
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CRPF Smart Mess - Meals</title>
+<style>
+:root{--g:#176747;--deep:#10563e;--bg:#f2f6f3;--white:#fff;--text:#214d3b;--muted:#78857e;--border:#dce5df;--red:#bd3942;--light:#e6f2eb;--wa:#16865b}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);font-family:Arial,sans-serif;color:var(--text)}
+header{background:var(--g);color:#fff;padding:18px 15px}
+header h2{margin:0 0 6px;font-size:22px}
+header p{margin:0;font-size:13px}
+nav{display:flex;gap:7px;overflow-x:auto;background:white;padding:10px;border-bottom:1px solid var(--border)}
+nav a{white-space:nowrap;text-decoration:none;color:var(--g);padding:9px 12px;border:1px solid var(--border);border-radius:8px;font-size:13px;font-weight:bold}
+nav a.active{background:var(--g);color:#fff}
+main{max-width:1150px;margin:auto;padding:14px}
+.card,.stat{background:white;border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:13px}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
+.stat small{display:block;color:var(--muted);font-size:12px;margin-bottom:8px}
+.stat strong{font-size:20px}
+h3{margin:0 0 13px;font-size:17px}
+label{display:block;font-size:13px;font-weight:bold;margin-bottom:6px}
+input,select,textarea{width:100%;padding:11px;border:1px solid #cbd8cf;border-radius:8px;font-size:14px;background:white;color:var(--text)}
+button{border:0;border-radius:8px;padding:11px 13px;background:var(--g);color:white;font-weight:bold;font-size:13px;cursor:pointer}
+button.secondary{background:var(--light);color:var(--g);border:1px solid var(--border)}
+button.danger{background:#fff0f0;color:var(--red);border:1px solid #f0cccc}
+button.whatsapp{background:var(--wa)}
+button:disabled{opacity:.5;cursor:not-allowed}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.field{margin-bottom:12px}
+.small{font-size:12px;color:var(--muted)}
+.meal-types{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:7px;margin-bottom:14px}
+.type-btn{background:white;color:var(--g);border:1px solid var(--border);padding:12px 6px;line-height:1.4}
+.type-btn.selected{background:var(--g);color:white;border-color:var(--g)}
+.member-tools{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
+.member-list{max-height:340px;overflow:auto;border:1px solid var(--border);border-radius:9px}
+.member-row{display:flex;gap:10px;align-items:center;padding:11px;border-bottom:1px solid var(--border)}
+.member-row:last-child{border-bottom:0}
+.member-row input{width:20px;height:20px;flex-shrink:0}
+.member-info{flex:1;min-width:0}
+.member-info b{display:block;font-size:14px}
+.member-info small{color:var(--muted);font-size:12px}
+.member-row .due{font-size:12px;color:var(--muted);text-align:right}
+.summary{background:var(--light);border-radius:9px;padding:13px;margin:12px 0}
+.summary-line{display:flex;justify-content:space-between;gap:10px;padding:5px 0;font-size:13px}
+.summary-line.total{font-size:16px;font-weight:bold;border-top:1px solid #c6ded0;padding-top:10px;margin-top:5px}
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;min-width:510px}
+th,td{text-align:left;padding:10px 8px;border-bottom:1px solid var(--border);font-size:13px}
+th{background:#f5f9f6;color:var(--g)}
+.actions{display:flex;gap:6px;flex-wrap:wrap}
+.actions button{padding:7px 9px}
+.badge{display:inline-block;background:var(--light);color:var(--g);padding:5px 8px;border-radius:20px;font-size:11px}
+.badge.done{background:#d8f2e3}
+.badge.cancel{background:#fff0f0;color:var(--red)}
+.empty{text-align:center;padding:24px;color:var(--muted)}
+.hidden{display:none!important}
+@media(max-width:600px){
+ main{padding:9px}.stats{gap:6px}.stat{padding:10px}.stat strong{font-size:17px}
+ .grid{grid-template-columns:1fr}.meal-types{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .meal-types button:last-child{grid-column:1/-1}
+}
+</style>
+</head>
+<body>
+<header>
+  <h2>🍲 CRPF Smart Mess</h2>
+  <p>Daily Meals · Ration Calculation · Jawan Attendance</p>
+</header>
+
+<nav>
+  <a href="index.html">Dashboard</a>
+  <a href="members.html">Members</a>
+  <a href="store.html">Store & Purchase</a>
+  <a href="recipes.html">Recipes</a>
+  <a class="active" href="meals.html">Meals</a>
+  <a href="accounts.html">Accounts</a>
+  <a href="settlement.html">Settlement</a>
+  <a href="commander.html">Commander</a>
+  <a href="reports.html">Reports</a>
+  <a href="backup.html">Backup</a>
+</nav>
+
+<main>
+  <div class="stats">
+    <div class="stat"><small>Active Members</small><strong id="activeCount">0</strong></div>
+    <div class="stat"><small>Meals Today</small><strong id="todayCount">0</strong></div>
+    <div class="stat"><small>Today's Cost</small><strong id="todayCost">Rs 0.00</strong></div>
+  </div>
+
+  <section class="card">
+    <h3>① Select Date & Meal</h3>
+    <div class="grid">
+      <div class="field">
+        <label for="mealDate">Meal Date</label>
+        <input type="date" id="mealDate">
+      </div>
+      <div class="field">
+        <label for="mealRecipe">Recipe / Menu *</label>
+        <select id="mealRecipe">
+          <option value="">Select recipe</option>
+        </select>
+      </div>
+    </div>
+
+    <label>Daily Menu</label>
+    <div class="meal-types">
+      <button type="button" class="type-btn selected" data-type="Morning Tea & Biscuits">☕<br>Morning Tea<br>& Biscuits</button>
+      <button type="button" class="type-btn" data-type="Breakfast">🌅<br>Breakfast</button>
+      <button type="button" class="type-btn" data-type="Lunch">🍛<br>Lunch</button>
+      <button type="button" class="type-btn" data-type="Evening Tea & Biscuits">☕<br>Evening Tea<br>& Biscuits</button>
+      <button type="button" class="type-btn" data-type="Dinner">🌙<br>Dinner</button>
+    </div>
+
+    <div class="grid">
+      <div class="field">
+        <label for="cookPhone">Cook's WhatsApp Number</label>
+        <input id="cookPhone" type="tel" placeholder="Country code + mobile number">
+        <small class="small">Example: 97798XXXXXXXX or 91XXXXXXXXXX</small>
+      </div>
+      <div class="field">
+        <label for="chargeMode">Meal Cost Distribution</label>
+        <select id="chargeMode">
+          <option value="equal">Equal among selected jawans</option>
+          <option value="serving">According to servings</option>
+        </select>
+        <small class="small">Change only according to your mess rules.</small>
+      </div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>② Select Jawans Who Took This Meal</h3>
+    <input id="memberSearch" placeholder="🔎 Search by name or service ID">
+    <div class="member-tools">
+      <button type="button" class="secondary" id="selectAll">Select All Active</button>
+      <button type="button" class="secondary" id="clearAll">Clear Selection</button>
+      <span class="badge" id="selectedCount">0 selected</span>
+    </div>
+    <div id="memberList" class="member-list"></div>
+    <p class="small">Sirf tick kiye gaye jawan is meal ke attendance aur charge mein shamil honge.</p>
+  </section>
+
+  <section class="card">
+    <h3>③ Ration Requirement & Cost</h3>
+    <div id="rationBox"><div class="empty">Recipe aur jawan select karein.</div></div>
+    <div class="summary">
+      <div class="summary-line"><span>Selected Jawans</span><b id="sumJawans">0</b></div>
+      <div class="summary-line"><span>Estimated Meal Cost</span><b id="sumCost">Rs 0.00</b></div>
+      <div class="summary-line total"><span>Estimated Cost Per Jawan</span><b id="sumPer">Rs 0.00</b></div>
+    </div>
+    <div class="actions">
+      <button type="button" class="whatsapp" id="sendRation">WhatsApp Ration List to Cook</button>
+      <button type="button" id="confirmMeal">✓ Confirm Meal & Post Charges</button>
+    </div>
+    <p class="small">WhatsApp button message tayyar karega. Bhejne ke liye WhatsApp mein Send dabana hoga.</p>
+  </section>
+
+  <section class="card">
+    <h3>④ Meal History</h3>
+    <div class="grid">
+      <div class="field">
+        <label for="historyDate">Filter Date</label>
+        <input type="date" id="historyDate">
+      </div>
+      <div class="field">
+        <label for="historyType">Filter Meal</label>
+        <select id="historyType">
+          <option value="">All Meals</option>
+          <option>Morning Tea & Biscuits</option>
+          <option>Breakfast</option>
+          <option>Lunch</option>
+          <option>Evening Tea & Biscuits</option>
+          <option>Dinner</option>
+        </select>
+      </div>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead><tr><th>Date / Meal</th><th>Jawans</th><th>Cost</th><th>Status</th><th>Actions</th></tr></thead>
+        <tbody id="historyRows"></tbody>
+      </table>
+    </div>
+    <div id="historyEmpty" class="empty hidden">No meal records found.</div>
+  </section>
+</main>
+
+<script>
+"use strict";
+
+const KEYS = ["crpfMessProfessionalV1","crpfMessPrototypeV2"];
+let storageKey = KEYS.find(k => localStorage.getItem(k)) || KEYS[0];
+let data = {};
+let selectedType = "Morning Tea & Biscuits";
+let selectedMembers = new Set();
+let editingMealId = null;
+let previousMeal = null;
+
+const $ = id => document.getElementById(id);
+const mealTypes = [
+  "Morning Tea & Biscuits","Breakfast","Lunch",
+  "Evening Tea & Biscuits","Dinner"
+];
+
+function today(){
+  const d = new Date();
+  return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+}
+function makeId(){
+  return "m"+Date.now().toString(36)+Math.random().toString(36).slice(2,7);
+}
+function esc(v){
+  return String(v ?? "").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+}
+function money(v){return "Rs "+(Number(v)||0).toFixed(2)}
+function baseUnit(u){
+  u=String(u||"").toLowerCase();
+  if(["kg","g","gram","grams"].includes(u))return "g";
+  if(["ltr","litre","liter","ml"].includes(u))return "ml";
+  if(["pc","pcs","piece","pieces"].includes(u))return "pcs";
+  return u;
+}
+function toBase(q,u){
+  q=Number(q)||0;u=String(u||"").toLowerCase();
+  if(u==="kg"||u==="ltr"||u==="litre"||u==="liter")return q*1000;
+  return q;
+}
+function readData(){
+  storageKey=KEYS.find(k=>localStorage.getItem(k))||KEYS[0];
+  try{data=JSON.parse(localStorage.getItem(storageKey)||"{}")}catch(e){data={}}
+  if(!data||typeof data!=="object"||Array.isArray(data))data={};
+  ["members","items","recipes","meals","ledger","movements"].forEach(k=>{
+    if(!Array.isArray(data[k]))data[k]=[];
+  });
+}
+function saveData(){
+  try{localStorage.setItem(storageKey,JSON.stringify(data));return true}
+  catch(e){alert("Save nahi hua. Browser storage full ho sakta hai.");return false}
+}
+function memberId(m){return String(m.id ?? m.memberId ?? m.serviceId ?? m.fullName ?? m.name ?? "")}
+function memberName(m){return m.fullName || m.name || m.serviceId || "Unnamed jawan"}
+function isActive(m){return !m.status || ["active","present"].includes(String(m.status).toLowerCase())}
+function findMember(id){return data.members.find(m=>memberId(m)===String(id))}
+function findRecipe(id){return data.recipes.find(r=>String(r.id)===String(id))}
+function findItem(id){return data.items.find(i=>String(i.id)===String(id))}
+function recipeName(r){return r.name || r.recipeName || "Unnamed recipe"}
+
+function itemRate(item){
+  if(!item)return 0;
+  const purchases=Array.isArray(item.purchases)?item.purchases:[];
+  let qty=0,cost=0;
+  purchases.forEach(p=>{
+    let q=Number(p.quantityBase);
+    if(!(q>0))q=toBase(p.quantity,p.purchaseUnit||item.unit);
+    let c=Number(p.total);
+    if(!Number.isFinite(c)||c<0)c=q*(Number(p.rateBase)||Number(p.rate)||0);
+    if(q>0){qty+=q;cost+=c}
+  });
+  if(qty>0)return cost/qty;
+  if(Number(item.averageRateBase)>0)return Number(item.averageRateBase);
+  if(Number(item.avgRate)>0){
+    return Number(item.avgRate)/(["g","ml"].includes(baseUnit(item.unit))?1000:1);
+  }
+  return 0;
+}
+function recipeIngredients(recipe){
+  return Array.isArray(recipe?.ingredients)?recipe.ingredients:[];
+}
+function oneServingRation(recipe){
+  return recipeIngredients(recipe).map(ing=>{
+    const item=findItem(ing.itemId);
+    const unit=ing.unit||baseUnit(item?.unit);
+    let q=Number(ing.quantityBase);
+    if(!(q>0))q=toBase(ing.quantity,unit);
+    return {
+      itemId:ing.itemId,
+      itemName:item?(item.name||item.itemName||"Item"):(ing.itemName||"Unknown item"),
+      quantityBase:q,
+      unit:baseUnit(unit),
+      rateBase:itemRate(item),
+      cost:q*itemRate(item)
+    };
+  });
+}
+function recipeCost(recipe){
+  return oneServingRation(recipe).reduce((s,r)=>s+r.cost,0);
+}
+function selectedRecipe(){return findRecipe($("mealRecipe").value)}
+function activeMembers(){return data.members.filter(isActive)}
+
+function refreshRecipeOptions(){
+  const select=$("mealRecipe");
+  const previous=select.value;
+  select.innerHTML='<option value="">Select recipe</option>'+
+    data.recipes.map(r=>`<option value="${esc(r.id)}">${esc(recipeName(r))}</option>`).join("");
+  if(data.recipes.some(r=>String(r.id)===previous))select.value=previous;
+}
+
+function renderMembers(){
+  const search=$("memberSearch").value.trim().toLowerCase();
+  const members=activeMembers().filter(m=>
+    (memberName(m)+" "+(m.serviceId||m.id||"")).toLowerCase().includes(search)
+  );
+  $("memberList").innerHTML=members.length?members.map(m=>{
+    const id=memberId(m);
+    return `<label class="member-row">
+      <input type="checkbox" class="member-check" value="${esc(id)}" ${selectedMembers.has(id)?"checked":""}>
+      <span class="member-info"><b>${esc(memberName(m))}</b><small>${esc(m.serviceId||m.id||"")} ${m.rank?"· "+esc(m.rank):""}</small></span>
+    </label>`;
+  }).join(""):'<div class="empty">No active members found. Add members first.</div>';
+  $("selectedCount").textContent=selectedMembers.size+" selected";
+  $("sumJawans").textContent=selectedMembers.size;
+}
+function renderStats(){
+  const active=activeMembers().length;
+  const todays=data.meals.filter(m=>m.date===today()&&m.status!=="cancelled");
+  $("activeCount").textContent=active;
+  $("todayCount").textContent=todays.length;
+  $("todayCost").textContent=money(todays.reduce((s,m)=>s+(Number(m.totalCost)||0),0));
+}
+function renderRation(){
+  const recipe=selectedRecipe();
+  const count=selectedMembers.size;
+  if(!recipe){
+    $("rationBox").innerHTML='<div class="empty">Pehle saved recipe select karein. Recipe nahi hai to Recipes page par add karein.</div>';
+    $("sumCost").textContent=money(0);$("sumPer").textContent=money(0);
+    return;
+  }
+  const ration=oneServingRation(recipe).map(r=>({...r,quantityBase:r.quantityBase*count,cost:r.cost*count}));
+  const total=recipeCost(recipe)*count;
+  const rows=ration.map(r=>`<tr><td>${esc(r.itemName)}</td><td>${formatQty(r.quantityBase,r.unit)}</td><td>${money(r.cost)}</td></tr>`).join("");
+  $("rationBox").innerHTML=`
+    <p><b>${esc(recipeName(recipe))}</b> · ${count} serving(s)</p>
+    <div class="table-wrap"><table><thead><tr><th>Store Item</th><th>Total Required</th><th>Cost</th></tr></thead>
+    <tbody>${rows||'<tr><td colspan="3">No ingredients in this recipe.</td></tr>'}</tbody></table></div>`;
+  $("sumCost").textContent=money(total);
+  $("sumPer").textContent=money(count?total/count:0);
+}
+function formatQty(q,u){
+  q=Number(q)||0;
+  if(u==="g"&&q>=1000)return (q/1000).toFixed(3).replace(/\.?0+$/,"")+" kg";
+  if(u==="ml"&&q>=1000)return (q/1000).toFixed(3).replace(/\.?0+$/,"")+" litre";
+  return Number(q.toFixed(3))+" "+u;
+}
+function renderHistory(){
+  const date=$("historyDate").value;
+  const type=$("historyType").value;
+  const list=[...data.meals].filter(m=>
+    (!date||m.date===date)&&(!type||m.type===type)
+  ).sort((a,b)=>(b.date||"").localeCompare(a.date||""));
+  $("historyRows").innerHTML=list.map(m=>{
+    const status=m.status||"confirmed";
+    const label=status==="cancelled"?"Cancelled":status==="draft"?"Draft":"Confirmed";
+    return `<tr>
+      <td><b>${esc(m.date||"")}</b><br>${esc(m.type||"Meal")}</td>
+      <td>${(m.attendance||[]).length}</td>
+      <td>${money(m.totalCost)}</td>
+      <td><span class="badge ${status==="confirmed"?"done":status==="cancelled"?"cancel":""}">${label}</span></td>
+      <td><div class="actions">
+        <button class="secondary" onclick="viewHistory('${esc(m.id)}')">View</button>
+        ${status!=="cancelled"?`<button class="secondary" onclick="editHistory('${esc(m.id)}')">Edit</button><button class="danger" onclick="cancelHistory('${esc(m.id)}')">Cancel</button>`:""}
+      </div></td>
+    </tr>`;
+  }).join("");
+  $("historyEmpty").classList.toggle("hidden",list.length>0);
+}
+function render(){
+  readData();
+  refreshRecipeOptions();
+  renderMembers();
+  renderRation();
+  renderStats();
+  renderHistory();
+}
+
+document.querySelectorAll(".type-btn").forEach(btn=>{
+  btn.addEventListener("click",()=>{
+    selectedType=btn.dataset.type;
+    document.querySelectorAll(".type-btn").forEach(b=>b.classList.toggle("selected",b===btn));
+  });
+});
+$("memberList").addEventListener("change",e=>{
+  if(!e.target.matches(".member-check"))return;
+  if(e.target.checked)selectedMembers.add(e.target.value);
+  else selectedMembers.delete(e.target.value);
+  renderMembers();renderRation();
+});
+$("memberSearch").addEventListener("input",renderMembers);
+$("selectAll").addEventListener("click",()=>{
+  activeMembers().forEach(m=>selectedMembers.add(memberId(m)));
+  renderMembers();renderRation();
+});
+$("clearAll").addEventListener("click",()=>{
+  selectedMembers.clear();renderMembers();renderRation();
+});
+$("mealRecipe").addEventListener("change",renderRation);
+$("historyDate").addEventListener("change",renderHistory);
+$("historyType").addEventListener("change",renderHistory);
+
+function rationForMeal(recipe,count){
+  return oneServingRation(recipe).map(r=>({
+    itemId:r.itemId,
+    itemName:r.itemName,
+    quantityBase:r.quantityBase*count,
+    unit:r.unit,
+    rateBase:r.rateBase,
+    cost:r.cost*count
+  }));
+}
+function mealMessage(){
+  const recipe=selectedRecipe();
+  if(!recipe)return null;
+  if(!selectedMembers.size)return null;
+  const ration=rationForMeal(recipe,selectedMembers.size);
+  const lines=[
+    "CRPF SMART MESS - RATION LIST",
+    "Date: "+$("mealDate").value,
+    "Meal: "+selectedType,
+    "Menu: "+recipeName(recipe),
+    "Servings: "+selectedMembers.size,
+    "",
+    "Required ration:"
+  ];
+  ration.forEach(r=>lines.push("- "+r.itemName+": "+formatQty(r.quantityBase,r.unit)));
+  lines.push("Estimated cost: "+money(recipeCost(recipe)*selectedMembers.size));
+  lines.push("Please prepare the above meal quantity.");
+  return lines.join("\n");
+}
+$("sendRation").addEventListener("click",()=>{
+  const message=mealMessage();
+  if(!message)return alert("Recipe aur kam se kam ek jawan select karein.");
+  let phone=$("cookPhone").value.replace(/[^\d]/g,"");
+  if(phone.length<8) return alert("Cook ka WhatsApp number country code ke saath likhein.");
+  if(phone.startsWith("00"))phone=phone.slice(2);
+  window.open("https://wa.me/"+phone+"?text="+encodeURIComponent(message),"_blank");
+});
+
+function ledgerEntriesForMeal(mealId){
+  return data.ledger.filter(t=>String(t.mealId||"")===String(mealId));
+}
+function postCharges(meal){
+  if(!Array.isArray(data.ledger))data.ledger=[];
+  const attendance=meal.attendance||[];
+  if(!attendance.length)return;
+  const per=Number(meal.totalCost||0)/attendance.length;
+  attendance.forEach(memberKey=>{
+    const member=findMember(memberKey);
+    if(!member)return;
+    data.ledger.push({
+      id:makeId(),
+      date:meal.date,
+      memberId:member.id ?? member.memberId ?? member.serviceId,
+      memberName:memberName(member),
+      type:"charge",
+      transactionType:"meal_charge",
+      amount:Number(per.toFixed(2)),
+      description:meal.type+" - "+meal.recipeName,
+      mealId:meal.id
+    });
+  });
+}
+function removeCharges(mealId){
+  data.ledger=data.ledger.filter(t=>String(t.mealId||"")!==String(mealId));
+}
+function buildMeal(){
+  readData();
+  const recipe=selectedRecipe();
+  if(!$("mealDate").value)throw Error("Meal date select karein.");
+  if(!recipe)throw Error("Recipe select karein.");
+  if(!selectedMembers.size)throw Error("Kam se kam ek jawan tick karein.");
+  const count=selectedMembers.size;
+  const total=recipeCost(recipe)*count;
+  const attendance=[...selectedMembers];
+  const old=editingMealId?data.meals.find(m=>String(m.id)===String(editingMealId)):null;
+  if(editingMealId&&!old)throw Error("Purana meal record nahi mila.");
+  return {
+    id:editingMealId||makeId(),
+    date:$("mealDate").value,
+    type:selectedType,
+    recipeId:recipe.id,
+    recipeName:recipeName(recipe),
+    servings:count,
+    attendance,
+    ration:rationForMeal(recipe,count),
+    totalCost:Number(total.toFixed(2)),
+    chargeMode:$("chargeMode").value,
+    status:"confirmed",
+    confirmedAt:old?.confirmedAt||new Date().toISOString(),
+    updatedAt:new Date().toISOString()
+  };
+}
+$("confirmMeal").addEventListener("click",()=>{
+  try{
+    readData();
+    const meal=buildMeal();
+    const old=editingMealId?data.meals.find(m=>String(m.id)===String(editingMealId)):null;
+    if(old&&old.status==="cancelled")throw Error("Cancelled meal ko edit karke dobara confirm nahi kar sakte. Naya meal banayein.");
+    const promptText=old
+      ?"Meal update karna hai? Purane charges replace honge."
+      :"Meal confirm karna hai? Stock aur jawano ke accounts update honge.";
+    if(!confirm(promptText))return;
+
+    if(old){
+      removeCharges(old.id);
+      const index=data.meals.findIndex(m=>String(m.id)===String(old.id));
+      data.meals[index]=meal;
+    }else{
+      data.meals.push(meal);
+    }
+    // Charges are linked to the meal ID so they can be reversed on edit/cancel.
+    postCharges(meal);
+    if(!saveData())return;
+
+    editingMealId=null;previousMeal=null;
+    $("confirmMeal").textContent="✓ Confirm Meal & Post Charges";
+    render();
+    alert("Meal confirm ho gaya. Ration usage aur meal charges record ho gaye.");
+  }catch(e){alert(e.message||"Meal save nahi hua.")}
+});
+
+function viewHistory(id){
+  readData();
+  const meal=data.meals.find(m=>String(m.id)===String(id));
+  if(!meal)return alert("Meal record nahi mila.");
+  const names=(meal.attendance||[]).map(key=>{
+    const m=findMember(key);return m?memberName(m):key;
+  });
+  const ration=(meal.ration||[]).map(r=>"- "+(r.itemName||"Item")+": "+formatQty(r.quantityBase,r.unit)).join("\n");
+  alert("Date: "+meal.date+"\nMeal: "+meal.type+"\nMenu: "+meal.recipeName+
+    "\nStatus: "+(meal.status||"confirmed")+"\nJawans ("+names.length+"): "+names.join(", ")+
+    "\n\nRation:\n"+(ration||"No ration data")+"\n\nTotal cost: "+money(meal.totalCost));
+}
+
+function editHistory(id){
+  readData();
+  const meal=data.meals.find(m=>String(m.id)===String(id));
+  if(!meal)return alert("Meal record nahi mila.");
+  if(meal.status==="cancelled")return alert("Cancelled meal edit nahi ho sakta.");
+  if(!confirm("Is meal ko edit karne ke liye form mein load karein? Confirm karne par purane charges replace honge."))return;
+  editingMealId=meal.id;previousMeal=JSON.parse(JSON.stringify(meal));
+  $("mealDate").value=meal.date||today();
+  selectedType=meal.type||mealTypes[0];
+  document.querySelectorAll(".type-btn").forEach(b=>b.classList.toggle("selected",b.dataset.type===selectedType));
+  $("mealRecipe").value=meal.recipeId||"";
+  $("chargeMode").value=meal.chargeMode||"equal";
+  selectedMembers=new Set((meal.attendance||[]).map(String));
+  $("confirmMeal").textContent="Save Meal Changes";
+  renderMembers();renderRation();
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+function cancelHistory(id){
+  readData();
+  const meal=data.meals.find(m=>String(m.id)===String(id));
+  if(!meal)return alert("Meal record nahi mila.");
+  if(meal.status==="cancelled")return alert("Meal pehle hi cancel hai.");
+  if(!confirm("Meal cancel karein? Isse ration stock calculation aur linked charges se meal hata diya jayega."))return;
+  // Keep the meal for audit/history; remove its stock usage and reverse its linked charges.
+  meal.status="cancelled";
+  meal.ration=[];
+  removeCharges(meal.id);
+  meal.totalCost=0;
+  meal.updatedAt=new Date().toISOString();
+  if(saveData())render();
+}
+
+$("mealDate").value=today();
+$("historyDate").value=today();
+render();
+</script>
+</body>
+</html>

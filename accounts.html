@@ -3,468 +3,471 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>CRPF Smart Mess Manager - Accounts</title>
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Mess Accounts & Monthly Bill</title>
 <style>
-:root{--g:#176747;--deep:#10563e;--bg:#f2f6f3;--white:#fff;--text:#214d3b;--muted:#78857e;--border:#dce5df;--red:#bd3942;--orange:#a96810}
+:root{--g:#176747;--deep:#10563e;--bg:#f2f6f3;--white:#fff;--text:#214d3b;--muted:#78857e;--border:#dce5df;--red:#bd3942;--amber:#94620a}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);font-family:Arial,sans-serif;color:var(--text)}
-header{background:var(--deep);color:white;padding:18px 15px}
-header h2{margin:0 0 5px;font-size:21px}
-header p{margin:0;font-size:13px;opacity:.9}
-nav{display:flex;gap:8px;overflow-x:auto;background:var(--g);padding:10px}
-nav a{color:white;text-decoration:none;white-space:nowrap;padding:8px 12px;border-radius:7px;font-size:13px}
-nav a.active,nav a:hover{background:white;color:var(--g)}
-main{max-width:1100px;margin:auto;padding:14px}
-h3{margin:0 0 13px}
-.card{background:white;border:1px solid var(--border);border-radius:12px;padding:15px;margin-bottom:14px;box-shadow:0 2px 7px #163c2710}
-.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
-.stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-bottom:14px}
-.stat{background:white;border:1px solid var(--border);border-radius:11px;padding:13px}
-.stat small{display:block;color:var(--muted);margin-bottom:8px}
-.stat strong{font-size:20px;overflow-wrap:anywhere}
-label{display:block;font-size:13px;font-weight:bold;margin:9px 0 5px}
-input,select,textarea{width:100%;padding:11px;border:1px solid var(--border);border-radius:8px;background:white;color:var(--text);font-size:15px}
-button,.btn{border:0;border-radius:8px;padding:10px 13px;background:var(--g);color:white;font-size:14px;cursor:pointer;text-decoration:none;display:inline-block}
-button.secondary,.btn.secondary{background:#e8f0eb;color:var(--g)}
-button.danger{background:var(--red)}
-button.orange{background:var(--orange)}
-button:disabled{opacity:.45}
-.actions{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
-.muted{color:var(--muted);font-size:13px}
-.tablewrap{overflow-x:auto}
-table{width:100%;border-collapse:collapse;font-size:13px}
-th,td{padding:10px 8px;border-bottom:1px solid var(--border);text-align:left;vertical-align:top}
-th{background:#f1f6f2;white-space:nowrap}
-td button{margin:2px;padding:7px 9px}
-.pill{display:inline-block;padding:4px 8px;border-radius:20px;background:#e4f3e9;color:var(--g);font-size:12px}
-.pill.due{background:#ffeded;color:var(--red)}
-.billhead{text-align:center;border-bottom:2px solid var(--g);padding-bottom:12px;margin-bottom:14px}
-.billhead h2{margin:0 0 5px}
-.billtotal{background:#edf6ef;padding:13px;border-radius:8px;margin-top:12px}
-.billtotal p{display:flex;justify-content:space-between;gap:10px;margin:7px 0}
-.empty{text-align:center;color:var(--muted);padding:20px}
-hr{border:0;border-top:1px solid var(--border);margin:14px 0}
-@media(min-width:700px){.stats{grid-template-columns:repeat(4,minmax(0,1fr))}.grid{grid-template-columns:repeat(3,minmax(0,1fr))}}
+header{background:var(--g);color:white;padding:18px 15px}
+header h2{margin:0 0 5px;font-size:22px}
+header p{margin:0;font-size:13px}
+nav{display:flex;gap:7px;overflow-x:auto;background:white;padding:11px;border-bottom:1px solid var(--border)}
+nav a{white-space:nowrap;text-decoration:none;background:#eaf3ed;color:var(--g);padding:9px 11px;border-radius:8px;font-size:13px;font-weight:bold}
+main{max-width:1000px;margin:16px auto;padding:0 12px 30px}
+.card{background:white;border:1px solid var(--border);border-radius:12px;padding:15px;margin-bottom:14px}
+h3{margin:0 0 12px;font-size:18px}
+label{display:block;font-size:13px;font-weight:bold;margin:12px 0 6px}
+input,select,textarea{width:100%;padding:11px;border:1px solid var(--border);border-radius:8px;font-size:15px;background:white;color:var(--text)}
+button{border:0;border-radius:8px;padding:11px 13px;font-weight:bold;font-size:13px;cursor:pointer}
+.primary{background:var(--g);color:white}
+.secondary{background:#eaf3ed;color:var(--g)}
+.danger{background:#fff0f0;color:var(--red)}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 12px}
+.stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
+.stat{background:#f6faf7;border:1px solid var(--border);border-radius:10px;padding:12px}
+.stat strong{display:block;font-size:21px;color:var(--g);overflow-wrap:anywhere}
+.stat span{font-size:12px;color:var(--muted)}
+.help{font-size:12px;line-height:1.5;color:var(--muted)}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:13px}
+.tableWrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:13px;min-width:520px}
+th,td{padding:10px 8px;text-align:left;border-bottom:1px solid var(--border);vertical-align:top}
+th{background:#f3f8f4}
+.right{text-align:right;white-space:nowrap}
+.good{color:var(--g);font-weight:bold}
+.bad{color:var(--red);font-weight:bold}
+#message{font-size:13px;line-height:1.5;margin-top:10px}
+.empty{padding:18px;text-align:center;color:var(--muted);font-size:13px}
+.hidden{display:none!important}
+.billHead{text-align:center;border-bottom:1px solid var(--border);padding-bottom:12px;margin-bottom:12px}
+.billHead h2{margin:0 0 5px}
+@media(max-width:520px){.grid{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.stat strong{font-size:18px}}
 @media print{
   body{background:white;color:#111}
-  header,nav,.no-print,.stats,.screen-only{display:none!important}
-  main{padding:0;max-width:none}
-  #billPanel{display:block!important;border:0;box-shadow:none;padding:0}
-  .card{box-shadow:none;border:0}
-  #billPanel table th{background:#eee!important}
+  header,nav,.noPrint,#paymentCard,#registerCard,#summaryCard,#billControls,footer{display:none!important}
+  main{max-width:none;margin:0;padding:0}
+  .card{border:0;padding:0;margin:0}
+  #billCard{display:block!important}
+  #billCard .tableWrap{overflow:visible}
+  #billCard table{min-width:0;font-size:11px}
+  #billCard th,#billCard td{padding:6px 4px}
 }
 </style>
 </head>
 <body>
 <header>
   <h2>CRPF Smart Mess Manager</h2>
-  <p>Jawan Accounts · Payments · Monthly Bill</p>
+  <p>Advance Register · Payments · Monthly Bill</p>
 </header>
 
-<nav class="no-print">
+<nav class="noPrint">
   <a href="index.html">Dashboard</a>
   <a href="members.html">Members</a>
   <a href="store.html">Store</a>
   <a href="recipes.html">Recipes</a>
   <a href="meals.html">Meals</a>
-  <a href="accounts.html" class="active">Accounts</a>
+  <a href="accounts.html">Accounts</a>
   <a href="settlement.html">Settlement</a>
+  <a href="settings.html">Settings</a>
 </nav>
 
 <main>
-  <div id="notice" class="muted no-print" style="margin:4px 0 12px"></div>
-
-  <section class="stats">
-    <div class="stat"><small>Active Members</small><strong id="sMembers">0</strong></div>
-    <div class="stat"><small>Total Meal Charges</small><strong id="sCharges">Rs 0</strong></div>
-    <div class="stat"><small>Total Payments</small><strong id="sPaid">Rs 0</strong></div>
-    <div class="stat"><small>Total Outstanding Due</small><strong id="sDue">Rs 0</strong></div>
+  <section class="card" id="summaryCard">
+    <h3>Account Summary</h3>
+    <div class="stats">
+      <div class="stat"><strong id="totalPaid">Rs 0</strong><span>Total recorded payments</span></div>
+      <div class="stat"><strong id="totalCharges">Rs 0</strong><span>Total recorded meal charges</span></div>
+      <div class="stat"><strong id="totalDue">Rs 0</strong><span>Total member dues</span></div>
+      <div class="stat"><strong id="memberCount">0</strong><span>Members in register</span></div>
+    </div>
+    <p class="help">Yeh totals available member, ledger aur meal records se calculate hote hain. Default Mess Advance ko actual jama payment nahi maana jata.</p>
   </section>
 
-  <section class="card no-print">
-    <h3>Find Jawan Account</h3>
-    <div class="grid">
-      <div>
-        <label>Search by name or Service ID</label>
-        <input id="search" placeholder="Name / Service ID" oninput="renderMembers()">
-      </div>
-      <div>
-        <label>Select Jawan</label>
-        <select id="memberSelect" onchange="selectMember()">
-          <option value="">-- Select Jawan --</option>
-        </select>
-      </div>
-      <div>
-        <label>Bill Month</label>
-        <input id="billMonth" type="month" onchange="makeBill()">
-      </div>
-    </div>
-    <div class="actions">
-      <button onclick="showBill()">View Monthly Bill</button>
-      <button class="secondary" onclick="printBill()">Print / Save PDF</button>
-      <button class="secondary" onclick="shareBill()">Share Bill on WhatsApp</button>
-    </div>
-    <p class="muted">Pehle jawan aur mahina select karein. Bill mein sirf usi mahine ka hisab aayega.</p>
-  </section>
-
-  <section class="card no-print">
-    <h3>Member Balances</h3>
-    <div class="tablewrap">
-      <table>
-        <thead><tr>
-          <th>Service ID / Name</th><th>Rank</th><th>Monthly Limit</th>
-          <th>Charges</th><th>Paid</th><th>Due</th><th>Action</th>
-        </tr></thead>
-        <tbody id="memberRows"></tbody>
-      </table>
-    </div>
-  </section>
-
-  <section class="card no-print" id="paymentPanel">
-    <h3>Receive Payment</h3>
-    <p class="muted">Jab asal mein paisa mile tabhi payment entry karein. Partial payment bhi daal sakte hain.</p>
+  <section class="card noPrint" id="paymentCard">
+    <h3>Record Member Payment</h3>
+    <p class="help">Jawan se paisa asal mein receive hone par hi payment entry karein. Entry save hone ke baad receipt bana sakte hain.</p>
     <form id="paymentForm">
       <div class="grid">
-        <div><label>Jawan</label><select id="payMember" required></select></div>
-        <div><label>Payment Date</label><input id="payDate" type="date" required></div>
-        <div><label>Amount Received (Rs)</label><input id="payAmount" type="number" min="0.01" step="0.01" required placeholder="Actual amount"></div>
-        <div><label>Payment Method</label>
-          <select id="payMode"><option>Cash</option><option>Bank</option><option>Online</option><option>Other</option></select>
+        <div>
+          <label for="payMember">Member *</label>
+          <select id="payMember" required></select>
         </div>
-        <div><label>Receipt / Reference (optional)</label><input id="payRef" placeholder="Receipt number"></div>
-        <div><label>Remarks (optional)</label><input id="payNote" placeholder="Payment details"></div>
+        <div>
+          <label for="payDate">Payment Date *</label>
+          <input id="payDate" type="date" required>
+        </div>
+        <div>
+          <label for="payAmount">Amount (Rs) *</label>
+          <input id="payAmount" type="number" min="0.01" step="0.01" required>
+        </div>
+        <div>
+          <label for="payMode">Payment Method</label>
+          <select id="payMode">
+            <option>Cash</option>
+            <option>Bank Transfer</option>
+            <option>UPI</option>
+            <option>Other</option>
+          </select>
+        </div>
+        <div>
+          <label for="payRef">Receipt / Reference No.</label>
+          <input id="payRef" placeholder="Optional reference">
+        </div>
+        <div>
+          <label for="payNote">Description</label>
+          <input id="payNote" placeholder="Mess advance payment">
+        </div>
       </div>
-      <div class="actions"><button type="submit">Save Payment</button></div>
+      <div class="actions">
+        <button class="primary" type="submit">Save Payment</button>
+        <button class="secondary" type="button" onclick="paymentFormReset()">Clear</button>
+      </div>
+      <div id="message" aria-live="polite"></div>
     </form>
   </section>
 
-  <section class="card no-print" id="ledgerPanel">
-    <h3>Account Transaction History</h3>
+  <section class="card noPrint" id="registerCard">
+    <h3>Member Advance Register</h3>
     <div class="grid">
-      <div><label>Filter Jawan</label><select id="ledgerMember" onchange="renderLedger()"></select></div>
-      <div><label>Filter Month</label><input id="ledgerMonth" type="month" onchange="renderLedger()"></div>
+      <div>
+        <label for="filterMember">Member</label>
+        <select id="filterMember" onchange="renderRegister()"></select>
+      </div>
+      <div>
+        <label for="filterMonth">Month</label>
+        <input id="filterMonth" type="month" onchange="renderRegister()">
+      </div>
     </div>
-    <div class="tablewrap" style="margin-top:12px">
-      <table><thead><tr><th>Date</th><th>Jawan</th><th>Details</th><th>Type</th><th>Amount</th></tr></thead>
-      <tbody id="ledgerRows"></tbody></table>
+    <div class="tableWrap" style="margin-top:12px">
+      <table>
+        <thead><tr><th>Date</th><th>Member</th><th>Type</th><th>Description</th><th class="right">Amount</th></tr></thead>
+        <tbody id="registerRows"></tbody>
+      </table>
+    </div>
+    <div id="registerEmpty" class="empty hidden">Is filter ke liye koi record nahi mila.</div>
+    <div class="actions">
+      <button class="secondary" onclick="downloadRegister()">Download Register CSV</button>
     </div>
   </section>
 
-  <section class="card" id="billPanel">
-    <div class="billhead">
-      <h2>MESS MONTHLY BILL</h2>
-      <div>CRPF Smart Mess Manager</div>
-      <p class="muted">Member meal charges and payment statement</p>
+  <section class="card" id="billCard">
+    <div id="billControls" class="noPrint">
+      <h3>Member Monthly Bill</h3>
+      <div class="grid">
+        <div>
+          <label for="billMember">Select Member</label>
+          <select id="billMember" onchange="renderBill()"></select>
+        </div>
+        <div>
+          <label for="billMonth">Select Month</label>
+          <input id="billMonth" type="month" onchange="renderBill()">
+        </div>
+      </div>
+      <div class="actions">
+        <button class="primary" onclick="printBill()">Print / Save PDF</button>
+        <button class="secondary" onclick="shareBill()">Share Bill on WhatsApp</button>
+      </div>
+      <p class="help">Bill actual recorded payments aur meal charges par based hai. Agar purane meal records mein individual charge ledger nahi hai, to meal ka total recorded attendance mein barabar baanta ja sakta hai. Isliye final bill verify karein.</p>
     </div>
-    <div id="billContent" class="empty">Jawan aur mahina select karke “View Monthly Bill” dabayein.</div>
+    <div id="billOutput" style="margin-top:18px">
+      <div class="empty">Bill dekhne ke liye member aur month select karein.</div>
+    </div>
   </section>
 </main>
 
 <script>
 (function(){
-'use strict';
-const KEYS=['crpfMessProfessionalV1','crpfMessPrototypeV2','crpfMessGreenV1','crpfSmartMessManagerSimpleV1'];
-let KEY='';
-let data={members:[],items:[],recipes:[],meals:[],ledger:[],expenses:[],settings:{}};
+"use strict";
+const KEYS=["crpfMessProfessionalV1","crpfMessPrototypeV2"];
+const $=id=>document.getElementById(id);
+const arr=x=>Array.isArray(x)?x:[];
+const str=x=>String(x??"");
+let data=loadData();
 
-function parseStore(k){
+function parse(key){
   try{
-    const d=JSON.parse(localStorage.getItem(k)||'null');
-    if(d && typeof d==='object') return d;
-  }catch(e){}
-  return null;
+    const x=JSON.parse(localStorage.getItem(key)||"null");
+    return x&&typeof x==="object"&&!Array.isArray(x)?x:null;
+  }catch(e){return null}
 }
-function score(d){
-  if(!d)return -1;
-  let n=0;
-  ['members','items','recipes','meals','ledger','finance','expenses'].forEach(k=>{
-    if(Array.isArray(d[k])) n+=d[k].length?10:1;
+function mergeById(a,b){
+  const out=[],seen=new Set();
+  [...arr(a),...arr(b)].forEach(x=>{
+    const k=x&&x.id!=null?"id:"+x.id:"obj:"+JSON.stringify(x);
+    if(!seen.has(k)){seen.add(k);out.push(x)}
   });
-  return n;
+  return out;
 }
-function load(){
-  let best=null,bestScore=-1;
-  KEYS.forEach(k=>{
-    const d=parseStore(k);
-    if(d && score(d)>bestScore){best=d;bestScore=score(d);KEY=k;}
-  });
-  if(!best){KEY=KEYS[0];best={};}
-  data=best;
-  ['members','items','recipes','meals','ledger','expenses','finance','handovers','limitHistory'].forEach(k=>{
-    if(!Array.isArray(data[k]))data[k]=[];
-  });
-  if(!data.settings || typeof data.settings!=='object')data.settings={};
+function loadData(){
+  const old=parse(KEYS[1])||{},cur=parse(KEYS[0])||{};
+  const d={...old,...cur};
+  ["members","items","recipes","meals","ledger","expenses","handovers",
+   "limitHistory","movements","purchases","transactions","records","receipts","refunds"
+  ].forEach(k=>d[k]=mergeById(old[k],cur[k]));
+  d.settings={...(old.settings||{}),...(cur.settings||{})};
+  d.members=arr(d.members);d.ledger=arr(d.ledger);d.meals=arr(d.meals);
+  return d;
 }
-function save(){
-  try{
-    localStorage.setItem(KEY,JSON.stringify(data));
-    document.getElementById('notice').textContent='Saved in this browser ('+KEY+').';
-    return true;
-  }catch(e){
-    alert('Save nahi ho paya. Browser storage full ho sakta hai. Pehle backup karein.');
-    return false;
-  }
+function saveData(){
+  const old=localStorage.getItem(KEYS[0]);
+  if(old){try{localStorage.setItem("crpfMessAccountsSafetyCopy",old)}catch(e){}}
+  localStorage.setItem(KEYS[0],JSON.stringify(data));
 }
-function id(){return 'acc_'+Date.now().toString(36)+'_'+Math.random().toString(36).slice(2,7);}
-function esc(v){return String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
-function money(n){return 'Rs '+(Number(n)||0).toLocaleString('en-IN',{minimumFractionDigits:2,maximumFractionDigits:2});}
-function amount(x){return Number(x?.amount??x?.total??x?.cost??0)||0;}
-function dateNow(){return new Date().toISOString().slice(0,10);}
-function currentMonth(){return dateNow().slice(0,7);}
-function monthOf(v){return String(v||'').slice(0,7);}
-function memberId(m){return String(m?.id??m?.memberId??m?.serviceId??m?.memberCode??'');}
-function memberName(m){return m?.name||m?.fullName||m?.memberName||m?.serviceName||'Unnamed member';}
-function serviceId(m){return m?.serviceId||m?.memberCode||m?.serviceNo||m?.id||'—';}
-function rank(m){return m?.rank||m?.designation||'—';}
-function limit(m){return Number(m?.monthlyLimit??m?.limit??4000)||4000;}
-function memberById(idv){
-  return data.members.find(m=>memberId(m)===String(idv))||null;
+function makeId(){return "acc_"+Date.now().toString(36)+"_"+Math.random().toString(36).slice(2,7)}
+function memberName(m){return m.name||m.fullName||m.memberName||"Unnamed member"}
+function memberService(m){return m.serviceId||m.memberId||m.idNumber||""}
+function memberStatus(m){return m.status||"Active"}
+function memberKey(m){return str(m.id)}
+function money(n){return "Rs "+Number(n||0).toLocaleString("en-IN",{minimumFractionDigits:2,maximumFractionDigits:2})}
+function amount(n){const v=Number(n);return Number.isFinite(v)?v:0}
+function esc(v){return str(v).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
+function today(){const d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")}
+function currentMonth(){return today().slice(0,7)}
+function monthOf(date){return str(date).slice(0,7)}
+function memberById(id){return data.members.find(m=>memberKey(m)===str(id))}
+function isCancelled(meal){return ["cancelled","canceled","void"].includes(str(meal.status).toLowerCase())}
+function mealAttendance(meal){
+  return arr(meal.attendance||meal.members||meal.memberIds).map(x=>{
+    if(typeof x==="object")return str(x.memberId||x.id||x.serviceId);
+    return str(x);
+  }).filter(Boolean);
 }
-function activeMembers(){
-  return data.members.filter(m=>!['inactive','transferred','left'].includes(String(m.status||'active').toLowerCase()));
+function mealCost(meal){return amount(meal.totalCost??meal.cost??meal.total??0)}
+function mealType(meal){return meal.type||meal.mealType||"Meal"}
+function mealName(meal){return meal.recipeName||meal.name||mealType(meal)}
+function entryMemberId(e){
+  return str(e.memberId||e.member_id||e.jawanId||e.memberID||"");
 }
-function typeOf(t){
-  const s=String(t?.transactionType||t?.type||t?.kind||'').toLowerCase();
-  if(['deposit','payment','credit','received','member_payment','advance','income'].includes(s))return 'payment';
-  if(['charge','meal_charge','debit','expense','meal'].includes(s))return 'charge';
-  return s.includes('payment')||s.includes('deposit')?'payment':s.includes('charge')?'charge':'other';
+function entryType(e){
+  const t=str(e.transactionType||e.type||e.kind).toLowerCase();
+  if(t.includes("refund"))return "refund";
+  if(t.includes("charge")||t.includes("meal")||t.includes("debit"))return "charge";
+  if(t.includes("deposit")||t.includes("payment")||t.includes("credit")||t.includes("advance"))return "payment";
+  return t||"other";
 }
-function memberMatches(t,mid){
-  const candidates=[t?.memberId,t?.member_id,t?.memberCode,t?.serviceId,t?.jawanId,t?.member?.id];
-  return candidates.some(v=>v!==undefined&&v!==null&&String(v)===String(mid));
+function entryAmount(e){return Math.abs(amount(e.amount??e.value??e.total??0))}
+function entryDate(e){return str(e.date||e.createdAt||e.timestamp||"").slice(0,10)}
+function entryName(e){return e.description||e.note||e.notes||e.type||"Account entry"}
+function linkedMealId(e){return str(e.mealId||e.meal_id||"")}
+function linkedMealChargeTotal(meal,memberId){
+  return data.ledger.filter(e=>entryType(e)==="charge"&&
+    linkedMealId(e)===str(meal.id)&&entryMemberId(e)===str(memberId))
+    .reduce((s,e)=>s+entryAmount(e),0);
 }
-function ledgerRowsFor(mid,month){
-  return data.ledger.filter(t=>memberMatches(t,mid)&&(!month||monthOf(t.date||t.createdAt)===month));
+function isMealCharge(e){return entryType(e)==="charge"&&(linkedMealId(e)!==""||str(e.transactionType).toLowerCase().includes("meal")||str(e.type).toLowerCase().includes("meal"))}
+function memberChargeEntries(id,month){
+  return data.ledger.filter(e=>entryMemberId(e)===str(id)&&entryType(e)==="charge"&&
+    (!month||monthOf(entryDate(e))===month));
 }
-function isCancelled(meal){return ['cancelled','canceled','void'].includes(String(meal.status||'').toLowerCase());}
-function attendanceIds(meal){
-  return (meal.attendance||meal.members||meal.memberIds||[]).map(x=>{
-    if(typeof x==='object')return String(x.memberId??x.id??x.serviceId??'');
-    return String(x);
-  });
+function memberPayments(id,month){
+  return data.ledger.filter(e=>entryMemberId(e)===str(id)&&
+    ["payment","refund"].includes(entryType(e))&&(!month||monthOf(entryDate(e))===month));
 }
-function mealCost(meal){return Number(meal.totalCost??meal.cost??meal.amount??0)||0;}
-function mealChargeForMember(meal,mid){
-  if(isCancelled(meal))return 0;
-  const attendees=attendanceIds(meal);
-  if(!attendees.includes(String(mid)))return 0;
-  const linked=data.ledger.some(t=>typeOf(t)==='charge'&&memberMatches(t,mid)&&String(t.mealId||t.referenceId||'')===String(meal.id));
-  if(linked)return 0;
-  return attendees.length?mealCost(meal)/attendees.length:0;
-}
-function allTransactions(mid,month){
-  const rows=[];
-  ledgerRowsFor(mid,month).forEach(t=>{
-    const typ=typeOf(t);
-    if(typ==='charge'||typ==='payment'){
-      rows.push({
-        date:t.date||t.createdAt||'',
-        type:typ,
-        amount:amount(t),
-        description:t.description||t.note||t.remarks||(typ==='charge'?'Meal charge':'Payment received'),
-        mealId:t.mealId||t.referenceId||'',
-        source:t
-      });
+function mealSharesForMember(id,month){
+  const out=[];
+  data.meals.filter(m=>!isCancelled(m)&&(!month||monthOf(m.date||m.mealDate)===month))
+  .forEach(meal=>{
+    const attendees=mealAttendance(meal);
+    const hasMember=attendees.some(k=>k===str(id)||
+      (memberById(k)&&memberKey(memberById(k))===str(id))||
+      (memberById(k)&&memberService(memberById(k))===str(id)));
+    if(!hasMember||attendees.length===0)return;
+    const recorded=linkedMealChargeTotal(meal,id);
+    const anyLinked=data.ledger.some(e=>entryType(e)==="charge"&&linkedMealId(e)===str(meal.id));
+    // If the meal already has member-level ledger entries, use those; do not create a duplicate share.
+    if(anyLinked){
+      if(recorded>0)out.push({id:"meal_"+meal.id,date:meal.date||meal.mealDate,kind:"Meal",description:mealType(meal)+" - "+mealName(meal),amount:recorded});
+      return;
     }
+    out.push({id:"meal_"+meal.id,date:meal.date||meal.mealDate,kind:"Meal",description:mealType(meal)+" - "+mealName(meal),amount:mealCost(meal)/attendees.length});
   });
-  data.meals.filter(m=>!isCancelled(m)&&(!month||monthOf(m.date)===month)).forEach(m=>{
-    const c=mealChargeForMember(m,mid);
-    if(c>0)rows.push({
-      date:m.date||'',type:'charge',amount:c,
-      description:(m.type||'Meal')+' - '+(m.recipeName||m.recipe||'Meal'),
-      mealId:m.id,source:m
-    });
-  });
-  rows.sort((a,b)=>String(a.date).localeCompare(String(b.date)));
+  return out;
+}
+function allChargesForMember(id,month){
+  const entries=memberChargeEntries(id,month);
+  const rows=entries.map(e=>({id:e.id,date:entryDate(e),kind:"Charge",description:entryName(e),amount:entryAmount(e)}));
+  const linkedIds=new Set(entries.map(linkedMealId).filter(Boolean));
+  const linkedAny=data.ledger.some(e=>entryType(e)==="charge"&&linkedMealId(e)!=="");
+  const shares=mealSharesForMember(id,month).filter(r=>!linkedIds.has(str(r.id).replace(/^meal_/,"")));
+  // If any linked meal charges exist, fallback attendance shares are only used for meals without linked charges.
+  rows.push(...shares);
   return rows;
 }
-function totals(mid,month){
-  const rows=allTransactions(mid,month);
-  return {
-    charges:rows.filter(t=>t.type==='charge').reduce((s,t)=>s+t.amount,0),
-    paid:rows.filter(t=>t.type==='payment').reduce((s,t)=>s+t.amount,0),
-    rows
-  };
+function paymentsForMember(id,month){
+  return memberPayments(id,month).map(e=>({
+    id:e.id,date:entryDate(e),kind:entryType(e)==="refund"?"Refund":"Payment",
+    description:entryName(e),amount:entryType(e)==="refund"?-entryAmount(e):entryAmount(e)
+  }));
 }
-function populateSelects(){
-  const opts=activeMembers().map(m=>`<option value="${esc(memberId(m))}">${esc(memberName(m))} (${esc(serviceId(m))})</option>`).join('');
-  ['memberSelect','payMember','ledgerMember'].forEach((idv,i)=>{
-    const el=document.getElementById(idv),old=el.value;
-    const first=i===2?'All jawans':'-- Select Jawan --';
-    el.innerHTML=(i===2?'<option value="">All jawans</option>':'<option value="">'+first+'</option>')+opts;
-    if([...el.options].some(o=>o.value===old))el.value=old;
+function transactionsForMember(id,month){
+  return [...allChargesForMember(id,month),...paymentsForMember(id,month)]
+    .sort((a,b)=>str(a.date).localeCompare(str(b.date)));
+}
+function memberTotals(id,month){
+  const charges=allChargesForMember(id,month).reduce((s,r)=>s+amount(r.amount),0);
+  const payments=memberPayments(id,month).filter(e=>entryType(e)==="payment").reduce((s,e)=>s+entryAmount(e),0);
+  const refunds=memberPayments(id,month).filter(e=>entryType(e)==="refund").reduce((s,e)=>s+entryAmount(e),0);
+  return {charges,payments,refunds,netPaid:payments-refunds,due:charges-payments+refunds};
+}
+function setOptions(select,includeAll){
+  const previous=select.value;
+  select.innerHTML="";
+  if(includeAll){
+    const opt=document.createElement("option");opt.value="All";opt.textContent="All Members";select.appendChild(opt);
+  }
+  data.members.slice().sort((a,b)=>memberName(a).localeCompare(memberName(b))).forEach(m=>{
+    const o=document.createElement("option");
+    o.value=memberKey(m);o.textContent=memberName(m)+(memberService(m)?" · "+memberService(m):"");
+    select.appendChild(o);
   });
+  if([...select.options].some(o=>o.value===previous))select.value=previous;
 }
-function renderMembers(){
-  const q=document.getElementById('search').value.toLowerCase().trim();
-  const rows=activeMembers().filter(m=>(memberName(m)+' '+serviceId(m)+' '+rank(m)).toLowerCase().includes(q));
-  document.getElementById('memberRows').innerHTML=rows.map(m=>{
-    const mid=memberId(m),t=totals(mid,''),due=t.charges-t.paid;
-    return `<tr>
-      <td><b>${esc(serviceId(m))}</b><br>${esc(memberName(m))}</td>
-      <td>${esc(rank(m))}</td>
-      <td>${money(limit(m))}</td>
-      <td>${money(t.charges)}</td><td>${money(t.paid)}</td>
-      <td><span class="pill ${due>0?'due':''}">${money(due)}</span></td>
-      <td><button onclick="openMember('${esc(mid)}')">View</button><button class="secondary" onclick="quickBill('${esc(mid)}')">Bill</button></td>
-    </tr>`;
-  }).join('')||'<tr><td colspan="7" class="empty">Member record nahi mila. Pehle Members page mein jawan add karein.</td></tr>';
+function showMessage(msg,error){
+  $("message").textContent=msg;
+  $("message").style.color=error?"#bd3942":"#176747";
 }
-function renderStats(){
-  const ms=activeMembers();
-  let ch=0,pa=0;
-  ms.forEach(m=>{const t=totals(memberId(m),'');ch+=t.charges;pa+=t.paid;});
-  document.getElementById('sMembers').textContent=ms.length;
-  document.getElementById('sCharges').textContent=money(ch);
-  document.getElementById('sPaid').textContent=money(pa);
-  document.getElementById('sDue').textContent=money(ch-pa);
-}
-function selectMember(){
-  const mid=document.getElementById('memberSelect').value;
-  if(mid)document.getElementById('payMember').value=mid;
-  makeBill();
-}
-function openMember(mid){
-  document.getElementById('memberSelect').value=mid;
-  document.getElementById('payMember').value=mid;
-  makeBill();
-  document.getElementById('billPanel').scrollIntoView({behavior:'smooth'});
-}
-function quickBill(mid){
-  document.getElementById('memberSelect').value=mid;
-  makeBill();showBill();
-}
-function makeBill(){
-  const mid=document.getElementById('memberSelect').value;
-  const month=document.getElementById('billMonth').value||currentMonth();
-  const out=document.getElementById('billContent');
-  if(!mid){out.innerHTML='<div class="empty">Pehle jawan select karein.</div>';return;}
-  const m=memberById(mid);
-  if(!m){out.innerHTML='<div class="empty">Member record nahi mila.</div>';return;}
-  const t=totals(mid,month),due=t.charges-t.paid;
-  const rows=t.rows;
-  out.innerHTML=`
-    <div>
-      <div class="grid">
-        <div><b>Jawan Name</b><br>${esc(memberName(m))}</div>
-        <div><b>Service ID</b><br>${esc(serviceId(m))}</div>
-        <div><b>Rank</b><br>${esc(rank(m))}</div>
-        <div><b>Bill Month</b><br>${esc(month)}</div>
-      </div>
-      <hr>
-      <h3>Item / Meal-wise Account</h3>
-      <div class="tablewrap">
-        <table><thead><tr><th>Date</th><th>Details</th><th>Type</th><th>Amount</th></tr></thead>
-        <tbody>${rows.map(r=>`<tr>
-          <td>${esc(r.date||'—')}</td><td>${esc(r.description)}</td>
-          <td>${r.type==='payment'?'Payment':'Charge'}</td>
-          <td>${money(r.amount)}</td>
-        </tr>`).join('')||'<tr><td colspan="4" class="empty">Is month ka transaction nahi hai.</td></tr>'}</tbody>
-        </table>
-      </div>
-      <div class="billtotal">
-        <p><span>Total meal charges</span><b>${money(t.charges)}</b></p>
-        <p><span>Total payment received</span><b>${money(t.paid)}</b></p>
-        <p><span>Monthly limit (reference only)</span><b>${money(limit(m))}</b></p>
-        <hr>
-        <p><strong>${due>=0?'Balance Due':'Advance / Credit'}</strong><strong>${money(Math.abs(due))}</strong></p>
-      </div>
-      <p class="muted">Yeh bill browser mein maujood records se bana hai. Monthly limit ko charge mein nahi joda gaya.</p>
-    </div>`;
-}
-function showBill(){
-  if(!document.getElementById('memberSelect').value){alert('Pehle jawan select karein.');return;}
-  makeBill();
-  document.getElementById('billPanel').scrollIntoView({behavior:'smooth'});
-}
-function printBill(){
-  if(!document.getElementById('memberSelect').value){alert('Pehle jawan select karein.');return;}
-  makeBill();
-  window.print();
-}
-function shareBill(){
-  const mid=document.getElementById('memberSelect').value;
-  if(!mid){alert('Pehle jawan select karein.');return;}
-  const m=memberById(mid),month=document.getElementById('billMonth').value||currentMonth(),t=totals(mid,month),due=t.charges-t.paid;
-  const message=[
-    'CRPF Smart Mess Manager - Monthly Bill',
-    'Jawan: '+memberName(m),
-    'Service ID: '+serviceId(m),
-    'Rank: '+rank(m),
-    'Month: '+month,
-    'Meal Charges: '+money(t.charges),
-    'Payment Received: '+money(t.paid),
-    (due>=0?'Balance Due: ':'Advance/Credit: ')+money(Math.abs(due))
-  ].join('\n');
-  const phone=String(m.mobile||m.phone||m.mobileNumber||'').replace(/\D/g,'');
-  const url='https://wa.me/'+phone+'?text='+encodeURIComponent(message);
-  if(phone.length>=8)window.open(url,'_blank');
-  else if(confirm('Member ke record mein mobile number nahi mila. WhatsApp share menu kholein?'))window.open('https://wa.me/?text='+encodeURIComponent(message),'_blank');
-}
-function renderLedger(){
-  const mid=document.getElementById('ledgerMember').value;
-  const month=document.getElementById('ledgerMonth').value;
-  const members=data.members;
-  let list=[];
-  members.forEach(m=>{
-    if(mid&&memberId(m)!==mid)return;
-    allTransactions(memberId(m),month||'').forEach(t=>list.push({...t,memberName:memberName(m)}));
+function updateSummary(){
+  const ids=data.members.map(memberKey);
+  let paid=0,charges=0,due=0;
+  ids.forEach(id=>{
+    const t=memberTotals(id,null);
+    paid+=t.payments;
+    charges+=t.charges;
+    due+=t.due;
   });
-  list.sort((a,b)=>String(b.date).localeCompare(String(a.date)));
-  document.getElementById('ledgerRows').innerHTML=list.map(t=>`<tr>
-    <td>${esc(t.date||'—')}</td><td>${esc(t.memberName)}</td>
-    <td>${esc(t.description)}</td><td>${t.type==='payment'?'Payment':'Charge'}</td>
-    <td>${money(t.amount)}</td>
-  </tr>`).join('')||'<tr><td colspan="5" class="empty">Transaction nahi mila.</td></tr>';
+  $("totalPaid").textContent=money(paid);
+  $("totalCharges").textContent=money(charges);
+  $("totalDue").textContent=money(due);
+  $("memberCount").textContent=data.members.length;
 }
-document.getElementById('paymentForm').addEventListener('submit',function(e){
+function renderRegister(){
+  const member=$("filterMember").value;
+  const month=$("filterMonth").value;
+  let rows=[];
+  const target=data.members.filter(m=>member==="All"||memberKey(m)===member);
+  target.forEach(m=>rows.push(...transactionsForMember(memberKey(m),month).map(r=>({...r,member:memberName(m)}))));
+  rows.sort((a,b)=>str(b.date).localeCompare(str(a.date)));
+  $("registerRows").innerHTML=rows.map(r=>{
+    const type=r.kind==="Payment"?"Payment":r.kind==="Refund"?"Refund":"Charge";
+    const sign=type==="Charge"?"+":type==="Refund"?"−":"";
+    return "<tr><td>"+esc(r.date||"-")+"</td><td>"+esc(r.member)+"</td><td>"+esc(type)+"</td><td>"+esc(r.description)+"</td><td class='right'>"+sign+money(r.amount)+"</td></tr>";
+  }).join("");
+  $("registerEmpty").classList.toggle("hidden",rows.length>0);
+}
+function renderBill(){
+  const id=$("billMember").value,month=$("billMonth").value;
+  const m=memberById(id);
+  if(!m||!month){
+    $("billOutput").innerHTML='<div class="empty">Member aur month select karein.</div>';return;
+  }
+  const rows=transactionsForMember(id,month);
+  const t=memberTotals(id,month);
+  const dueClass=t.due>0?"bad":"good";
+  const currency=(data.settings&&data.settings.currency)||"Rs";
+  const fmt=n=>currency+" "+Number(n||0).toLocaleString("en-IN",{minimumFractionDigits:2,maximumFractionDigits:2});
+  $("billOutput").innerHTML=
+    '<div class="billHead"><h2>'+esc((data.settings&&data.settings.messName)||"CRPF Smart Mess")+'</h2>'+
+    '<div>Monthly Member Bill</div><div>'+esc(month)+'</div></div>'+
+    '<p><b>Member:</b> '+esc(memberName(m))+'</p>'+
+    '<p><b>Service ID:</b> '+esc(memberService(m)||"-")+'</p>'+
+    '<p><b>Rank / Duty:</b> '+esc(m.rank||"-")+' / '+esc(m.duty||"-")+'</p>'+
+    '<div class="stats">'+
+    '<div class="stat"><strong>'+fmt(t.charges)+'</strong><span>Meal / other recorded charges</span></div>'+
+    '<div class="stat"><strong>'+fmt(t.payments)+'</strong><span>Payments received this month</span></div>'+
+    '<div class="stat"><strong>'+fmt(t.refunds)+'</strong><span>Refunds recorded this month</span></div>'+
+    '<div class="stat"><strong class="'+dueClass+'">'+fmt(t.due)+'</strong><span>Monthly balance (positive = due)</span></div>'+
+    '</div>'+
+    '<h3 style="margin-top:18px">Itemized Transactions</h3>'+
+    '<div class="tableWrap"><table><thead><tr><th>Date</th><th>Type</th><th>Description</th><th class="right">Amount</th></tr></thead><tbody>'+
+    (rows.length?rows.map(r=>'<tr><td>'+esc(r.date||"-")+'</td><td>'+esc(r.kind)+'</td><td>'+esc(r.description)+'</td><td class="right">'+(r.kind==="Charge"?"+":r.kind==="Refund"?"−":"")+fmt(r.amount)+'</td></tr>').join(""):'<tr><td colspan="4">No transactions found for this month.</td></tr>')+
+    '</tbody></table></div>'+
+    '<p style="margin-top:16px"><b>Bill Note:</b> This bill is based on the records currently saved in this browser. Please verify before collecting or refunding money.</p>'+
+    '<p><small>Generated: '+esc(today())+'</small></p>';
+}
+function csvCell(v){return '"'+str(v).replace(/"/g,'""')+'"'}
+window.downloadRegister=function(){
+  const rows=[["Date","Member","Type","Description","Amount"]];
+  const member=$("filterMember").value,month=$("filterMonth").value;
+  data.members.filter(m=>member==="All"||memberKey(m)===member).forEach(m=>{
+    transactionsForMember(memberKey(m),month).forEach(r=>rows.push([r.date,memberName(m),r.kind,r.description,r.amount]));
+  });
+  const csv="\uFEFF"+rows.map(r=>r.map(csvCell).join(",")).join("\r\n");
+  const url=URL.createObjectURL(new Blob([csv],{type:"text/csv;charset=utf-8"}));
+  const a=document.createElement("a");a.href=url;a.download="Mess_Account_Register_"+(month||"all")+".csv";a.click();
+  setTimeout(()=>URL.revokeObjectURL(url),1000);
+};
+window.printBill=function(){
+  if(!$("billMember").value){alert("Pehle member select karein.");return}
+  renderBill();window.print();
+};
+window.shareBill=function(){
+  const id=$("billMember").value,month=$("billMonth").value,m=memberById(id);
+  if(!m){alert("Pehle member select karein.");return}
+  const t=memberTotals(id,month);
+  const msg=[
+    (data.settings&&data.settings.messName)||"CRPF Smart Mess",
+    "Monthly Bill: "+month,
+    "Member: "+memberName(m),
+    "Service ID: "+(memberService(m)||"-"),
+    "Charges: "+money(t.charges),
+    "Payments: "+money(t.payments),
+    "Refunds: "+money(t.refunds),
+    "Balance (positive = due): "+money(t.due),
+    "Please verify this bill against the mess records."
+  ].join("\n");
+  const phone=str(m.mobile||"").replace(/[^\d]/g,"");
+  const url=phone?"https://wa.me/"+phone+"?text="+encodeURIComponent(msg):"https://wa.me/?text="+encodeURIComponent(msg);
+  window.open(url,"_blank");
+};
+window.paymentFormReset=function(){
+  $("paymentForm").reset();$("payDate").value=today();showMessage("");
+};
+$("paymentForm").addEventListener("submit",function(e){
   e.preventDefault();
-  const mid=document.getElementById('payMember').value;
-  const m=memberById(mid);
-  const amt=Number(document.getElementById('payAmount').value);
-  if(!m){alert('Jawan select karein.');return;}
-  if(!Number.isFinite(amt)||amt<=0){alert('Sahi payment amount dalein.');return;}
+  const id=$("payMember").value,m=memberById(id),amt=Number($("payAmount").value);
+  if(!m){showMessage("Member select karein.",true);return}
+  if(!Number.isFinite(amt)||amt<=0){showMessage("Payment amount zero se zyada hona chahiye.",true);return}
   const entry={
-    id:id(),date:document.getElementById('payDate').value||dateNow(),
-    memberId:mid,memberName:memberName(m),
-    type:'deposit',transactionType:'payment',amount:amt,
-    paymentMode:document.getElementById('payMode').value,
-    description:'Payment received - '+document.getElementById('payMode').value,
-    reference:document.getElementById('payRef').value.trim(),
-    notes:document.getElementById('payNote').value.trim()
+    id:makeId(),
+    date:$("payDate").value||today(),
+    memberId:memberKey(m),
+    memberName:memberName(m),
+    type:"deposit",
+    transactionType:"payment",
+    amount:Math.round(amt*100)/100,
+    paymentMode:$("payMode").value,
+    reference:$("payRef").value.trim(),
+    description:$("payNote").value.trim()||"Mess advance payment",
+    createdAt:new Date().toISOString()
   };
   data.ledger.push(entry);
-  if(!save()){data.ledger.pop();return;}
-  alert('Payment save ho gaya: '+money(amt));
-  this.reset();
-  document.getElementById('payDate').value=dateNow();
-  document.getElementById('payMember').value=mid;
-  document.getElementById('memberSelect').value=mid;
-  renderAll();makeBill();
+  try{
+    saveData();
+    updateSummary();renderRegister();renderBill();
+    showMessage("Payment record save ho gaya. Receipt/reference: "+(entry.reference||"not entered"));
+    $("payAmount").value="";$("payRef").value="";$("payNote").value="";
+  }catch(err){
+    data.ledger=data.ledger.filter(x=>x.id!==entry.id);
+    showMessage("Save fail hua. Browser storage full ho sakta hai. Backup lein.",true);
+  }
 });
-function renderAll(){
-  populateSelects();
-  renderMembers();
-  renderStats();
-  renderLedger();
+function init(){
+  $("payDate").value=today();
+  $("filterMonth").value=currentMonth();
+  $("billMonth").value=currentMonth();
+  setOptions($("payMember"),false);
+  setOptions($("filterMember"),true);
+  setOptions($("billMember"),false);
+  if(!data.members.length){
+    $("payMember").innerHTML='<option value="">Pehle Members page par member add karein</option>';
+    $("billMember").innerHTML='<option value="">No members found</option>';
+  }
+  updateSummary();renderRegister();renderBill();
 }
-window.selectMember=selectMember;
-window.renderMembers=renderMembers;
-window.renderLedger=renderLedger;
-window.openMember=openMember;
-window.quickBill=quickBill;
-window.makeBill=makeBill;
-window.showBill=showBill;
-window.printBill=printBill;
-window.shareBill=shareBill;
-
-load();
-document.getElementById('billMonth').value=currentMonth();
-document.getElementById('payDate').value=dateNow();
-document.getElementById('ledgerMonth').value=currentMonth();
-renderAll();
-makeBill();
+try{init()}catch(e){
+  showMessage("Accounts load karne mein dikkat hui. Browser data delete na karein.",true);
+}
 })();
 </script>
 </body>

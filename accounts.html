@@ -1,1 +1,513 @@
 
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CRPF Smart Mess - Accounts</title>
+<style>
+:root{--g:#176747;--deep:#10563e;--bg:#f2f6f3;--white:#fff;--text:#214d3b;--muted:#78857e;--border:#dce5df;--red:#bd3942;--light:#e6f2eb;--wa:#16865b}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);font-family:Arial,sans-serif;color:var(--text)}
+header{background:var(--g);color:white;padding:18px 15px}
+header h2{margin:0 0 6px;font-size:22px}
+header p{margin:0;font-size:13px}
+nav{display:flex;gap:7px;overflow-x:auto;background:white;padding:10px;border-bottom:1px solid var(--border)}
+nav a{white-space:nowrap;text-decoration:none;color:var(--g);padding:9px 12px;border:1px solid var(--border);border-radius:8px;font-size:13px;font-weight:bold}
+nav a.active{background:var(--g);color:white}
+main{max-width:1150px;margin:auto;padding:14px}
+.card,.stat{background:white;border:1px solid var(--border);border-radius:12px;padding:14px;margin-bottom:13px}
+.stats{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+.stat small{display:block;color:var(--muted);font-size:12px;margin-bottom:8px}
+.stat strong{font-size:19px;overflow-wrap:anywhere}
+h3{margin:0 0 13px;font-size:17px}
+input,select,textarea{width:100%;padding:11px;border:1px solid #cbd8cf;border-radius:8px;font-size:14px;background:white;color:var(--text)}
+button{border:0;border-radius:8px;padding:10px 12px;background:var(--g);color:white;font-weight:bold;font-size:13px;cursor:pointer}
+button.secondary{background:var(--light);color:var(--g);border:1px solid var(--border)}
+button.danger{background:#fff0f0;color:var(--red);border:1px solid #f0cccc}
+button.whatsapp{background:var(--wa)}
+button:disabled{opacity:.5;cursor:not-allowed}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.field{margin-bottom:12px}
+label{display:block;font-size:13px;font-weight:bold;margin-bottom:6px}
+.small{font-size:12px;color:var(--muted)}
+.toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.toolbar input{flex:1;min-width:170px}
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;min-width:700px}
+th,td{text-align:left;padding:10px 8px;border-bottom:1px solid var(--border);font-size:13px;vertical-align:middle}
+th{background:#f5f9f6;color:var(--g)}
+.actions{display:flex;gap:5px;flex-wrap:wrap}
+.actions button{padding:7px 9px}
+.badge{display:inline-block;background:var(--light);color:var(--g);padding:5px 8px;border-radius:20px;font-size:11px}
+.badge.due{background:#fff0f0;color:var(--red)}
+.badge.paid{background:#d8f2e3;color:#176747}
+.badge.partial{background:#fff4d8;color:#815d08}
+.empty{text-align:center;padding:25px;color:var(--muted)}
+.hidden{display:none!important}
+.summary{background:var(--light);border-radius:9px;padding:12px;margin:12px 0}
+.line{display:flex;justify-content:space-between;gap:12px;padding:7px 0;font-size:13px}
+.line.total{border-top:1px solid #c6ded0;font-weight:bold;font-size:16px;margin-top:5px;padding-top:12px}
+.dialog{border:0;border-radius:14px;width:min(700px,95vw);max-height:90vh;padding:0;box-shadow:0 10px 50px #0003}
+.dialog::backdrop{background:#10291dcc}
+.modal-head{padding:15px;background:var(--g);color:white;display:flex;align-items:center;justify-content:space-between}
+.modal-head h3{margin:0}
+.modal-body{padding:15px;overflow:auto}
+.modal-foot{display:flex;gap:8px;justify-content:flex-end;padding:12px 15px;border-top:1px solid var(--border)}
+.member-top{display:flex;gap:14px;align-items:center;margin-bottom:15px}
+.avatar{width:76px;height:76px;flex-shrink:0;object-fit:cover;border-radius:12px;background:var(--light)}
+.detail-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+.detail{padding:10px;background:#f6f9f7;border-radius:8px;overflow-wrap:anywhere}
+.detail small{display:block;color:var(--muted);font-size:11px;margin-bottom:5px}
+.detail b{font-size:14px}
+@media(max-width:650px){
+ main{padding:9px}.stats{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .stat{padding:11px}.grid,.detail-grid{grid-template-columns:1fr}
+ .member-top{align-items:flex-start}
+}
+</style>
+</head>
+<body>
+<header>
+  <h2>💳 CRPF Smart Mess</h2>
+  <p>Jawan Accounts · Payments · Balance Due · WhatsApp Reminder</p>
+</header>
+
+<nav>
+  <a href="index.html">Dashboard</a>
+  <a href="members.html">Members</a>
+  <a href="store.html">Store & Purchase</a>
+  <a href="recipes.html">Recipes</a>
+  <a href="meals.html">Meals</a>
+  <a class="active" href="accounts.html">Accounts</a>
+  <a href="settlement.html">Settlement</a>
+  <a href="commander.html">Commander</a>
+  <a href="reports.html">Reports</a>
+  <a href="backup.html">Backup</a>
+</nav>
+
+<main>
+  <div class="stats">
+    <div class="stat"><small>Active Jawans</small><strong id="memberCount">0</strong></div>
+    <div class="stat"><small>Total Meal Charges</small><strong id="chargeTotal">Rs 0.00</strong></div>
+    <div class="stat"><small>Total Payments</small><strong id="paymentTotal">Rs 0.00</strong></div>
+    <div class="stat"><small>Total Outstanding</small><strong id="dueTotal">Rs 0.00</strong></div>
+  </div>
+
+  <section class="card">
+    <h3>Jawan Account Register</h3>
+    <div class="toolbar">
+      <input id="search" placeholder="🔎 Search name, service ID or rank">
+      <select id="filter" style="max-width:170px">
+        <option value="all">All Members</option>
+        <option value="due">Only Due</option>
+        <option value="paid">Paid / No Due</option>
+      </select>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Jawan</th><th>Meal Charges</th><th>Paid</th><th>Balance Due</th><th>Status</th><th>Actions</th></tr>
+        </thead>
+        <tbody id="accountRows"></tbody>
+      </table>
+    </div>
+    <div id="empty" class="empty hidden">No matching members found. Add jawans in Members first.</div>
+    <p class="small">Account details Members aur confirmed Meals se calculate hote hain. Payment record karne par paid amount history mein save hota hai.</p>
+  </section>
+</main>
+
+<!-- MEMBER ACCOUNT VIEW -->
+<dialog id="viewDialog" class="dialog">
+  <div class="modal-head">
+    <h3>Member Account & Details</h3>
+    <button class="secondary" onclick="closeDialog('viewDialog')">✕</button>
+  </div>
+  <div class="modal-body" id="viewBody"></div>
+  <div class="modal-foot">
+    <button class="secondary" onclick="closeDialog('viewDialog')">Close</button>
+  </div>
+</dialog>
+
+<!-- PAYMENT ENTRY -->
+<dialog id="paymentDialog" class="dialog">
+  <div class="modal-head">
+    <h3 id="paymentTitle">Record Payment</h3>
+    <button class="secondary" onclick="closeDialog('paymentDialog')">✕</button>
+  </div>
+  <form id="paymentForm">
+    <div class="modal-body">
+      <input type="hidden" id="paymentMemberId">
+      <div class="summary">
+        <div class="line"><span>Member</span><b id="paymentMemberName">—</b></div>
+        <div class="line"><span>Outstanding Due</span><b id="paymentDue">Rs 0.00</b></div>
+      </div>
+      <div class="field">
+        <label for="paymentAmount">Amount Received (Rs) *</label>
+        <input id="paymentAmount" type="number" min="0.01" step="0.01" required>
+      </div>
+      <div class="grid">
+        <div class="field">
+          <label for="paymentDate">Payment Date</label>
+          <input id="paymentDate" type="date" required>
+        </div>
+        <div class="field">
+          <label for="paymentMode">Payment Method</label>
+          <select id="paymentMode">
+            <option>Cash</option><option>Bank Transfer</option>
+            <option>Digital Payment</option><option>Other</option>
+          </select>
+        </div>
+      </div>
+      <div class="field">
+        <label for="paymentNote">Note (optional)</label>
+        <input id="paymentNote" maxlength="150" placeholder="Receipt number or note">
+      </div>
+      <p class="small">Full due milne par PAID dabayein. Partial payment ho to sirf actual received amount likhein.</p>
+    </div>
+    <div class="modal-foot">
+      <button type="button" class="secondary" onclick="closeDialog('paymentDialog')">Cancel</button>
+      <button type="submit">Save Payment</button>
+    </div>
+  </form>
+</dialog>
+
+<script>
+"use strict";
+
+const KEYS=["crpfMessProfessionalV1","crpfMessPrototypeV2"];
+let storageKey=KEYS[0];
+let data={};
+let paymentEditId=null;
+
+const $=id=>document.getElementById(id);
+
+function today(){
+  const d=new Date();
+  return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+}
+function makeId(){
+  return "p"+Date.now().toString(36)+Math.random().toString(36).slice(2,7);
+}
+function esc(v){
+  return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+}
+function money(v){return "Rs "+(Number(v)||0).toFixed(2)}
+
+function loadData(){
+  storageKey=KEYS.find(k=>localStorage.getItem(k))||KEYS[0];
+  try{data=JSON.parse(localStorage.getItem(storageKey)||"{}")}catch(e){data={}}
+  if(!data||typeof data!=="object"||Array.isArray(data))data={};
+  ["members","meals","ledger","items","recipes"].forEach(k=>{
+    if(!Array.isArray(data[k]))data[k]=[];
+  });
+}
+function saveData(){
+  try{
+    localStorage.setItem(storageKey,JSON.stringify(data));
+    return true;
+  }catch(e){
+    alert("Data save nahi hua. Browser storage full ho sakta hai.");
+    return false;
+  }
+}
+
+function memberKey(m){
+  return String(m.id??m.memberId??m.serviceId??m.fullName??m.name??"");
+}
+function memberName(m){
+  return m.fullName||m.name||m.serviceId||"Unnamed jawan";
+}
+function isActive(m){
+  return !m.status||["active","present"].includes(String(m.status).toLowerCase());
+}
+function findMember(id){
+  return data.members.find(m=>memberKey(m)===String(id));
+}
+function ledgerMemberId(t){
+  return String(t.memberId??t.jawanId??t.serviceId??"");
+}
+function isPayment(t){
+  const type=String(t.transactionType||t.type||"").toLowerCase();
+  return ["payment","deposit","credit","received","member_payment"].includes(type)
+    || t.kind==="payment";
+}
+function isMealCharge(t){
+  const type=String(t.transactionType||t.type||"").toLowerCase();
+  return ["charge","meal_charge","debit","meal"].includes(type)
+    && !isPayment(t);
+}
+function transactionAmount(t){return Math.abs(Number(t.amount??t.value??0)||0)}
+
+function mealMemberKeys(meal){
+  return Array.isArray(meal.attendance)?meal.attendance.map(String):[];
+}
+function mealCostPerMember(meal){
+  const total=Math.max(0,Number(meal.totalCost)||0);
+  const keys=mealMemberKeys(meal);
+  if(!keys.length)return 0;
+  // The current meal module splits total meal cost equally between selected jawans.
+  return total/keys.length;
+}
+
+function getAccount(member){
+  const key=memberKey(member);
+  let charges=0,payments=0;
+  const transactions=[];
+
+  // Charges created by the Meals page.
+  data.ledger.filter(t=>ledgerMemberId(t)===key).forEach(t=>{
+    if(isPayment(t)){
+      const amount=transactionAmount(t);
+      payments+=amount;
+      transactions.push({
+        date:t.date||"",
+        description:t.description||"Payment received",
+        kind:"payment",amount
+      });
+    }else if(isMealCharge(t)){
+      const amount=transactionAmount(t);
+      charges+=amount;
+      transactions.push({
+        date:t.date||"",
+        description:t.description||"Meal charge",
+        kind:"charge",amount
+      });
+    }
+  });
+
+  // Count confirmed meal attendance directly only when a linked ledger
+  // charge for that meal does not already exist, avoiding duplicate charges.
+  const meals=data.meals.filter(m=>
+    m.status!=="cancelled" &&
+    mealMemberKeys(m).includes(key)
+  );
+
+  meals.forEach(meal=>{
+    const hasLinkedCharge=data.ledger.some(t=>
+      String(t.mealId||"")===String(meal.id) &&
+      ledgerMemberId(t)===key &&
+      isMealCharge(t)
+    );
+    if(!hasLinkedCharge){
+      const amount=mealCostPerMember(meal);
+      charges+=amount;
+      transactions.push({
+        date:meal.date||"",
+        description:(meal.type||"Meal")+" - "+(meal.recipeName||""),
+        kind:"charge",amount
+      });
+    }
+  });
+
+  // Legacy member account balances are not guessed or silently added.
+  const due=Math.max(0,charges-payments);
+  const credit=Math.max(0,payments-charges);
+
+  transactions.sort((a,b)=>String(b.date).localeCompare(String(a.date)));
+  return {charges,payments,due,credit,transactions};
+}
+
+function statusFor(account){
+  if(account.due>0.005 && account.payments>0)return ["Partial","partial"];
+  if(account.due>0.005)return ["Due","due"];
+  return ["Paid","paid"];
+}
+
+function render(){
+  loadData();
+  const members=data.members.filter(isActive);
+  let totalCharges=0,totalPayments=0,totalDue=0;
+
+  const rows=members.map(m=>{
+    const account=getAccount(m);
+    totalCharges+=account.charges;
+    totalPayments+=account.payments;
+    totalDue+=account.due;
+    return {m,account};
+  });
+
+  $("memberCount").textContent=members.length;
+  $("chargeTotal").textContent=money(totalCharges);
+  $("paymentTotal").textContent=money(totalPayments);
+  $("dueTotal").textContent=money(totalDue);
+
+  const q=$("search").value.trim().toLowerCase();
+  const filter=$("filter").value;
+  const filtered=rows.filter(({m,account})=>{
+    const hay=(memberName(m)+" "+(m.serviceId||"")+" "+(m.rank||"")).toLowerCase();
+    if(q&&!hay.includes(q))return false;
+    if(filter==="due"&&account.due<=0.005)return false;
+    if(filter==="paid"&&account.due>0.005)return false;
+    return true;
+  });
+
+  $("accountRows").innerHTML=filtered.map(({m,account})=>{
+    const [status,cls]=statusFor(account);
+    const key=memberKey(m);
+    return `<tr>
+      <td><b>${esc(memberName(m))}</b><br><span class="small">${esc(m.serviceId||m.id||"")}</span></td>
+      <td>${money(account.charges)}</td>
+      <td>${money(account.payments)}</td>
+      <td><b>${money(account.due)}</b></td>
+      <td><span class="badge ${cls}">${status}</span></td>
+      <td><div class="actions">
+        <button class="secondary" onclick="viewMember('${esc(key)}')">View</button>
+        ${account.due>0.005?`<button onclick="quickPaid('${esc(key)}')">PAID</button><button class="whatsapp" onclick="sendReminder('${esc(key)}')">WhatsApp</button>`:`<button class="secondary" onclick="viewMember('${esc(key)}')">History</button>`}
+      </div></td>
+    </tr>`;
+  }).join("");
+
+  $("empty").classList.toggle("hidden",filtered.length>0);
+}
+
+function viewMember(id){
+  loadData();
+  const m=findMember(id);
+  if(!m)return alert("Member nahi mila.");
+  const a=getAccount(m);
+  const [status,cls]=statusFor(a);
+  const transactions=a.transactions;
+  const photo=m.photo||m.photoData||m.image||"";
+
+  $("viewBody").innerHTML=`
+    <div class="member-top">
+      ${photo?`<img class="avatar" src="${esc(photo)}" alt="Member photo">`:`<div class="avatar" style="display:grid;place-items:center;font-size:28px">👤</div>`}
+      <div><h3 style="margin-bottom:6px">${esc(memberName(m))}</h3>
+        <span class="badge">${esc(m.rank||"Rank not set")}</span>
+        <span class="badge ${cls}">${status}</span>
+      </div>
+    </div>
+
+    <h3>Member Details</h3>
+    <div class="detail-grid">
+      ${detail("Service / Member ID",m.serviceId||m.memberId||m.id)}
+      ${detail("Full Name",memberName(m))}
+      ${detail("Rank",m.rank)}
+      ${detail("Unit",m.unit)}
+      ${detail("Mobile",m.mobile)}
+      ${detail("Joining Date",m.joiningDate)}
+      ${detail("Status",m.status||"Active")}
+      ${detail("Monthly Limit",m.monthlyLimit!=null?money(m.monthlyLimit):"Not set")}
+      ${detail("Notes",m.notes)}
+    </div>
+
+    <h3 style="margin-top:20px">Complete Mess Account</h3>
+    <div class="detail-grid">
+      ${detail("Total Meal Charges",money(a.charges))}
+      ${detail("Total Paid",money(a.payments))}
+      ${detail("Balance Due",money(a.due))}
+      ${detail("Advance / Credit",money(a.credit))}
+    </div>
+
+    <div class="actions" style="margin-top:13px">
+      ${a.due>0.005?`<button onclick="quickPaid('${esc(memberKey(m))}')">PAID — Full Due</button><button class="whatsapp" onclick="sendReminder('${esc(memberKey(m))}')">WhatsApp Reminder</button>`:""}
+      ${a.due>0.005?`<button class="secondary" onclick="openPayment('${esc(memberKey(m))}',false)">Partial Payment</button>`:""}
+    </div>
+
+    <h3 style="margin-top:20px">Account Transactions</h3>
+    ${transactions.length?`
+      <div class="table-wrap"><table style="min-width:440px">
+      <thead><tr><th>Date</th><th>Details</th><th>Amount</th></tr></thead>
+      <tbody>${transactions.map(t=>`<tr>
+        <td>${esc(t.date||"—")}</td>
+        <td>${esc(t.description)}<br><span class="badge ${t.kind==="payment"?"paid":"due"}">${t.kind==="payment"?"Payment":"Charge"}</span></td>
+        <td>${money(t.amount)}</td>
+      </tr>`).join("")}</tbody></table></div>
+    `:'<div class="empty">No transactions recorded yet.</div>'}
+  `;
+  $("viewDialog").showModal();
+}
+function detail(label,value){
+  return `<div class="detail"><small>${esc(label)}</small><b>${esc(value||"—")}</b></div>`;
+}
+
+function quickPaid(id){
+  openPayment(id,true);
+}
+function openPayment(id,fullDue){
+  loadData();
+  const m=findMember(id);
+  if(!m)return alert("Member nahi mila.");
+  const a=getAccount(m);
+  if(a.due<=0.005)return alert("Is jawan ka koi outstanding due nahi hai.");
+  paymentEditId=null;
+  $("paymentMemberId").value=memberKey(m);
+  $("paymentMemberName").textContent=memberName(m);
+  $("paymentDue").textContent=money(a.due);
+  $("paymentAmount").value=fullDue?a.due.toFixed(2):"";
+  $("paymentAmount").max=a.due.toFixed(2);
+  $("paymentDate").value=today();
+  $("paymentMode").value="Cash";
+  $("paymentNote").value="";
+  $("paymentTitle").textContent=fullDue?"Confirm Full Payment":"Record Payment";
+  $("paymentDialog").showModal();
+}
+
+$("paymentForm").addEventListener("submit",e=>{
+  e.preventDefault();
+  loadData();
+
+  const id=$("paymentMemberId").value;
+  const m=findMember(id);
+  if(!m)return alert("Member nahi mila.");
+  const account=getAccount(m);
+  const amount=Number($("paymentAmount").value);
+  if(!Number.isFinite(amount)||amount<=0)return alert("Valid payment amount likhein.");
+  if(amount>account.due+0.005)return alert("Payment outstanding due se zyada nahi ho sakti. Advance ke liye alag approved entry chahiye.");
+
+  const entry={
+    id:makeId(),
+    date:$("paymentDate").value||today(),
+    memberId:m.id??m.memberId??m.serviceId,
+    memberName:memberName(m),
+    type:"deposit",
+    transactionType:"payment",
+    amount:Number(amount.toFixed(2)),
+    paymentMode:$("paymentMode").value,
+    description:"Payment received"+($("paymentNote").value.trim()?" - "+$("paymentNote").value.trim():"")
+  };
+
+  if(!Array.isArray(data.ledger))data.ledger=[];
+  data.ledger.push(entry);
+
+  if(!saveData())return;
+  closeDialog("paymentDialog");
+  render();
+  alert("Payment record ho gayi. Balance dobara calculate kar diya gaya.");
+});
+
+function sendReminder(id){
+  loadData();
+  const m=findMember(id);
+  if(!m)return alert("Member nahi mila.");
+  const a=getAccount(m);
+  if(a.due<=0.005)return alert("Is jawan ka koi due nahi hai.");
+  let phone=String(m.mobile||m.phone||"").replace(/[^\d]/g,"");
+  if(phone.startsWith("00"))phone=phone.slice(2);
+  if(phone.length<8)return alert("Member ke View mein valid mobile number hona chahiye.");
+
+  const message=
+    "Namaste "+memberName(m)+",\n"+
+    "Aapke CRPF Smart Mess account mein Rs "+a.due.toFixed(2)+" baaki hain.\n"+
+    "Total charges: Rs "+a.charges.toFixed(2)+"\n"+
+    "Total paid: Rs "+a.payments.toFixed(2)+"\n"+
+    "Kripya baki rakam jama karne par mess in-charge ko suchit karein.\nDhanyavaad.";
+  window.open("https://wa.me/"+phone+"?text="+encodeURIComponent(message),"_blank");
+}
+
+function closeDialog(id){
+  const d=$(id);
+  if(d&&d.open)d.close();
+}
+document.querySelectorAll("dialog").forEach(d=>{
+  d.addEventListener("click",e=>{if(e.target===d)d.close()});
+});
+$("search").addEventListener("input",render);
+$("filter").addEventListener("change",render);
+
+render();
+</script>
+</body>
+</html>

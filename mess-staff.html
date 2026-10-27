@@ -1,561 +1,439 @@
 
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>CRPF Mess Staff & Duty Register</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CRPF Mess Staff & Ration</title>
 <style>
-:root{
-  --g:#176747;--deep:#10563e;--bg:#f2f6f3;
-  --white:#fff;--text:#214d3b;--muted:#78857e;
-  --border:#dce5df;--red:#bd3942;--orange:#a96613;
-}
+:root{--g:#176747;--deep:#10563e;--bg:#f2f6f3;--line:#dce5df;--text:#214d3b;--muted:#78857e}
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--text);
-  font-family:Arial,sans-serif;font-size:14px}
-header{background:var(--g);color:white;padding:19px 16px}
-header h2{margin:0 0 6px;font-size:22px}
-header p{margin:0;font-size:13px;opacity:.9}
-main{max-width:1100px;margin:auto;padding:14px}
-.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}
-.stat,.panel{background:white;border:1px solid var(--border);
-  border-radius:12px;padding:14px}
-.stat strong{display:block;font-size:23px;color:var(--g);margin-top:7px}
-.stat span{font-size:12px;color:var(--muted)}
-.panel{margin-bottom:14px}
-h3{font-size:17px;margin:0 0 14px}
-.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
-.field label{display:block;font-weight:bold;font-size:12px;margin-bottom:6px}
-input,select,textarea{width:100%;padding:11px;border:1px solid #cbd8cf;
-  border-radius:8px;background:white;color:var(--text);font:inherit}
-input:focus,select:focus,textarea:focus{outline:2px solid #a4d4b9}
-button{border:0;border-radius:8px;padding:11px 14px;
-  background:var(--g);color:white;font-weight:bold;cursor:pointer}
-button:hover{background:var(--deep)}
-button.secondary{background:#e8f1eb;color:var(--g)}
-button.danger{background:#fbe9e9;color:var(--red)}
-button.small{padding:7px 9px;font-size:12px}
-.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
-.note{background:#edf6ef;border-radius:8px;padding:10px;
-  font-size:12px;line-height:1.6;margin-bottom:14px}
-.member-info{background:#f5f8f5;border:1px solid var(--border);
-  border-radius:8px;padding:11px;margin-top:10px;line-height:1.7}
-.member-info:empty{display:none}
-.toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
-.toolbar input,.toolbar select{flex:1;min-width:140px}
-.table-wrap{overflow-x:auto}
-table{width:100%;border-collapse:collapse;min-width:760px}
-th,td{padding:11px 9px;text-align:left;border-bottom:1px solid var(--border);
-  font-size:12px;vertical-align:top}
-th{background:#f1f6f2;color:var(--g)}
-.badge{display:inline-block;padding:5px 8px;border-radius:20px;
-  background:#e1f2e6;color:var(--g);font-size:11px;font-weight:bold}
-.badge.ended{background:#eee;color:#666}
-.muted{color:var(--muted);font-size:12px}
-.empty{text-align:center;padding:25px;color:var(--muted)}
-footer{text-align:center;color:var(--muted);font-size:11px;padding:10px}
-#message{display:none;margin-bottom:12px;padding:12px;border-radius:8px}
-#message.ok{display:block;background:#e2f4e7;color:#176747}
-#message.err{display:block;background:#fbe9e9;color:#bd3942}
-@media(max-width:600px){
- main{padding:10px}
- .grid{grid-template-columns:1fr}
- .stats{gap:6px}
- .stat{padding:10px}
- .stat strong{font-size:19px}
- header h2{font-size:19px}
-}
+body{margin:0;background:var(--bg);color:var(--text);font:14px Arial,sans-serif}
+header{background:linear-gradient(120deg,#10563e,#21805a);color:white;padding:18px}
+header h2{margin:0 0 5px;font-size:21px}
+header p{margin:0;font-size:12px}
+nav{display:flex;gap:7px;overflow:auto;background:white;padding:10px;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:5}
+nav a{white-space:nowrap;text-decoration:none;background:#e8f1eb;color:var(--g);padding:9px 12px;border-radius:7px;font-size:12px;font-weight:bold}
+nav a.current{background:var(--g);color:white}
+main{max-width:1150px;margin:auto;padding:12px}
+.panel,.stat{background:white;border:1px solid var(--line);border-radius:11px;padding:14px;margin-bottom:13px}
+h3{margin:0 0 13px;font-size:17px}
+h4{margin:0 0 9px}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:11px}
+label{display:block;font-size:12px;font-weight:bold;margin-bottom:6px}
+input,select,textarea{width:100%;padding:10px;border:1px solid #cbd8cf;border-radius:7px;font:inherit;color:var(--text);background:white}
+button{border:0;border-radius:7px;padding:10px 13px;background:var(--g);color:white;font-weight:bold;cursor:pointer}
+button.alt{background:#e8f1eb;color:var(--g)}
+button.red{background:#fbe9e9;color:#bd3942}
+.actions{display:flex;flex-wrap:wrap;gap:7px;margin-top:12px}
+.note{padding:11px;background:#edf6ef;border-radius:8px;line-height:1.6;font-size:12px;margin-bottom:13px}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-bottom:13px}
+.stat{margin:0;padding:11px}
+.stat span{display:block;font-size:11px;color:var(--muted)}
+.stat strong{display:block;font-size:21px;color:var(--g);margin-top:5px}
+.tablewrap{overflow:auto}
+table{width:100%;border-collapse:collapse;min-width:650px}
+th,td{padding:10px 8px;border-bottom:1px solid var(--line);text-align:left;vertical-align:top;font-size:12px}
+th{background:#eff5f0;color:var(--g)}
+.muted{font-size:12px;color:var(--muted)}
+.badge{display:inline-block;border-radius:20px;padding:4px 8px;font-size:11px;font-weight:bold;background:#e3f4e8;color:#176747}
+.nco{background:#fff1d8;color:#995b00}
+.so{background:#e4efff;color:#185da5}
+.head{background:#f0e8ff;color:#6944a2}
+.cook{background:#e3f4e8;color:#176747}
+.group{padding:12px;border:1px solid var(--line);border-radius:9px;margin-bottom:10px;background:#fff}
+.group.ncoGroup{border-left:5px solid #d18a20}
+.group.soGroup{border-left:5px solid #3578c6}
+#message{display:none;padding:11px;border-radius:8px;margin-bottom:12px;background:#e2f4e7;color:var(--g)}
+.empty{text-align:center;color:var(--muted);padding:20px}
+footer{text-align:center;color:var(--muted);padding:14px;font-size:11px}
+@media(max-width:600px){main{padding:9px}.grid{grid-template-columns:1fr}.stats{gap:5px}.stat{padding:9px}.stat strong{font-size:18px}}
+@media print{nav,button,.no-print{display:none!important}body{background:white}.panel,.group{break-inside:avoid}}
 </style>
 </head>
 <body>
 <header>
-  <h2>🍲 Mess Staff & Duty Register</h2>
-  <p>CRPF Smart Mess Manager · Member-linked duty management</p>
+  <h2>🛡️ CRPF MESS STAFF & DAILY RATION</h2>
+  <p>Member-linked duty register · Daily ration · Reports · WhatsApp</p>
 </header>
-  <nav>
+
+<nav>
   <a href="index.html">Dashboard</a>
   <a href="members.html">Members</a>
-   <a href="mess-staff.html">Mess staff</a>
-  <a href="store.html">Store</a>
+  <a href="store.html">Store & Purchase</a>
   <a href="recipes.html">Recipes</a>
   <a href="meals.html">Meals</a>
-  <a href="accounts.html">Accounts</a>
-  <a href="settlement.html">Settlement</a>
-  <a href="settings.html">Settings</a>
+  <a class="current" href="mess-staff.html">Mess Staff</a>
+  <a href="reports.html">Reports</a>
+  <a href="backup.html">Backup</a>
 </nav>
 
 <main>
-  <div id="message"></div>
+<div id="message"></div>
+
+<div class="note">
+  <b>Important:</b> Members page jawan ka master record hai. Is page par duty assign hoti hai.
+  Daily ration aur meal cost saved Meals records se fetch hote hain; purchase expense saved Purchases se.
+  Purane records delete nahi honge. Ration report mein wahi quantity aayegi jo Meals record mein save hai.
+</div>
+
+<div class="stats">
+  <div class="stat"><span>Total duty records</span><strong id="dutyCount">0</strong></div>
+  <div class="stat"><span>Aaj ke meal records</span><strong id="mealCount">0</strong></div>
+  <div class="stat"><span>Aaj ka meal cost</span><strong id="mealCost">Rs 0.00</strong></div>
+</div>
+
+<section class="panel">
+  <h3>1. Mess Duty Register</h3>
+  <form id="dutyForm">
+    <input type="hidden" id="editId">
+    <div class="grid">
+      <div><label>Jawan select karo *</label><select id="memberId" required><option value="">-- Members se select --</option></select></div>
+      <div><label>Duty *</label>
+        <select id="duty" required>
+          <option value="">-- Select Duty --</option>
+          <option>Mess Commander / NCO</option>
+          <option>Mess NCO</option>
+          <option>Mess SO</option>
+          <option>Head Cook</option>
+          <option>Cook</option>
+          <option>Assistant Cook</option>
+          <option>Storekeeper</option>
+          <option>Other Mess Duty</option>
+        </select>
+      </div>
+      <div><label>Duty start date *</label><input id="startDate" type="date" required></div>
+      <div><label>Duty end date (optional)</label><input id="endDate" type="date"></div>
+      <div><label>Assigned by</label><select id="assignedBy"><option value="">-- Commander / NCO --</option></select></div>
+      <div><label>Remarks</label><input id="dutyNote" placeholder="Optional"></div>
+    </div>
+    <div id="memberInfo" class="note" style="display:none;margin-top:10px"></div>
+    <div class="actions">
+      <button type="submit" id="saveDuty">Save Duty</button>
+      <button type="button" class="alt" id="clearDuty">Clear</button>
+    </div>
+  </form>
+  <h4 style="margin-top:20px">Saved Duty History</h4>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>Member</th><th>Rank</th><th>Duty</th><th>Start</th><th>End</th><th>Assigned By</th><th>Action</th></tr></thead>
+      <tbody id="dutyRows"></tbody>
+    </table>
+  </div>
+</section>
+
+<section class="panel">
+  <h3>2. Daily Ration & Kharch Report</h3>
+  <div class="grid">
+    <div><label>Report date</label><input type="date" id="reportDate"></div>
+    <div><label>Meal filter</label>
+      <select id="mealFilter">
+        <option value="all">All meals</option>
+        <option>Breakfast</option><option>Lunch</option><option>Dinner</option><option>Snacks</option>
+      </select>
+    </div>
+  </div>
+  <div class="actions no-print">
+    <button id="refreshReport">Fetch Report</button>
+    <button class="alt" id="printReport">Print Report</button>
+  </div>
+
+  <div class="stats" style="margin-top:12px">
+    <div class="stat"><span>Meal consumption cost</span><strong id="consumptionCost">Rs 0.00</strong></div>
+    <div class="stat"><span>Purchase expense that day</span><strong id="purchaseCost">Rs 0.00</strong></div>
+    <div class="stat"><span>Meals recorded</span><strong id="filteredMealCount">0</strong></div>
+  </div>
 
   <div class="note">
-    <b>Kaise kaam karega?</b><br>
-    Jawan Members page se select hoga. Uski details automatic aayengi.
-    Mess Commander/NCO bhi apna naam select karke apni duty register karega.
-    Purane duty records history mein rahenge.
+    Meal consumption cost = confirmed meal records ka saved cost.
+    Purchase expense = us date par saved purchase records ka cost.
+    Dono alag hisaab hain; purchase ko consumption cost mein dobara add nahi kiya gaya.
   </div>
 
-  <div class="stats">
-    <div class="stat"><span>Total duty entries</span><strong id="totalCount">0</strong></div>
-    <div class="stat"><span>Current duties</span><strong id="activeCount">0</strong></div>
-    <div class="stat"><span>Duty ended</span><strong id="endedCount">0</strong></div>
+  <h4>Meal records</h4>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>Meal</th><th>Recipe</th><th>Servings</th><th>Ration used</th><th>Cost</th><th>Section</th></tr></thead>
+      <tbody id="mealRows"></tbody>
+    </table>
   </div>
 
-  <section class="panel">
-    <h3 id="formTitle">➕ Assign Mess Duty</h3>
+  <h4 style="margin-top:18px">Daily Ration — item-wise total</h4>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>Item</th><th>Total quantity</th><th>Unit</th></tr></thead>
+      <tbody id="rationRows"></tbody>
+    </table>
+  </div>
 
-    <form id="dutyForm">
-      <div class="grid">
-        <div class="field">
-          <label for="member">Select Jawan *</label>
-          <select id="member" required>
-            <option value="">-- Select from Members --</option>
-          </select>
-        </div>
+  <h4 style="margin-top:18px">Daily Purchases</h4>
+  <div class="tablewrap">
+    <table>
+      <thead><tr><th>Item</th><th>Quantity</th><th>Supplier</th><th>Purchase cost</th></tr></thead>
+      <tbody id="purchaseRows"></tbody>
+    </table>
+  </div>
+</section>
 
-        <div class="field">
-          <label for="duty">Mess Duty *</label>
-          <select id="duty" required>
-            <option value="">-- Select Duty --</option>
-            <option>Mess Commander / NCO</option>
-            <option>Cook</option>
-            <option>Assistant Cook</option>
-            <option>Storekeeper</option>
-            <option>Mess Staff</option>
-            <option>Other</option>
-          </select>
-        </div>
-
-        <div class="field">
-          <label for="startDate">Duty Start Date *</label>
-          <input type="date" id="startDate" required>
-        </div>
-
-        <div class="field">
-          <label for="endDate">Duty End Date (optional)</label>
-          <input type="date" id="endDate">
-        </div>
-
-        <div class="field">
-          <label for="assignedBy">Duty Assigned By *</label>
-          <select id="assignedBy" required>
-            <option value="">-- Select Commander / NCO --</option>
-          </select>
-        </div>
-
-        <div class="field">
-          <label for="notes">Remarks (optional)</label>
-          <input id="notes" maxlength="300" placeholder="Additional duty details">
-        </div>
-      </div>
-
-      <div id="memberInfo" class="member-info"></div>
-
-      <div class="actions">
-        <button type="submit" id="saveBtn">Save Duty Record</button>
-        <button type="button" class="secondary" id="cancelEdit" hidden>Cancel Edit</button>
-        <button type="button" class="secondary" id="resetForm">Clear Form</button>
-      </div>
-    </form>
-  </section>
-
-  <section class="panel">
-    <h3>📋 Mess Duty Register</h3>
-    <div class="toolbar">
-      <input id="search" placeholder="Search name, ID, rank or duty">
-      <select id="statusFilter">
-        <option value="all">All Records</option>
-        <option value="active">Current Duties</option>
-        <option value="ended">Duty Ended</option>
-      </select>
-      <button type="button" class="secondary" id="refresh">Refresh</button>
-      <button type="button" class="secondary" id="print">Print Register</button>
-    </div>
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th>#</th>
-            <th>Jawan Details</th>
-            <th>Mess Duty</th>
-            <th>Start Date</th>
-            <th>End Date</th>
-            <th>Assigned By</th>
-            <th>Status</th>
-            <th>Action</th>
-          </tr>
-        </thead>
-        <tbody id="recordsBody"></tbody>
-      </table>
-    </div>
-    <p class="muted">Purane records ko delete karne ke bajay duty end karna behtar hai, taaki history bani rahe.</p>
-  </section>
+<section class="panel">
+  <h3>3. WhatsApp Reports</h3>
+  <div class="note">
+    Recipients Members record se select honge. Mobile number country code ke saath saved hona chahiye.
+    WhatsApp mein message open hoga; Send tumhe dabana hai.
+  </div>
+  <div class="grid">
+    <div><label>Head Cook</label><select id="headCook"><option value="">-- Select Head Cook --</option></select></div>
+    <div><label>Cook</label><select id="cook"><option value="">-- Select Cook --</option></select></div>
+    <div><label>Mess SO</label><select id="messSO"><option value="">-- Select Mess SO --</option></select></div>
+    <div><label>Mess NCO</label><select id="messNCO"><option value="">-- Select Mess NCO --</option></select></div>
+  </div>
+  <div class="actions">
+    <button onclick="sendWhatsApp('headCook')">Send ration to Head Cook</button>
+    <button onclick="sendWhatsApp('cook')">Send ration to Cook</button>
+    <button onclick="sendWhatsApp('messSO')">Send full report to Mess SO</button>
+    <button class="alt" onclick="sendWhatsApp('messNCO')">Send NCO report</button>
+    <button class="alt" onclick="copyFullReport()">Copy full report</button>
+  </div>
+</section>
 </main>
-
-<footer>CRPF Smart Mess Manager · Mess Duty Register</footer>
+<footer>CRPF Smart Mess Manager · Mess Staff & Daily Ration</footer>
 
 <script>
 (function(){
 "use strict";
+const KEYS=["crpfMessPrototypeV2","crpfMessProfessionalV1"];
+const $=id=>document.getElementById(id);
+const arr=v=>Array.isArray(v)?v:[];
+const str=v=>v==null?"":String(v).trim();
+const money=v=>"Rs "+Number(v||0).toLocaleString("en-IN",{minimumFractionDigits:2,maximumFractionDigits:2});
+const esc=v=>str(v).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const today=()=>{const d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")};
+let key="",db={},editing=null;
 
-const STORAGE_KEYS = [
-  "crpfMessProfessionalV1",
-  "crpfMessPrototypeV2"
-];
-
-let storageKey = "";
-let data = {};
-let editingId = null;
-
-const $ = id => document.getElementById(id);
-const arr = value => Array.isArray(value) ? value : [];
-const text = value => value == null ? "" : String(value).trim();
-
-function uid(){
-  return "duty_" + Date.now().toString(36) +
-    "_" + Math.random().toString(36).slice(2,8);
-}
-
-function esc(value){
-  return text(value).replace(/[&<>"']/g, ch => ({
-    "&":"&amp;","<":"&lt;",">":"&gt;",
-    '"':"&quot;","'":"&#39;"
-  }[ch]));
-}
-
-function readStore(){
-  for(const key of STORAGE_KEYS){
+function loadDB(){
+  for(const k of KEYS){
     try{
-      const raw = localStorage.getItem(key);
-      if(!raw) continue;
-      const parsed = JSON.parse(raw);
-      if(parsed && typeof parsed === "object" &&
-         Array.isArray(parsed.members)){
-        storageKey = key;
-        data = parsed;
-        if(!Array.isArray(data.messDuties)){
-          data.messDuties = [];
-        }
+      const d=JSON.parse(localStorage.getItem(k)||"null");
+      if(d&&Array.isArray(d.members)){
+        key=k;db=d;
+        db.items=arr(db.items);db.meals=arr(db.meals);
+        db.purchases=arr(db.purchases);db.messDuties=arr(db.messDuties);
         return true;
       }
     }catch(e){}
   }
   return false;
 }
+function saveDB(){localStorage.setItem(key,JSON.stringify(db))}
+function memberId(m){return str(m.id??m.memberId??m.serviceId??m.no??m.serviceNo)}
+function memberName(m){return str(m.name??m.fullName??m.memberName)||"Unnamed Member"}
+function memberRank(m){return str(m.rank??m.designation)}
+function memberPhone(m){return str(m.phone??m.mobile??m.mobileNumber??m.whatsapp)}
+function memberLabel(m){return memberName(m)+(memberRank(m)?" · "+memberRank(m):"")+(memberId(m)?" · "+memberId(m):"")}
+function findMember(id){return arr(db.members).find(m=>memberId(m)===str(id))}
+function itemName(id){const x=arr(db.items).find(i=>str(i.id)===str(id));return x?x.name:str(id)}
+function itemUnit(id){const x=arr(db.items).find(i=>str(i.id)===str(id));return x?x.unit:""}
+function notify(s){$("message").textContent=s;$("message").style.display="block";window.scrollTo({top:0,behavior:"smooth"});setTimeout(()=>$("message").style.display="none",4500)}
 
-function saveStore(){
-  if(!storageKey) throw new Error("Members storage key nahi mila.");
-  localStorage.setItem(storageKey, JSON.stringify(data));
-}
-
-function memberId(m){
-  return text(m.id ?? m.memberId ?? m.serviceId ?? m.serviceNo);
-}
-function memberName(m){
-  return text(m.fullName ?? m.name ?? m.memberName ?? m.full_name) || "Unnamed Member";
-}
-function memberRank(m){
-  return text(m.rank ?? m.designation);
-}
-function memberService(m){
-  return text(m.serviceId ?? m.serviceNo ?? m.memberId ?? m.id);
-}
-function memberMobile(m){
-  return text(m.mobile ?? m.phone ?? m.mobileNumber);
-}
-function memberStatus(m){
-  return text(m.status ?? "Active");
-}
-function getMember(id){
-  return arr(data.members).find(m => memberId(m) === text(id));
-}
-function dateToday(){
-  const d = new Date();
-  return d.getFullYear() + "-" +
-    String(d.getMonth()+1).padStart(2,"0") + "-" +
-    String(d.getDate()).padStart(2,"0");
-}
-function formatDate(value){
-  if(!value) return "—";
-  const parts = String(value).split("-");
-  return parts.length === 3 ? parts[2]+"/"+parts[1]+"/"+parts[0] : value;
-}
-function isEnded(record){
-  return !!record.endDate && record.endDate < dateToday();
-}
-function showMessage(message, type){
-  const el = $("message");
-  el.textContent = message;
-  el.className = type === "err" ? "err" : "ok";
-  el.style.display = "block";
-  window.scrollTo({top:0,behavior:"smooth"});
-  setTimeout(()=>{el.style.display="none";},5000);
-}
-
-function memberLabel(m){
-  return memberName(m) +
-    (memberService(m) ? " · " + memberService(m) : "") +
-    (memberRank(m) ? " · " + memberRank(m) : "");
-}
-
-function populateMembers(){
-  const members = arr(data.members).filter(m =>
-    !["transferred","inactive","deleted"].includes(
-      memberStatus(m).toLowerCase()
-    )
-  );
-
-  const memberSelect = $("member");
-  const assignedSelect = $("assignedBy");
-  const oldMember = memberSelect.value;
-  const oldAssigner = assignedSelect.value;
-
-  memberSelect.innerHTML =
-    '<option value="">-- Select from Members --</option>';
-  assignedSelect.innerHTML =
-    '<option value="">-- Select Commander / NCO --</option>';
-
-  members.forEach(m=>{
-    const id = memberId(m);
-    if(!id) return;
-
-    const option1 = document.createElement("option");
-    option1.value = id;
-    option1.textContent = memberLabel(m);
-    memberSelect.appendChild(option1);
-
-    const option2 = document.createElement("option");
-    option2.value = id;
-    option2.textContent = memberLabel(m);
-    assignedSelect.appendChild(option2);
+function fillMemberSelect(id,placeholder,role){
+  const sel=$(id),old=sel.value;
+  sel.innerHTML='<option value="">'+placeholder+'</option>';
+  arr(db.members).filter(m=>!["inactive","transferred","deleted"].includes(str(m.status).toLowerCase())).forEach(m=>{
+    const mid=memberId(m);if(!mid)return;
+    const o=document.createElement("option");o.value=mid;o.textContent=memberLabel(m);sel.appendChild(o);
   });
-
-  if(members.some(m=>memberId(m)===oldMember)) memberSelect.value=oldMember;
-  if(members.some(m=>memberId(m)===oldAssigner)) assignedSelect.value=oldAssigner;
-  updateMemberInfo();
-}
-
-function updateMemberInfo(){
-  const m = getMember($("member").value);
-  if(!m){
-    $("memberInfo").innerHTML="";
-    return;
+  if(arr(db.members).some(m=>memberId(m)===old))sel.value=old;
+  if(role){
+    const current=arr(db.messDuties).filter(d=>d.duty===role&&!d.endDate);
+    current.forEach(d=>{if(![...sel.options].some(o=>o.value===d.memberId)){const o=document.createElement("option");o.value=d.memberId;o.textContent=d.memberName+" (duty record)";sel.appendChild(o)}});
   }
-  $("memberInfo").innerHTML =
-    "<b>Selected Jawan</b><br>" +
-    "Name: "+esc(memberName(m))+"<br>"+
-    "Service / Member ID: "+esc(memberService(m)||"—")+"<br>"+
-    "Rank: "+esc(memberRank(m)||"—")+"<br>"+
-    "Mobile: "+esc(memberMobile(m)||"—");
 }
-
-function resetForm(){
-  editingId=null;
-  $("dutyForm").reset();
-  $("startDate").value=dateToday();
-  $("formTitle").textContent="➕ Assign Mess Duty";
-  $("saveBtn").textContent="Save Duty Record";
-  $("cancelEdit").hidden=true;
-  populateMembers();
+function setupSelects(){
+  fillMemberSelect("memberId","-- Select from Members --");
+  fillMemberSelect("assignedBy","-- Commander / NCO --");
+  fillMemberSelect("headCook","-- Select Head Cook --","Head Cook");
+  fillMemberSelect("cook","-- Select Cook --","Cook");
+  fillMemberSelect("messSO","-- Select Mess SO --","Mess SO");
+  fillMemberSelect("messNCO","-- Select Mess NCO --","Mess NCO");
 }
+function selectedInfo(){
+  const m=findMember($("memberId").value),box=$("memberInfo");
+  if(!m){box.style.display="none";box.innerHTML="";return}
+  box.style.display="block";
+  box.innerHTML="<b>Selected member:</b> "+esc(memberName(m))+"<br>Rank: "+esc(memberRank(m)||"—")+"<br>Service ID: "+esc(memberId(m))+"<br>Mobile: "+esc(memberPhone(m)||"—");
+}
+function resetDuty(){
+  editing=null;$("dutyForm").reset();$("editId").value="";$("startDate").value=today();
+  $("saveDuty").textContent="Save Duty";selectedInfo();
+}
+function renderDuties(){
+  const rows=arr(db.messDuties);
+  $("dutyCount").textContent=rows.length;
+  $("dutyRows").innerHTML=rows.length?rows.slice().reverse().map(d=>`<tr>
+    <td>${esc(d.memberName||findMember(d.memberId)?.name||"Member")}<br><span class="muted">${esc(d.memberId)}</span></td>
+    <td>${esc(d.memberRank||"")}</td><td>${esc(d.duty)}</td>
+    <td>${esc(d.startDate||"—")}</td><td>${esc(d.endDate||"—")}</td>
+    <td>${esc(d.assignedByName||"—")}</td>
+    <td><button class="alt" onclick="editDuty('${esc(d.id)}')">Edit</button>
+    ${!d.endDate?` <button class="red" onclick="endDuty('${esc(d.id)}')">End</button>`:""}</td>
+  </tr>`).join(""):'<tr><td colspan="7" class="empty">Duty record abhi nahi hai.</td></tr>';
+}
+$("memberId").addEventListener("change",selectedInfo);
+$("clearDuty").addEventListener("click",resetDuty);
+$("dutyForm").addEventListener("submit",e=>{
+  e.preventDefault();
+  const m=findMember($("memberId").value),a=findMember($("assignedBy").value);
+  const duty=$("duty").value,start=$("startDate").value,end=$("endDate").value;
+  if(!m||!duty||!start){notify("Member, duty aur start date select karo.");return}
+  if(end&&end<start){notify("End date, start date se pehle nahi ho sakti.");return}
+  const r={id:editing||("duty_"+Date.now()+"_"+Math.random().toString(36).slice(2,6)),
+    memberId:memberId(m),memberName:memberName(m),memberRank:memberRank(m),
+    duty,startDate:start,endDate:end,assignedById:a?memberId(a):"",
+    assignedByName:a?memberName(a):"",notes:$("dutyNote").value.trim(),
+    updatedAt:new Date().toISOString()};
+  if(editing){const i=db.messDuties.findIndex(x=>x.id===editing);if(i>=0)db.messDuties[i]={...db.messDuties[i],...r}}
+  else{r.createdAt=new Date().toISOString();db.messDuties.push(r)}
+  try{saveDB();resetDuty();setupSelects();renderDuties();notify("Duty register save ho gaya.")}
+  catch(err){notify("Save error: "+err.message)}
+});
+window.editDuty=id=>{
+  const d=db.messDuties.find(x=>x.id===id);if(!d)return;
+  editing=id;setupSelects();$("memberId").value=d.memberId;$("duty").value=d.duty;
+  $("startDate").value=d.startDate||today();$("endDate").value=d.endDate||"";
+  $("assignedBy").value=d.assignedById||"";$("dutyNote").value=d.notes||"";
+  $("saveDuty").textContent="Update Duty";selectedInfo();window.scrollTo({top:0,behavior:"smooth"});
+};
+window.endDuty=id=>{
+  const d=db.messDuties.find(x=>x.id===id);if(!d)return;
+  if(!confirm("Duty end date aaj set karein? Purana record rahega."))return;
+  d.endDate=today();d.updatedAt=new Date().toISOString();
+  try{saveDB();renderDuties();setupSelects();notify("Duty end record save ho gaya.")}
+  catch(e){notify("Save error: "+e.message)}
+};
 
-function render(){
-  const records = arr(data.messDuties);
-  $("totalCount").textContent=records.length;
-  $("activeCount").textContent=records.filter(r=>!isEnded(r)).length;
-  $("endedCount").textContent=records.filter(isEnded).length;
-
-  const query=$("search").value.trim().toLowerCase();
-  const filter=$("statusFilter").value;
-  const body=$("recordsBody");
-
-  const sorted=records.slice().sort((a,b)=>
-    text(b.startDate).localeCompare(text(a.startDate))
-  );
-
-  const filtered=sorted.filter(r=>{
-    const m=getMember(r.memberId);
-    const name=text(r.memberName || (m && memberName(m)));
-    const rank=text(r.memberRank || (m && memberRank(m)));
-    const service=text(r.serviceId || (m && memberService(m)));
-    const haystack=[name,rank,service,r.duty,r.assignedByName,r.notes]
-      .join(" ").toLowerCase();
-
-    if(query && !haystack.includes(query)) return false;
-    if(filter==="active" && isEnded(r)) return false;
-    if(filter==="ended" && !isEnded(r)) return false;
-    return true;
+function mealSection(m){
+  return str(m.section||m.messSection||m.diningSection||m.category||m.mealSection||"Jawan Mess");
+}
+function mealRation(m){
+  const needs=m.needs||m.ration||m.ingredientsUsed||{};
+  if(Array.isArray(needs)){
+    const o={};
+    needs.forEach(x=>{
+      const id=x.itemId||x.id||x.name;
+      const qty=Number(x.quantityBase??x.qty??x.quantity??0);
+      if(id)o[id]=(o[id]||0)+qty;
+    });
+    return o;
+  }
+  return needs&&typeof needs==="object"?needs:{};
+}
+function mealCost(m){return Number(m.cost??m.totalCost??m.consumptionCost??0)}
+function mealServings(m){return Number(m.servings??m.quantity??1)}
+function isCancelled(m){return m.cancelled===true||str(m.status).toLowerCase()==="cancelled"}
+function filteredMeals(){
+  const date=$("reportDate").value,filter=$("mealFilter").value;
+  return arr(db.meals).filter(m=>m.date===date&&!isCancelled(m)&&
+    (filter==="all"||str(m.type).toLowerCase()===filter.toLowerCase()));
+}
+function qtyMap(meals){
+  const result={};
+  meals.forEach(m=>{
+    const needs=mealRation(m);
+    Object.entries(needs).forEach(([id,q])=>{
+      const n=Number(q)||0;result[id]=(result[id]||0)+n;
+    });
   });
-
-  if(!filtered.length){
-    body.innerHTML='<tr><td colspan="8" class="empty">Koi duty record nahi mila. Members page mein jawan maujood hain to upar se duty assign karein.</td></tr>';
-    return;
-  }
-
-  body.innerHTML=filtered.map((r,index)=>{
-    const m=getMember(r.memberId);
-    const name=r.memberName || (m && memberName(m)) || "Member unavailable";
-    const rank=r.memberRank || (m && memberRank(m)) || "";
-    const service=r.serviceId || (m && memberService(m)) || "";
-    const ended=isEnded(r);
-
-    return `<tr>
-      <td>${index+1}</td>
-      <td><b>${esc(name)}</b><br>
-        ${esc(rank)}<br><span class="muted">${esc(service)}</span>
-      </td>
-      <td><b>${esc(r.duty)}</b><br>
-        ${r.notes ? '<span class="muted">'+esc(r.notes)+'</span>' : ''}
-      </td>
-      <td>${esc(formatDate(r.startDate))}</td>
-      <td>${esc(formatDate(r.endDate))}</td>
-      <td>${esc(r.assignedByName || "—")}<br>
-        <span class="muted">${esc(r.assignedByRank || "")}</span>
-      </td>
-      <td><span class="badge ${ended?'ended':''}">${ended?'Duty Ended':'Recorded'}</span></td>
-      <td>
-        <div class="actions" style="margin:0">
-          <button class="small secondary" data-edit="${esc(r.id)}">Edit</button>
-          ${!r.endDate ? '<button class="small danger" data-end="'+esc(r.id)+'">End Duty</button>' : ''}
-        </div>
-      </td>
-    </tr>`;
-  }).join("");
+  return result;
 }
+function renderReport(){
+  const date=$("reportDate").value||today(),meals=filteredMeals();
+  const purchases=arr(db.purchases).filter(p=>p.date===date);
+  const consumed=meals.reduce((s,m)=>s+mealCost(m),0);
+  const bought=purchases.reduce((s,p)=>s+Number(p.cost??p.total??p.totalCost??0),0);
+  $("mealCount").textContent=meals.length;
+  $("mealCost").textContent=money(consumed);
+  $("consumptionCost").textContent=money(consumed);
+  $("purchaseCost").textContent=money(bought);
+  $("filteredMealCount").textContent=meals.length;
 
-function submitDuty(event){
-  event.preventDefault();
+  $("mealRows").innerHTML=meals.length?meals.map(m=>{
+    const needs=mealRation(m);
+    const detail=Object.entries(needs).map(([id,q])=>esc(itemName(id))+": "+esc(q)+" "+esc(itemUnit(id))).join("<br>")||"Ration detail not saved";
+    return `<tr><td>${esc(m.type||"Meal")}<br><span class="muted">${esc(m.date)}</span></td>
+      <td>${esc(m.recipeName||m.recipe||"—")}</td><td>${esc(mealServings(m))}</td>
+      <td>${detail}</td><td>${money(mealCost(m))}</td><td>${esc(mealSection(m))}</td></tr>`;
+  }).join(""):'<tr><td colspan="6" class="empty">Is date ka saved meal record nahi mila.</td></tr>';
 
-  const m=getMember($("member").value);
-  const assigner=getMember($("assignedBy").value);
-  const duty=$("duty").value;
-  const startDate=$("startDate").value;
-  const endDate=$("endDate").value;
+  const totals=qtyMap(meals),ids=Object.keys(totals);
+  $("rationRows").innerHTML=ids.length?ids.map(id=>`<tr><td>${esc(itemName(id))}</td><td>${esc(totals[id])}</td><td>${esc(itemUnit(id))}</td></tr>`).join(""):'<tr><td colspan="3" class="empty">Saved Meals records mein ration quantities nahi mili.</td></tr>';
 
-  if(!m){showMessage("Pehle Members list se jawan select karein.","err");return;}
-  if(!assigner){showMessage("Duty assign karne wale Commander/NCO ko select karein.","err");return;}
-  if(!duty || !startDate){showMessage("Duty aur start date zaroori hain.","err");return;}
-  if(endDate && endDate<startDate){
-    showMessage("End date, start date se pehle nahi ho sakti.","err");return;
-  }
-
-  const record={
-    id: editingId || uid(),
-    memberId: memberId(m),
-    memberName: memberName(m),
-    memberRank: memberRank(m),
-    serviceId: memberService(m),
-    duty,
-    startDate,
-    endDate,
-    assignedById: memberId(assigner),
-    assignedByName: memberName(assigner),
-    assignedByRank: memberRank(assigner),
-    notes: $("notes").value.trim(),
-    updatedAt: new Date().toISOString()
-  };
-
-  if(!editingId) record.createdAt=new Date().toISOString();
-
-  try{
-    if(editingId){
-      const index=data.messDuties.findIndex(r=>r.id===editingId);
-      if(index<0) throw new Error("Edit record nahi mila.");
-      data.messDuties[index]={...data.messDuties[index],...record};
-    }else{
-      data.messDuties.push(record);
-    }
-    saveStore();
-    resetForm();
-    render();
-    showMessage(editingId ? "Duty record update ho gaya." : "Mess duty register mein save ho gayi.","ok");
-  }catch(err){
-    showMessage("Save nahi hua: "+err.message,"err");
-  }
+  $("purchaseRows").innerHTML=purchases.length?purchases.map(p=>`<tr>
+    <td>${esc(p.itemName||arr(db.items).find(i=>i.id===p.itemId)?.name||"—")}</td>
+    <td>${esc(p.enteredQty??p.quantity??p.qty??"—")} ${esc(p.enteredUnit??p.purchaseUnit??p.unit??"")}</td>
+    <td>${esc(p.vendor??p.supplier??"—")}</td>
+    <td>${money(p.cost??p.total??p.totalCost??0)}</td></tr>`).join(""):'<tr><td colspan="4" class="empty">Is date par purchase record nahi hai.</td></tr>';
 }
+$("refreshReport").addEventListener("click",()=>{if(loadDB()){setupSelects();renderDuties();renderReport();notify("Saved data se report refresh ho gayi.")}else notify("Members data storage mein nahi mila.")});
+$("reportDate").addEventListener("change",renderReport);
+$("mealFilter").addEventListener("change",renderReport);
+$("printReport").addEventListener("click",()=>window.print());
 
-function editDuty(id){
-  const r=data.messDuties.find(x=>x.id===id);
-  if(!r) return;
-
-  editingId=id;
-  populateMembers();
-  $("member").value=r.memberId;
-  $("duty").value=r.duty;
-  $("startDate").value=r.startDate || dateToday();
-  $("endDate").value=r.endDate || "";
-  $("assignedBy").value=r.assignedById || "";
-  $("notes").value=r.notes || "";
-  $("formTitle").textContent="✏️ Edit Mess Duty";
-  $("saveBtn").textContent="Update Duty Record";
-  $("cancelEdit").hidden=false;
-  updateMemberInfo();
-  window.scrollTo({top:0,behavior:"smooth"});
+function reportText(target){
+  const date=$("reportDate").value||today(),meals=filteredMeals(),purchases=arr(db.purchases).filter(p=>p.date===date);
+  const totals=qtyMap(meals);
+  let out="CRPF MESS DAILY REPORT\nDate: "+date+"\n\n";
+  out+="DAILY RATION / COOKING LIST\n";
+  out+="Meals recorded: "+meals.length+"\n";
+  if(meals.length){
+    meals.forEach(m=>{
+      out+="\n"+(m.type||"Meal")+" | "+(m.recipeName||m.recipe||"Recipe")+
+        " | Servings: "+mealServings(m)+" | Section: "+mealSection(m)+"\n";
+      const needs=mealRation(m);
+      Object.entries(needs).forEach(([id,q])=>out+="- "+itemName(id)+": "+q+" "+itemUnit(id)+"\n");
+    });
+  }else out+="No saved meal records for this date.\n";
+  out+="\nTOTAL RATION\n";
+  if(Object.keys(totals).length)Object.entries(totals).forEach(([id,q])=>out+="- "+itemName(id)+": "+q+" "+itemUnit(id)+"\n");
+  else out+="No ration quantity saved in Meals records.\n";
+  out+="\nMEAL CONSUMPTION COST: "+money(meals.reduce((s,m)=>s+mealCost(m),0))+"\n";
+  if(target!=="headCook"&&target!=="cook"){
+    out+="\nPURCHASE EXPENSE: "+money(purchases.reduce((s,p)=>s+Number(p.cost??p.total??p.totalCost??0),0))+"\n";
+    out+="\nPURCHASES\n";
+    purchases.forEach(p=>out+="- "+(p.itemName||arr(db.items).find(i=>i.id===p.itemId)?.name||"Item")+
+      ": "+(p.enteredQty??p.quantity??p.qty??"—")+" "+(p.enteredUnit??p.purchaseUnit??p.unit??"")+
+      " | "+money(p.cost??p.total??p.totalCost??0)+"\n");
+    out+="\nNOTE: Purchase expense and meal consumption cost are separate figures.\n";
+  }
+  if(target==="headCook"||target==="cook")out+="\nPlease prepare the above meals and ration for the selected date.\n";
+  if(target==="messSO")out+="\nMESS SO: Full daily ration and expense report.\n";
+  return out;
 }
+window.sendWhatsApp=target=>{
+  const id=$(target).value,m=findMember(id);
+  if(!m){notify("Pehle Members list se recipient select karo.");return}
+  const number=memberPhone(m).replace(/\D/g,"");
+  if(!number){notify("Selected member ke Members record mein country-code ke saath mobile number add karo.");return}
+  const text=reportText(target);
+  window.open("https://wa.me/"+number+"?text="+encodeURIComponent(text),"_blank");
+};
+window.copyFullReport=()=>{
+  const text=reportText("messSO");
+  if(navigator.clipboard&&navigator.clipboard.writeText){
+    navigator.clipboard.writeText(text).then(()=>notify("Full report copy ho gayi. WhatsApp par paste kar sakte ho."))
+    .catch(()=>prompt("Report copy karo:",text));
+  }else prompt("Report copy karo:",text);
+};
 
-function endDuty(id){
-  const r=data.messDuties.find(x=>x.id===id);
-  if(!r || r.endDate) return;
-  if(!confirm("Is duty ka end date aaj ki tareekh set karein? Purana record rahega.")) return;
-
-  r.endDate=dateToday();
-  r.updatedAt=new Date().toISOString();
-
-  try{
-    saveStore();
-    render();
-    showMessage("Duty end date save ho gayi. History register mein rahegi.","ok");
-  }catch(err){
-    showMessage("Save nahi hua: "+err.message,"err");
-  }
-}
-
-$("dutyForm").addEventListener("submit",submitDuty);
-$("member").addEventListener("change",updateMemberInfo);
-$("search").addEventListener("input",render);
-$("statusFilter").addEventListener("change",render);
-$("refresh").addEventListener("click",()=>{
-  if(!readStore()){
-    showMessage("Members data nahi mila. Members page par member save hone ki jaanch karein.","err");
-    return;
-  }
-  populateMembers();
-  render();
-  showMessage("Members aur duty records refresh ho gaye.","ok");
-});
-$("resetForm").addEventListener("click",resetForm);
-$("cancelEdit").addEventListener("click",resetForm);
-$("print").addEventListener("click",()=>window.print());
-
-$("recordsBody").addEventListener("click",event=>{
-  const edit=event.target.closest("[data-edit]");
-  const end=event.target.closest("[data-end]");
-  if(edit) editDuty(edit.dataset.edit);
-  if(end) endDuty(end.dataset.end);
-});
-
-window.addEventListener("storage",event=>{
-  if(STORAGE_KEYS.includes(event.key)){
-    if(readStore()){
-      populateMembers();
-      render();
-    }
-  }
-});
-
-if(readStore()){
-  $("startDate").value=dateToday();
-  populateMembers();
-  render();
-  if(!data.members.length){
-    showMessage("Members list khali hai. Pehle Members page par jawan add karein.","err");
-  }
+$("startDate").value=today();$("reportDate").value=today();
+if(loadDB()){
+  db.messDuties=arr(db.messDuties);
+  setupSelects();renderDuties();renderReport();
 }else{
-  $("startDate").value=dateToday();
-  $("recordsBody").innerHTML=
-    '<tr><td colspan="8" class="empty">Members data nahi mila. Pehle Members page par kam se kam ek jawan save karein. Agar data kisi doosri storage key mein hai, us key ko code mein add karna hoga.</td></tr>';
-  showMessage("Members data wali storage key nahi mili. Code sirf maujooda supported keys ko check karta hai; data delete ya overwrite nahi kiya gaya.","err");
+  $("dutyRows").innerHTML='<tr><td colspan="7" class="empty">Members data nahi mila. Pehle Members page par jawan save karein.</td></tr>';
+  $("mealRows").innerHTML='<tr><td colspan="6" class="empty">Saved data unavailable.</td></tr>';
+  $("rationRows").innerHTML='<tr><td colspan="3" class="empty">Saved data unavailable.</td></tr>';
+  $("purchaseRows").innerHTML='<tr><td colspan="4" class="empty">Saved data unavailable.</td></tr>';
+  notify("Members data ki storage key nahi mili. Data delete nahi kiya gaya.");
 }
 })();
 </script>

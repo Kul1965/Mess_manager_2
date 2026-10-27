@@ -1,1 +1,367 @@
 
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CRPF Smart Mess Manager - Records</title>
+<style>
+:root{
+  --g:#176747;--deep:#10563e;--bg:#f2f6f3;
+  --white:#fff;--text:#214d3b;--muted:#78857e;
+  --border:#dce5df;--red:#bd3942;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);
+font-family:Arial,sans-serif;font-size:14px}
+header{background:var(--g);color:white;padding:18px 14px}
+header h2{margin:0 0 6px;font-size:21px}
+header p{margin:0;opacity:.9}
+nav{display:flex;gap:7px;overflow-x:auto;padding:10px;
+background:white;border-bottom:1px solid var(--border)}
+nav a{flex-shrink:0;text-decoration:none;color:var(--g);
+border:1px solid var(--border);padding:9px 12px;
+border-radius:8px;font-weight:bold}
+nav a.active{background:var(--g);color:white}
+main{max-width:1100px;margin:auto;padding:14px}
+.card{background:white;border:1px solid var(--border);
+border-radius:12px;padding:14px;margin-bottom:13px}
+h3{margin:0 0 12px;font-size:17px}
+.stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+.stat{background:white;border:1px solid var(--border);
+border-radius:10px;padding:13px}
+.stat small{display:block;color:var(--muted);margin-bottom:8px}
+.stat strong{font-size:23px;color:var(--g)}
+.filters{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+input,select,button{font:inherit;border-radius:8px;padding:11px;
+width:100%;border:1px solid var(--border);background:white;color:var(--text)}
+button{background:var(--g);color:white;border:0;font-weight:bold;cursor:pointer}
+button.secondary{background:white;color:var(--g);border:1px solid var(--g)}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.tablewrap{overflow-x:auto}
+table{border-collapse:collapse;width:100%;min-width:650px}
+th,td{padding:11px 9px;border-bottom:1px solid var(--border);
+text-align:left;vertical-align:top}
+th{background:#edf4ef;color:var(--deep)}
+.tag{display:inline-block;padding:4px 7px;border-radius:5px;
+background:#e6f3eb;color:var(--g);font-size:12px}
+.muted{color:var(--muted)}
+.notice{line-height:1.6;background:#fff8e8;border:1px solid #efdfb8;
+padding:11px;border-radius:8px;margin-bottom:12px}
+.empty{text-align:center;padding:25px;color:var(--muted)}
+footer{text-align:center;color:var(--muted);padding:15px}
+@media(min-width:650px){
+ .stats{grid-template-columns:repeat(4,minmax(0,1fr))}
+ .filters{grid-template-columns:repeat(4,minmax(0,1fr))}
+}
+</style>
+</head>
+<body>
+<header>
+  <h2>CRPF Smart Mess Manager</h2>
+  <p>Record Register · Purane aur naye records</p>
+</header>
+
+<nav>
+  <a href="index.html">Dashboard</a>
+  <a href="members.html">Members</a>
+  <a href="store.html">Store</a>
+  <a href="recipes.html">Recipes</a>
+  <a href="meals.html">Meals</a>
+  <a href="accounts.html">Accounts</a>
+  <a href="settlement.html">Settlement</a>
+  <a href="records.html" class="active">Records</a>
+  <a href="settings.html">Settings</a>
+</nav>
+
+<main>
+  <div class="notice">
+    <strong>Record Register:</strong> Yahan saved records ko dekh aur filter kar sakte hain.
+    Yeh page records ko edit ya delete nahi karta. Data browser mein save hai to wahi
+    data dikh sakta hai; doosre phone/browser ka data apne aap nahi aayega.
+  </div>
+
+  <section class="stats">
+    <div class="stat"><small>Members</small><strong id="memberCount">0</strong></div>
+    <div class="stat"><small>Store Items</small><strong id="itemCount">0</strong></div>
+    <div class="stat"><small>Meal Records</small><strong id="mealCount">0</strong></div>
+    <div class="stat"><small>Ledger Entries</small><strong id="ledgerCount">0</strong></div>
+  </section>
+
+  <section class="card" style="margin-top:13px">
+    <h3>Search Records</h3>
+    <div class="filters">
+      <input id="search" placeholder="Name, item, details..." />
+      <select id="kind">
+        <option value="all">All record types</option>
+        <option value="member">Members</option>
+        <option value="item">Store items</option>
+        <option value="purchase">Purchases</option>
+        <option value="recipe">Recipes</option>
+        <option value="meal">Meals</option>
+        <option value="ledger">Account entries</option>
+        <option value="expense">Other expenses</option>
+        <option value="handover">Handovers</option>
+      </select>
+      <input id="fromDate" type="date" aria-label="From date" />
+      <input id="toDate" type="date" aria-label="To date" />
+    </div>
+    <div class="actions">
+      <button id="searchBtn">Search</button>
+      <button id="resetBtn" class="secondary">Reset Filters</button>
+    </div>
+  </section>
+
+  <section class="card">
+    <h3>Saved Records</h3>
+    <p class="muted" id="resultInfo">Loading records...</p>
+    <div class="tablewrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>Type</th>
+            <th>Record / Name</th>
+            <th>Details</th>
+            <th>Amount (Rs)</th>
+          </tr>
+        </thead>
+        <tbody id="recordsBody"></tbody>
+      </table>
+    </div>
+    <div id="empty" class="empty" hidden>No matching records found.</div>
+  </section>
+
+  <section class="card">
+    <h3>Data Safety</h3>
+    <p class="muted">Download the data currently found in this browser as a JSON backup.
+    This does not replace your existing backup.</p>
+    <button id="backupBtn">Download JSON Backup</button>
+  </section>
+</main>
+
+<footer>CRPF Smart Mess Manager · Record Register</footer>
+
+<script>
+(function(){
+"use strict";
+
+const KEYS = ["crpfMessProfessionalV1","crpfMessPrototypeV2"];
+let data = {};
+let allRecords = [];
+
+function arr(value){ return Array.isArray(value) ? value : []; }
+function first(obj, keys, fallback=""){
+  for(const k of keys){
+    if(obj && obj[k] !== undefined && obj[k] !== null && obj[k] !== "")
+      return obj[k];
+  }
+  return fallback;
+}
+function text(value){
+  if(value === null || value === undefined) return "";
+  if(typeof value === "object") return "";
+  return String(value);
+}
+function money(value){
+  const n = Number(value);
+  return Number.isFinite(n) ? n.toLocaleString("en-IN",{maximumFractionDigits:2}) : "";
+}
+function dateOf(obj){
+  let d = text(first(obj,["date","joiningDate","createdAt","confirmedAt","updatedAt","timestamp"]));
+  if(d.includes("T")) d = d.split("T")[0];
+  return d.length >= 10 ? d.slice(0,10) : d;
+}
+function getMemberName(obj){
+  return text(first(obj,["memberName","fullName","name","nameOfMember","serviceId","memberId"],""));
+}
+function add(type,label,obj,details,amount){
+  obj = obj || {};
+  allRecords.push({
+    date:dateOf(obj),
+    type:type,
+    label:text(label) || type,
+    details:text(details),
+    amount:amount === null || amount === undefined ? "" : money(amount)
+  });
+}
+function safeRead(key){
+  try{
+    const raw = localStorage.getItem(key);
+    if(!raw) return {};
+    const parsed = JSON.parse(raw);
+    return parsed && typeof parsed === "object" ? parsed : {};
+  }catch(e){ return {}; }
+}
+function loadData(){
+  // Read-only compatibility: combine available collections for viewing.
+  // Never write merged data back to either existing storage key.
+  const sources = KEYS.map(safeRead);
+  const result = {};
+  const collections = [
+    "members","items","purchases","recipes","meals","ledger",
+    "movements","expenses","handovers"
+  ];
+  collections.forEach(k=>{
+    const seen = new Set();
+    result[k] = [];
+    sources.forEach(source=>{
+      arr(source[k]).forEach((item,index)=>{
+        const signature = item && item.id !== undefined
+          ? k+":"+String(item.id)
+          : k+":"+JSON.stringify(item);
+        if(!seen.has(signature)){
+          seen.add(signature);
+          result[k].push(item);
+        }
+      });
+    });
+  });
+  sources.forEach(source=>{
+    if(source.settings && typeof source.settings === "object"){
+      result.settings = Object.assign({},result.settings || {},source.settings);
+    }
+  });
+  return result;
+}
+function collectRecords(){
+  allRecords = [];
+  data = loadData();
+
+  arr(data.members).forEach(m=>{
+    add("member",getMemberName(m),m,
+      [first(m,["serviceId","memberId","rank"],""),
+       first(m,["duty","status"],"")].filter(Boolean).join(" · "),null);
+  });
+
+  arr(data.items).forEach(i=>{
+    add("item",first(i,["name","itemName"],"Store item"),i,
+      "Stock: "+text(first(i,["stock","quantity","currentStock"],"Not specified"))+
+      " "+text(first(i,["unit","baseUnit"],"")),null);
+
+    arr(i.purchases).forEach(p=>{
+      add("purchase",first(i,["name","itemName"],"Purchase"),p,
+        "Qty: "+text(first(p,["quantity","quantityBase"],""))+
+        " "+text(first(p,["purchaseUnit","unit"],""))+
+        (first(p,["supplier"],"") ? " · Supplier: "+text(p.supplier) : ""),
+        first(p,["total","totalCost"],""));
+    });
+  });
+
+  arr(data.purchases).forEach(p=>{
+    add("purchase",first(p,["itemName","name"],"Purchase"),p,
+      text(first(p,["supplier","invoice","notes"],"Purchase entry")),
+      first(p,["total","totalCost","amount"],""));
+  });
+
+  arr(data.recipes).forEach(r=>{
+    add("recipe",first(r,["name","recipeName"],"Recipe"),r,
+      "Ingredients: "+arr(r.ingredients).length,null);
+  });
+
+  arr(data.meals).forEach(m=>{
+    add("meal",first(m,["recipeName","type"],"Meal"),m,
+      text(first(m,["type"],""))+
+      " · Servings: "+text(first(m,["servings"],""))+
+      " · Status: "+text(first(m,["status"],"")),
+      first(m,["totalCost","amount"],""));
+  });
+
+  arr(data.ledger).forEach(l=>{
+    add("ledger",getMemberName(l) || first(l,["description","transactionType","type"],"Account entry"),
+      l,text(first(l,["description","transactionType","type"],"Account entry")),
+      first(l,["amount","total"],""));
+  });
+
+  arr(data.expenses).forEach(e=>{
+    add("expense",first(e,["name","title","description"],"Other expense"),e,
+      text(first(e,["category","notes"],"")),
+      first(e,["amount","total"],""));
+  });
+
+  arr(data.handovers).forEach(h=>{
+    add("handover",first(h,["commanderName","name","title"],"Commander handover"),h,
+      text(first(h,["notes","remarks","fromCommander"],"Handover record")),
+      first(h,["amount","cash","cashAmount"],""));
+  });
+
+  document.getElementById("memberCount").textContent = arr(data.members).length;
+  document.getElementById("itemCount").textContent = arr(data.items).length;
+  document.getElementById("mealCount").textContent = arr(data.meals).length;
+  document.getElementById("ledgerCount").textContent = arr(data.ledger).length;
+  render();
+}
+function render(){
+  const q = document.getElementById("search").value.trim().toLowerCase();
+  const kind = document.getElementById("kind").value;
+  const from = document.getElementById("fromDate").value;
+  const to = document.getElementById("toDate").value;
+
+  const filtered = allRecords.filter(r=>{
+    if(kind !== "all" && r.type !== kind) return false;
+    if(from && (!r.date || r.date < from)) return false;
+    if(to && (!r.date || r.date > to)) return false;
+    const haystack = [r.date,r.type,r.label,r.details,r.amount].join(" ").toLowerCase();
+    return !q || haystack.includes(q);
+  }).sort((a,b)=>b.date.localeCompare(a.date));
+
+  const body = document.getElementById("recordsBody");
+  body.replaceChildren();
+
+  filtered.forEach(r=>{
+    const tr = document.createElement("tr");
+    [r.date || "—",r.type,r.label,r.details || "—",r.amount].forEach((value,index)=>{
+      const td = document.createElement("td");
+      if(index === 1){
+        const span = document.createElement("span");
+        span.className = "tag";
+        span.textContent = value;
+        td.appendChild(span);
+      }else{
+        td.textContent = value || "—";
+      }
+      tr.appendChild(td);
+    });
+    body.appendChild(tr);
+  });
+
+  document.getElementById("resultInfo").textContent =
+    "Showing "+filtered.length+" of "+allRecords.length+" records";
+  document.getElementById("empty").hidden = filtered.length !== 0;
+}
+document.getElementById("searchBtn").addEventListener("click",render);
+["search","kind","fromDate","toDate"].forEach(id=>{
+  document.getElementById(id).addEventListener("input",render);
+  document.getElementById(id).addEventListener("change",render);
+});
+document.getElementById("resetBtn").addEventListener("click",()=>{
+  ["search","fromDate","toDate"].forEach(id=>document.getElementById(id).value="");
+  document.getElementById("kind").value="all";
+  render();
+});
+document.getElementById("backupBtn").addEventListener("click",()=>{
+  const backup = {};
+  KEYS.forEach(key=>{
+    const raw = localStorage.getItem(key);
+    if(raw !== null){
+      try{backup[key]=JSON.parse(raw);}
+      catch(e){backup[key]=raw;}
+    }
+  });
+  backup.exportedAt = new Date().toISOString();
+  const blob = new Blob([JSON.stringify(backup,null,2)],{type:"application/json"});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = "CRPF-Mess-Backup-"+new Date().toISOString().slice(0,10)+".json";
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),1000);
+});
+collectRecords();
+})();
+</script>
+</body>
+</html>

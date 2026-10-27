@@ -423,9 +423,154 @@ function openPurchase(id,itemId){
 }
 function fillItemSelect(selected){
   const items=getData().items;
-  $("purchaseItem").innerHTML=items.map(i=>
+  $("purchaseItem").innerHTML=items.map(i=>`<option value="${esc(i.id)}">${esc(i.name)}</option>`).join("");
+  if(selected)$("purchaseItem").value=String(selected);
+  updateUnitHint();
+}
+function calcTotal(){
+  const q=num($("purchaseQty").value),rate=num($("purchaseRate").value);
+  $("purchaseTotal").value=money(q*rate);
+  updateUnitHint();
+}
+function updateUnitHint(){
+  const item=getData().items.find(i=>String(i.id)===$("purchaseItem").value);
+  if(!item){$("unitHint").textContent="Pehle item select karein.";return}
+  const base=baseUnit(item.unit||"kg");
+  $("unitHint").textContent="Stock base unit: "+base+". Purchase quantity and rate will be converted automatically. Example: 2 kg = 2000 g.";
+}
+["purchaseQty","purchaseRate"].forEach(id=>$(id).addEventListener("input",calcTotal));
+$("purchaseUnit").addEventListener("change",updateUnitHint);
+$("purchaseItem").addEventListener("change",updateUnitHint);
+$("addPurchaseBtn").addEventListener("click",()=>openPurchase());
+$("addPurchaseBtn2").addEventListener("click",()=>openPurchase());
 
+$("purchaseForm").addEventListener("submit",e=>{
+  e.preventDefault();
+  const d=getData();
+  const id=$("purchaseId").value;
+  const itemId=$("purchaseItem").value;
+  const item=d.items.find(i=>String(i.id)===String(itemId));
+  if(!item)return alert("Store item select karein.");
+
+  const unit=$("purchaseUnit").value;
+  const qty=num($("purchaseQty").value);
+  const rate=num($("purchaseRate").value);
+  if(qty<=0||rate<0)return alert("Quantity positive honi chahiye aur rate negative nahi ho sakta.");
+
+  const targetBase=baseUnit(item.unit||"kg");
+  if(baseUnit(unit)!==targetBase)return alert("Unit mismatch: "+item.name+" ke liye "+targetBase+" family ki unit chunein.");
+
+  const quantityBase=toBase(qty,unit);
+  const total=qty*rate;
+  const record={
+    id:id||newPurchaseId(),
+    date:$("purchaseDate").value||today(),
+    quantity:qty,
+    purchaseUnit:unit,
+    rate,
+    quantityBase,
+    rateBase:total/quantityBase,
+    total,
+    supplier:$("supplier").value.trim(),
+    invoice:$("invoice").value.trim(),
+    notes:$("purchaseNotes").value.trim()
+  };
+
+  if(!Array.isArray(item.purchases))item.purchases=[];
+  if(id){
+    let oldFound=findPurchase(d,id);
+    if(!oldFound)return alert("Purchase record nahi mila.");
+    // If an item is changed, remove the old record and insert into the selected item.
+    oldFound.item.purchases=oldFound.item.purchases.filter(p=>String(p.id)!==String(id));
+  }
+  item.purchases.push(record);
+
+  if(saveData(d)){
+    $("purchaseDialog").close();
     render();
+    switchTab("purchasesPanel");
+    alert(id?"Purchase update ho gaya.":"Purchase save ho gaya.");
+  }
+});
+
+function findPurchase(d,id){
+  for(const item of d.items){
+    const p=arr(item.purchases).find(x=>String(x.id)===String(id));
+    if(p)return {item,purchase:p};
+  }
+  return null;
+}
+function viewItem(id){
+  const d=getData(),item=d.items.find(i=>String(i.id)===String(id));
+  if(!item)return alert("Item nahi mila.");
+  const s=stockFor(d,item),unit=baseUnit(item.unit||"kg");
+  $("viewTitle").textContent="Store Item Details";
+  $("viewBody").innerHTML=
+    line("Item Name",item.name)+line("Purchase Unit",item.unit)+
+    line("Base Unit",unit)+line("Current Stock",formatQty(s.qty,unit))+
+    line("Weighted Average Rate",money(s.avg)+" per "+unit)+
+    line("Current Stock Value",money(s.value))+
+    line("Total Purchased",formatQty(s.totalQty,unit))+
+    line("Consumed in confirmed meals",formatQty(s.used,unit))+
+    line("Purchase Records",arr(item.purchases).length)+line("Notes",item.note)+
+    `<div class="form-buttons"><button class="btn primary" data-action="editItem" data-id="${esc(item.id)}">Edit Item</button><button class="btn orange" data-action="addPurchase" data-id="${esc(item.id)}">＋ Purchase</button><button class="btn secondary" data-close="viewDialog">Close</button></div>`;
+  $("viewDialog").showModal();
+}
+function viewPurchase(id){
+  const found=findPurchase(getData(),id);
+  if(!found)return alert("Purchase nahi mila.");
+  const p=found.purchase;
+  $("viewTitle").textContent="Purchase Details";
+  $("viewBody").innerHTML=
+    line("Item",found.item.name)+line("Date",p.date)+
+    line("Quantity",num(p.quantity)+" "+(p.purchaseUnit||p.unit||found.item.unit))+
+    line("Rate per unit",money(p.rate))+line("Total",money(p.total))+
+    line("Supplier",p.supplier)+line("Invoice",p.invoice)+line("Notes",p.notes)+
+    `<div class="form-buttons"><button class="btn primary" data-action="editPurchase" data-id="${esc(p.id)}">Edit Purchase</button><button class="btn secondary" data-close="viewDialog">Close</button></div>`;
+  $("viewDialog").showModal();
+}
+function line(label,value){
+  return `<div class="view-line"><small>${esc(label)}</small>${esc(value??"—")}</div>`;
+}
+function deleteItem(id){
+  const d=getData(),item=d.items.find(i=>String(i.id)===String(id));
+  if(!item)return alert("Item nahi mila.");
+  if(arr(item.purchases).length){
+    return alert("Is item ki purchase history hai. Pehle purchase records ko review/delete karein. History wale item ko seedha delete nahi karenge.");
+  }
+  if(d.meals.some(m=>arr(m.ration).some(r=>String(r.itemId)===String(id)))){
+    return alert("Is item ka meal record hai. Audit record bachane ke liye item delete nahi kiya.");
+  }
+  if(!confirm("Kya "+item.name+" ko delete karna hai?"))return;
+  d.items=d.items.filter(i=>String(i.id)!==String(id));
+  if(saveData(d)){render();alert("Item delete ho gaya.");}
+}
+function deletePurchase(id){
+  const d=getData(),found=findPurchase(d,id);
+  if(!found)return alert("Purchase nahi mila.");
+  if(!confirm(found.item.name+" ki "+found.purchase.date+" wali purchase delete karni hai? Stock aur average rate dobara calculate honge."))return;
+  found.item.purchases=found.item.purchases.filter(p=>String(p.id)!==String(id));
+  if(saveData(d)){render();alert("Purchase delete ho gayi.");}
+}
+
+document.addEventListener("click",e=>{
+  const close=e.target.closest("[data-close]");
+  if(close){const dialog=$(close.dataset.close);if(dialog)dialog.close();return}
+  const btn=e.target.closest("button[data-action]");
+  if(!btn)return;
+  const {action,id}=btn.dataset;
+  if(action==="viewItem")viewItem(id);
+  if(action==="editItem"){ $("viewDialog").close();openItem(id);}
+  if(action==="addPurchase"){ $("viewDialog").close();openPurchase("",id);}
+  if(action==="deleteItem")deleteItem(id);
+  if(action==="viewPurchase")viewPurchase(id);
+  if(action==="editPurchase"){ $("viewDialog").close();openPurchase(id);}
+  if(action==="deletePurchase")deletePurchase(id);
+});
+
+$("itemSearch").addEventListener("input",renderItems);
+$("purchaseSearch").addEventListener("input",renderPurchases);
+render();
 </script>
 </body>
 </html>

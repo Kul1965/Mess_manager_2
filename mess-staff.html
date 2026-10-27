@@ -1,1 +1,552 @@
 
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CRPF Mess Staff & Duty Register</title>
+<style>
+:root{
+  --g:#176747;--deep:#10563e;--bg:#f2f6f3;
+  --white:#fff;--text:#214d3b;--muted:#78857e;
+  --border:#dce5df;--red:#bd3942;--orange:#a96613;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);
+  font-family:Arial,sans-serif;font-size:14px}
+header{background:var(--g);color:white;padding:19px 16px}
+header h2{margin:0 0 6px;font-size:22px}
+header p{margin:0;font-size:13px;opacity:.9}
+main{max-width:1100px;margin:auto;padding:14px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:14px}
+.stat,.panel{background:white;border:1px solid var(--border);
+  border-radius:12px;padding:14px}
+.stat strong{display:block;font-size:23px;color:var(--g);margin-top:7px}
+.stat span{font-size:12px;color:var(--muted)}
+.panel{margin-bottom:14px}
+h3{font-size:17px;margin:0 0 14px}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+.field label{display:block;font-weight:bold;font-size:12px;margin-bottom:6px}
+input,select,textarea{width:100%;padding:11px;border:1px solid #cbd8cf;
+  border-radius:8px;background:white;color:var(--text);font:inherit}
+input:focus,select:focus,textarea:focus{outline:2px solid #a4d4b9}
+button{border:0;border-radius:8px;padding:11px 14px;
+  background:var(--g);color:white;font-weight:bold;cursor:pointer}
+button:hover{background:var(--deep)}
+button.secondary{background:#e8f1eb;color:var(--g)}
+button.danger{background:#fbe9e9;color:var(--red)}
+button.small{padding:7px 9px;font-size:12px}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px}
+.note{background:#edf6ef;border-radius:8px;padding:10px;
+  font-size:12px;line-height:1.6;margin-bottom:14px}
+.member-info{background:#f5f8f5;border:1px solid var(--border);
+  border-radius:8px;padding:11px;margin-top:10px;line-height:1.7}
+.member-info:empty{display:none}
+.toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+.toolbar input,.toolbar select{flex:1;min-width:140px}
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;min-width:760px}
+th,td{padding:11px 9px;text-align:left;border-bottom:1px solid var(--border);
+  font-size:12px;vertical-align:top}
+th{background:#f1f6f2;color:var(--g)}
+.badge{display:inline-block;padding:5px 8px;border-radius:20px;
+  background:#e1f2e6;color:var(--g);font-size:11px;font-weight:bold}
+.badge.ended{background:#eee;color:#666}
+.muted{color:var(--muted);font-size:12px}
+.empty{text-align:center;padding:25px;color:var(--muted)}
+footer{text-align:center;color:var(--muted);font-size:11px;padding:10px}
+#message{display:none;margin-bottom:12px;padding:12px;border-radius:8px}
+#message.ok{display:block;background:#e2f4e7;color:#176747}
+#message.err{display:block;background:#fbe9e9;color:#bd3942}
+@media(max-width:600px){
+ main{padding:10px}
+ .grid{grid-template-columns:1fr}
+ .stats{gap:6px}
+ .stat{padding:10px}
+ .stat strong{font-size:19px}
+ header h2{font-size:19px}
+}
+</style>
+</head>
+<body>
+<header>
+  <h2>🍲 Mess Staff & Duty Register</h2>
+  <p>CRPF Smart Mess Manager · Member-linked duty management</p>
+</header>
+
+<main>
+  <div id="message"></div>
+
+  <div class="note">
+    <b>Kaise kaam karega?</b><br>
+    Jawan Members page se select hoga. Uski details automatic aayengi.
+    Mess Commander/NCO bhi apna naam select karke apni duty register karega.
+    Purane duty records history mein rahenge.
+  </div>
+
+  <div class="stats">
+    <div class="stat"><span>Total duty entries</span><strong id="totalCount">0</strong></div>
+    <div class="stat"><span>Current duties</span><strong id="activeCount">0</strong></div>
+    <div class="stat"><span>Duty ended</span><strong id="endedCount">0</strong></div>
+  </div>
+
+  <section class="panel">
+    <h3 id="formTitle">➕ Assign Mess Duty</h3>
+
+    <form id="dutyForm">
+      <div class="grid">
+        <div class="field">
+          <label for="member">Select Jawan *</label>
+          <select id="member" required>
+            <option value="">-- Select from Members --</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="duty">Mess Duty *</label>
+          <select id="duty" required>
+            <option value="">-- Select Duty --</option>
+            <option>Mess Commander / NCO</option>
+            <option>Cook</option>
+            <option>Assistant Cook</option>
+            <option>Storekeeper</option>
+            <option>Mess Staff</option>
+            <option>Other</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="startDate">Duty Start Date *</label>
+          <input type="date" id="startDate" required>
+        </div>
+
+        <div class="field">
+          <label for="endDate">Duty End Date (optional)</label>
+          <input type="date" id="endDate">
+        </div>
+
+        <div class="field">
+          <label for="assignedBy">Duty Assigned By *</label>
+          <select id="assignedBy" required>
+            <option value="">-- Select Commander / NCO --</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label for="notes">Remarks (optional)</label>
+          <input id="notes" maxlength="300" placeholder="Additional duty details">
+        </div>
+      </div>
+
+      <div id="memberInfo" class="member-info"></div>
+
+      <div class="actions">
+        <button type="submit" id="saveBtn">Save Duty Record</button>
+        <button type="button" class="secondary" id="cancelEdit" hidden>Cancel Edit</button>
+        <button type="button" class="secondary" id="resetForm">Clear Form</button>
+      </div>
+    </form>
+  </section>
+
+  <section class="panel">
+    <h3>📋 Mess Duty Register</h3>
+    <div class="toolbar">
+      <input id="search" placeholder="Search name, ID, rank or duty">
+      <select id="statusFilter">
+        <option value="all">All Records</option>
+        <option value="active">Current Duties</option>
+        <option value="ended">Duty Ended</option>
+      </select>
+      <button type="button" class="secondary" id="refresh">Refresh</button>
+      <button type="button" class="secondary" id="print">Print Register</button>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>#</th>
+            <th>Jawan Details</th>
+            <th>Mess Duty</th>
+            <th>Start Date</th>
+            <th>End Date</th>
+            <th>Assigned By</th>
+            <th>Status</th>
+            <th>Action</th>
+          </tr>
+        </thead>
+        <tbody id="recordsBody"></tbody>
+      </table>
+    </div>
+    <p class="muted">Purane records ko delete karne ke bajay duty end karna behtar hai, taaki history bani rahe.</p>
+  </section>
+</main>
+
+<footer>CRPF Smart Mess Manager · Mess Duty Register</footer>
+
+<script>
+(function(){
+"use strict";
+
+const STORAGE_KEYS = [
+  "crpfMessProfessionalV1",
+  "crpfMessPrototypeV2"
+];
+
+let storageKey = "";
+let data = {};
+let editingId = null;
+
+const $ = id => document.getElementById(id);
+const arr = value => Array.isArray(value) ? value : [];
+const text = value => value == null ? "" : String(value).trim();
+
+function uid(){
+  return "duty_" + Date.now().toString(36) +
+    "_" + Math.random().toString(36).slice(2,8);
+}
+
+function esc(value){
+  return text(value).replace(/[&<>"']/g, ch => ({
+    "&":"&amp;","<":"&lt;",">":"&gt;",
+    '"':"&quot;","'":"&#39;"
+  }[ch]));
+}
+
+function readStore(){
+  for(const key of STORAGE_KEYS){
+    try{
+      const raw = localStorage.getItem(key);
+      if(!raw) continue;
+      const parsed = JSON.parse(raw);
+      if(parsed && typeof parsed === "object" &&
+         Array.isArray(parsed.members)){
+        storageKey = key;
+        data = parsed;
+        if(!Array.isArray(data.messDuties)){
+          data.messDuties = [];
+        }
+        return true;
+      }
+    }catch(e){}
+  }
+  return false;
+}
+
+function saveStore(){
+  if(!storageKey) throw new Error("Members storage key nahi mila.");
+  localStorage.setItem(storageKey, JSON.stringify(data));
+}
+
+function memberId(m){
+  return text(m.id ?? m.memberId ?? m.serviceId ?? m.serviceNo);
+}
+function memberName(m){
+  return text(m.fullName ?? m.name ?? m.memberName ?? m.full_name) || "Unnamed Member";
+}
+function memberRank(m){
+  return text(m.rank ?? m.designation);
+}
+function memberService(m){
+  return text(m.serviceId ?? m.serviceNo ?? m.memberId ?? m.id);
+}
+function memberMobile(m){
+  return text(m.mobile ?? m.phone ?? m.mobileNumber);
+}
+function memberStatus(m){
+  return text(m.status ?? "Active");
+}
+function getMember(id){
+  return arr(data.members).find(m => memberId(m) === text(id));
+}
+function dateToday(){
+  const d = new Date();
+  return d.getFullYear() + "-" +
+    String(d.getMonth()+1).padStart(2,"0") + "-" +
+    String(d.getDate()).padStart(2,"0");
+}
+function formatDate(value){
+  if(!value) return "—";
+  const parts = String(value).split("-");
+  return parts.length === 3 ? parts[2]+"/"+parts[1]+"/"+parts[0] : value;
+}
+function isEnded(record){
+  return !!record.endDate && record.endDate < dateToday();
+}
+function showMessage(message, type){
+  const el = $("message");
+  el.textContent = message;
+  el.className = type === "err" ? "err" : "ok";
+  el.style.display = "block";
+  window.scrollTo({top:0,behavior:"smooth"});
+  setTimeout(()=>{el.style.display="none";},5000);
+}
+
+function memberLabel(m){
+  return memberName(m) +
+    (memberService(m) ? " · " + memberService(m) : "") +
+    (memberRank(m) ? " · " + memberRank(m) : "");
+}
+
+function populateMembers(){
+  const members = arr(data.members).filter(m =>
+    !["transferred","inactive","deleted"].includes(
+      memberStatus(m).toLowerCase()
+    )
+  );
+
+  const memberSelect = $("member");
+  const assignedSelect = $("assignedBy");
+  const oldMember = memberSelect.value;
+  const oldAssigner = assignedSelect.value;
+
+  memberSelect.innerHTML =
+    '<option value="">-- Select from Members --</option>';
+  assignedSelect.innerHTML =
+    '<option value="">-- Select Commander / NCO --</option>';
+
+  members.forEach(m=>{
+    const id = memberId(m);
+    if(!id) return;
+
+    const option1 = document.createElement("option");
+    option1.value = id;
+    option1.textContent = memberLabel(m);
+    memberSelect.appendChild(option1);
+
+    const option2 = document.createElement("option");
+    option2.value = id;
+    option2.textContent = memberLabel(m);
+    assignedSelect.appendChild(option2);
+  });
+
+  if(members.some(m=>memberId(m)===oldMember)) memberSelect.value=oldMember;
+  if(members.some(m=>memberId(m)===oldAssigner)) assignedSelect.value=oldAssigner;
+  updateMemberInfo();
+}
+
+function updateMemberInfo(){
+  const m = getMember($("member").value);
+  if(!m){
+    $("memberInfo").innerHTML="";
+    return;
+  }
+  $("memberInfo").innerHTML =
+    "<b>Selected Jawan</b><br>" +
+    "Name: "+esc(memberName(m))+"<br>"+
+    "Service / Member ID: "+esc(memberService(m)||"—")+"<br>"+
+    "Rank: "+esc(memberRank(m)||"—")+"<br>"+
+    "Mobile: "+esc(memberMobile(m)||"—");
+}
+
+function resetForm(){
+  editingId=null;
+  $("dutyForm").reset();
+  $("startDate").value=dateToday();
+  $("formTitle").textContent="➕ Assign Mess Duty";
+  $("saveBtn").textContent="Save Duty Record";
+  $("cancelEdit").hidden=true;
+  populateMembers();
+}
+
+function render(){
+  const records = arr(data.messDuties);
+  $("totalCount").textContent=records.length;
+  $("activeCount").textContent=records.filter(r=>!isEnded(r)).length;
+  $("endedCount").textContent=records.filter(isEnded).length;
+
+  const query=$("search").value.trim().toLowerCase();
+  const filter=$("statusFilter").value;
+  const body=$("recordsBody");
+
+  const sorted=records.slice().sort((a,b)=>
+    text(b.startDate).localeCompare(text(a.startDate))
+  );
+
+  const filtered=sorted.filter(r=>{
+    const m=getMember(r.memberId);
+    const name=text(r.memberName || (m && memberName(m)));
+    const rank=text(r.memberRank || (m && memberRank(m)));
+    const service=text(r.serviceId || (m && memberService(m)));
+    const haystack=[name,rank,service,r.duty,r.assignedByName,r.notes]
+      .join(" ").toLowerCase();
+
+    if(query && !haystack.includes(query)) return false;
+    if(filter==="active" && isEnded(r)) return false;
+    if(filter==="ended" && !isEnded(r)) return false;
+    return true;
+  });
+
+  if(!filtered.length){
+    body.innerHTML='<tr><td colspan="8" class="empty">Koi duty record nahi mila. Members page mein jawan maujood hain to upar se duty assign karein.</td></tr>';
+    return;
+  }
+
+  body.innerHTML=filtered.map((r,index)=>{
+    const m=getMember(r.memberId);
+    const name=r.memberName || (m && memberName(m)) || "Member unavailable";
+    const rank=r.memberRank || (m && memberRank(m)) || "";
+    const service=r.serviceId || (m && memberService(m)) || "";
+    const ended=isEnded(r);
+
+    return `<tr>
+      <td>${index+1}</td>
+      <td><b>${esc(name)}</b><br>
+        ${esc(rank)}<br><span class="muted">${esc(service)}</span>
+      </td>
+      <td><b>${esc(r.duty)}</b><br>
+        ${r.notes ? '<span class="muted">'+esc(r.notes)+'</span>' : ''}
+      </td>
+      <td>${esc(formatDate(r.startDate))}</td>
+      <td>${esc(formatDate(r.endDate))}</td>
+      <td>${esc(r.assignedByName || "—")}<br>
+        <span class="muted">${esc(r.assignedByRank || "")}</span>
+      </td>
+      <td><span class="badge ${ended?'ended':''}">${ended?'Duty Ended':'Recorded'}</span></td>
+      <td>
+        <div class="actions" style="margin:0">
+          <button class="small secondary" data-edit="${esc(r.id)}">Edit</button>
+          ${!r.endDate ? '<button class="small danger" data-end="'+esc(r.id)+'">End Duty</button>' : ''}
+        </div>
+      </td>
+    </tr>`;
+  }).join("");
+}
+
+function submitDuty(event){
+  event.preventDefault();
+
+  const m=getMember($("member").value);
+  const assigner=getMember($("assignedBy").value);
+  const duty=$("duty").value;
+  const startDate=$("startDate").value;
+  const endDate=$("endDate").value;
+
+  if(!m){showMessage("Pehle Members list se jawan select karein.","err");return;}
+  if(!assigner){showMessage("Duty assign karne wale Commander/NCO ko select karein.","err");return;}
+  if(!duty || !startDate){showMessage("Duty aur start date zaroori hain.","err");return;}
+  if(endDate && endDate<startDate){
+    showMessage("End date, start date se pehle nahi ho sakti.","err");return;
+  }
+
+  const record={
+    id: editingId || uid(),
+    memberId: memberId(m),
+    memberName: memberName(m),
+    memberRank: memberRank(m),
+    serviceId: memberService(m),
+    duty,
+    startDate,
+    endDate,
+    assignedById: memberId(assigner),
+    assignedByName: memberName(assigner),
+    assignedByRank: memberRank(assigner),
+    notes: $("notes").value.trim(),
+    updatedAt: new Date().toISOString()
+  };
+
+  if(!editingId) record.createdAt=new Date().toISOString();
+
+  try{
+    if(editingId){
+      const index=data.messDuties.findIndex(r=>r.id===editingId);
+      if(index<0) throw new Error("Edit record nahi mila.");
+      data.messDuties[index]={...data.messDuties[index],...record};
+    }else{
+      data.messDuties.push(record);
+    }
+    saveStore();
+    resetForm();
+    render();
+    showMessage(editingId ? "Duty record update ho gaya." : "Mess duty register mein save ho gayi.","ok");
+  }catch(err){
+    showMessage("Save nahi hua: "+err.message,"err");
+  }
+}
+
+function editDuty(id){
+  const r=data.messDuties.find(x=>x.id===id);
+  if(!r) return;
+
+  editingId=id;
+  populateMembers();
+  $("member").value=r.memberId;
+  $("duty").value=r.duty;
+  $("startDate").value=r.startDate || dateToday();
+  $("endDate").value=r.endDate || "";
+  $("assignedBy").value=r.assignedById || "";
+  $("notes").value=r.notes || "";
+  $("formTitle").textContent="✏️ Edit Mess Duty";
+  $("saveBtn").textContent="Update Duty Record";
+  $("cancelEdit").hidden=false;
+  updateMemberInfo();
+  window.scrollTo({top:0,behavior:"smooth"});
+}
+
+function endDuty(id){
+  const r=data.messDuties.find(x=>x.id===id);
+  if(!r || r.endDate) return;
+  if(!confirm("Is duty ka end date aaj ki tareekh set karein? Purana record rahega.")) return;
+
+  r.endDate=dateToday();
+  r.updatedAt=new Date().toISOString();
+
+  try{
+    saveStore();
+    render();
+    showMessage("Duty end date save ho gayi. History register mein rahegi.","ok");
+  }catch(err){
+    showMessage("Save nahi hua: "+err.message,"err");
+  }
+}
+
+$("dutyForm").addEventListener("submit",submitDuty);
+$("member").addEventListener("change",updateMemberInfo);
+$("search").addEventListener("input",render);
+$("statusFilter").addEventListener("change",render);
+$("refresh").addEventListener("click",()=>{
+  if(!readStore()){
+    showMessage("Members data nahi mila. Members page par member save hone ki jaanch karein.","err");
+    return;
+  }
+  populateMembers();
+  render();
+  showMessage("Members aur duty records refresh ho gaye.","ok");
+});
+$("resetForm").addEventListener("click",resetForm);
+$("cancelEdit").addEventListener("click",resetForm);
+$("print").addEventListener("click",()=>window.print());
+
+$("recordsBody").addEventListener("click",event=>{
+  const edit=event.target.closest("[data-edit]");
+  const end=event.target.closest("[data-end]");
+  if(edit) editDuty(edit.dataset.edit);
+  if(end) endDuty(end.dataset.end);
+});
+
+window.addEventListener("storage",event=>{
+  if(STORAGE_KEYS.includes(event.key)){
+    if(readStore()){
+      populateMembers();
+      render();
+    }
+  }
+});
+
+if(readStore()){
+  $("startDate").value=dateToday();
+  populateMembers();
+  render();
+  if(!data.members.length){
+    showMessage("Members list khali hai. Pehle Members page par jawan add karein.","err");
+  }
+}else{
+  $("startDate").value=dateToday();
+  $("recordsBody").innerHTML=
+    '<tr><td colspan="8" class="empty">Members data nahi mila. Pehle Members page par kam se kam ek jawan save karein. Agar data kisi doosri storage key mein hai, us key ko code mein add karna hoga.</td></tr>';
+  showMessage("Members data wali storage key nahi mili. Code sirf maujooda supported keys ko check karta hai; data delete ya overwrite nahi kiya gaya.","err");
+}
+})();
+</script>
+</body>
+</html>

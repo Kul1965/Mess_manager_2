@@ -1,1 +1,608 @@
 
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CRPF Smart Mess - Recipes</title>
+<style>
+:root{
+  --g:#176747;--deep:#10563e;--bg:#f2f6f3;
+  --white:#fff;--text:#214d3b;--muted:#78857e;
+  --border:#dce5df;--red:#bd3942;--light:#e6f2eb;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);font-family:Arial,sans-serif;color:var(--text)}
+header{background:var(--g);color:white;padding:18px 15px}
+header h2{margin:0 0 6px;font-size:22px}
+header p{margin:0;font-size:13px;opacity:.9}
+nav{display:flex;gap:7px;overflow-x:auto;padding:10px;background:white;border-bottom:1px solid var(--border)}
+nav a{white-space:nowrap;text-decoration:none;color:var(--g);padding:9px 12px;border:1px solid var(--border);border-radius:8px;font-size:13px;font-weight:bold}
+nav a.active{background:var(--g);color:white}
+main{max-width:1100px;margin:auto;padding:14px}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px;margin-bottom:14px}
+.stat,.card{background:white;border:1px solid var(--border);border-radius:12px;padding:13px}
+.stat small{display:block;color:var(--muted);font-size:12px;margin-bottom:7px}
+.stat strong{font-size:20px}
+.toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
+input,select,textarea{width:100%;padding:11px;border:1px solid #cbd8cf;border-radius:8px;background:white;font-size:14px;color:var(--text)}
+button{border:0;border-radius:8px;padding:10px 13px;background:var(--g);color:white;font-size:13px;font-weight:bold;cursor:pointer}
+button.secondary{background:var(--light);color:var(--g);border:1px solid var(--border)}
+button.danger{background:#fff0f0;color:var(--red);border:1px solid #f0cccc}
+button:disabled{opacity:.45;cursor:not-allowed}
+.search{flex:1;min-width:150px}
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;min-width:650px}
+th,td{padding:11px 9px;border-bottom:1px solid var(--border);text-align:left;font-size:13px;vertical-align:middle}
+th{background:#f5f9f6;color:var(--g)}
+.muted{color:var(--muted);font-size:12px}
+.pill{display:inline-block;background:var(--light);color:var(--g);padding:5px 8px;border-radius:20px;font-size:12px}
+.actions{display:flex;gap:5px;flex-wrap:wrap}
+.actions button{padding:7px 9px}
+.empty{text-align:center;padding:30px 10px;color:var(--muted)}
+dialog{border:0;border-radius:14px;width:min(650px,95vw);max-height:90vh;padding:0;box-shadow:0 10px 50px #0003}
+dialog::backdrop{background:#10291dcc}
+.modal-head{padding:16px;background:var(--g);color:white;display:flex;justify-content:space-between;align-items:center}
+.modal-head h3{margin:0;font-size:18px}
+.modal-body{padding:15px;overflow:auto}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.field{margin-bottom:12px}
+.field label{display:block;font-size:13px;font-weight:bold;margin-bottom:6px}
+.field small{display:block;color:var(--muted);margin-top:5px;font-size:11px}
+.ingredient-row{border:1px solid var(--border);border-radius:10px;padding:10px;margin-bottom:9px;background:#fbfdfb}
+.ingredient-grid{display:grid;grid-template-columns:2fr 1fr 1fr;gap:8px}
+.ingredient-bottom{display:flex;justify-content:space-between;align-items:center;margin-top:8px;gap:8px}
+.total-box{background:var(--light);border-radius:10px;padding:13px;margin:12px 0;display:flex;justify-content:space-between;align-items:center;gap:10px}
+.total-box strong{font-size:19px;color:var(--g)}
+.modal-foot{display:flex;gap:8px;justify-content:flex-end;padding:12px 15px;border-top:1px solid var(--border)}
+.view-line{padding:10px 0;border-bottom:1px solid var(--border)}
+@media(max-width:500px){
+ main{padding:10px}.stats{gap:6px}.stat{padding:10px}.stat strong{font-size:17px}
+ .form-grid{grid-template-columns:1fr}.ingredient-grid{grid-template-columns:1fr 1fr}
+ .ingredient-grid .food-select{grid-column:1/-1}
+}
+</style>
+</head>
+<body>
+<header>
+  <h2>🍲 CRPF Smart Mess</h2>
+  <p>Recipe Builder · Ingredients · Cost per Serving</p>
+</header>
+
+<nav>
+  <a href="index.html">Dashboard</a>
+  <a href="members.html">Members</a>
+  <a href="store.html">Store & Purchase</a>
+  <a class="active" href="recipes.html">Recipes</a>
+  <a href="meals.html">Meals</a>
+  <a href="accounts.html">Accounts</a>
+  <a href="settlement.html">Settlement</a>
+  <a href="commander.html">Commander</a>
+  <a href="reports.html">Reports</a>
+  <a href="backup.html">Backup</a>
+</nav>
+
+<main>
+  <div class="stats">
+    <div class="stat"><small>Total Recipes</small><strong id="recipeCount">0</strong></div>
+    <div class="stat"><small>Store Items</small><strong id="itemCount">0</strong></div>
+    <div class="stat"><small>Average Recipe Cost</small><strong id="avgCost">Rs 0.00</strong></div>
+  </div>
+
+  <div class="toolbar">
+    <input id="search" class="search" placeholder="🔎 Search recipe name..." oninput="render()">
+    <button onclick="openNew()">＋ Add Recipe</button>
+  </div>
+
+  <section class="card">
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Recipe</th>
+            <th>Ingredients</th>
+            <th>Cost / Serving</th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody id="recipeRows"></tbody>
+      </table>
+    </div>
+    <div id="empty" class="empty" hidden>
+      <div style="font-size:32px">🍲</div>
+      <p>No recipes added yet.</p>
+      <button onclick="openNew()">＋ Create First Recipe</button>
+    </div>
+  </section>
+  <p class="muted">Recipe ingredients are entered for one serving. Costs use the store's weighted-average purchase rates.</p>
+</main>
+
+<dialog id="editDialog">
+  <div class="modal-head">
+    <h3 id="formTitle">Add Recipe</h3>
+    <button type="button" class="secondary" onclick="closeDialog('editDialog')">✕</button>
+  </div>
+  <form id="recipeForm">
+    <div class="modal-body">
+      <input type="hidden" id="recipeId">
+
+      <div class="form-grid">
+        <div class="field">
+          <label for="recipeName">Recipe Name *</label>
+          <input id="recipeName" required maxlength="100" placeholder="e.g. Dal, Rice, Chicken Curry">
+        </div>
+        <div class="field">
+          <label for="recipeCategory">Category</label>
+          <select id="recipeCategory">
+            <option>Breakfast</option><option>Lunch</option>
+            <option>Dinner</option><option>Snacks</option><option>Other</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="field">
+        <label>Serving size</label>
+        <input value="1 serving" disabled>
+        <small>Enter ingredient quantities required to prepare one serving.</small>
+      </div>
+
+      <div style="display:flex;justify-content:space-between;align-items:center;margin:18px 0 10px;gap:8px">
+        <strong>Ingredients</strong>
+        <button type="button" onclick="addIngredient()">＋ Add Ingredient</button>
+      </div>
+
+      <div id="ingredientRows"></div>
+
+      <div id="ingredientHint" class="muted">Choose ingredients from Store Items. Add purchase records in Store & Purchase to calculate costs.</div>
+
+      <div class="total-box">
+        <div><b>Cost per serving</b><div class="muted">Calculated automatically</div></div>
+        <strong id="liveCost">Rs 0.00</strong>
+      </div>
+
+      <div class="field">
+        <label for="recipeNotes">Notes (optional)</label>
+        <textarea id="recipeNotes" rows="2" placeholder="Cooking instructions or notes"></textarea>
+      </div>
+    </div>
+    <div class="modal-foot">
+      <button type="button" class="secondary" onclick="closeDialog('editDialog')">Cancel</button>
+      <button type="submit">Save Recipe</button>
+    </div>
+  </form>
+</dialog>
+
+<dialog id="viewDialog">
+  <div class="modal-head">
+    <h3>Recipe Details</h3>
+    <button class="secondary" onclick="closeDialog('viewDialog')">✕</button>
+  </div>
+  <div class="modal-body" id="viewBody"></div>
+  <div class="modal-foot">
+    <button class="secondary" onclick="closeDialog('viewDialog')">Close</button>
+    <button id="viewEditBtn">Edit Recipe</button>
+  </div>
+</dialog>
+
+<script>
+"use strict";
+
+const KEYS = ["crpfMessProfessionalV1", "crpfMessPrototypeV2"];
+let storageKey = KEYS.find(k => localStorage.getItem(k)) || KEYS[0];
+let data = {};
+let currentViewId = null;
+
+function loadData(){
+  storageKey = KEYS.find(k => localStorage.getItem(k)) || KEYS[0];
+  try {
+    data = JSON.parse(localStorage.getItem(storageKey) || "{}");
+  } catch(e) {
+    data = {};
+  }
+  if(!data || typeof data !== "object" || Array.isArray(data)) data = {};
+  if(!Array.isArray(data.items)) data.items = [];
+  if(!Array.isArray(data.recipes)) data.recipes = [];
+  if(!Array.isArray(data.meals)) data.meals = [];
+  if(!Array.isArray(data.movements)) data.movements = [];
+}
+
+function saveData(){
+  try {
+    localStorage.setItem(storageKey, JSON.stringify(data));
+    return true;
+  } catch(e) {
+    alert("Data save nahi hua. Browser storage full ho sakta hai.");
+    return false;
+  }
+}
+
+function id(){
+  return "r" + Date.now().toString(36) + Math.random().toString(36).slice(2,7);
+}
+
+function esc(value){
+  return String(value ?? "").replace(/[&<>"']/g, c => ({
+    "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+  }[c]));
+}
+
+function money(value){
+  return "Rs " + (Number(value) || 0).toFixed(2);
+}
+
+function baseUnit(unit){
+  unit = String(unit || "").toLowerCase();
+  if(unit === "kg" || unit === "g") return "g";
+  if(unit === "ltr" || unit === "litre" || unit === "liter" || unit === "ml") return "ml";
+  if(unit === "pcs" || unit === "pc" || unit === "piece" || unit === "pieces") return "pcs";
+  return unit;
+}
+
+function toBase(quantity, unit){
+  quantity = Number(quantity) || 0;
+  unit = String(unit || "").toLowerCase();
+  if(unit === "kg") return quantity * 1000;
+  if(unit === "ltr" || unit === "litre" || unit === "liter") return quantity * 1000;
+  return quantity;
+}
+
+function unitLabel(unit){
+  const u = baseUnit(unit);
+  return u || unit || "";
+}
+
+function itemName(item){
+  return item.name || item.itemName || item.title || "Unnamed item";
+}
+
+function itemAverageRate(item){
+  const purchases = Array.isArray(item.purchases) ? item.purchases : [];
+  let totalQty = 0, totalCost = 0;
+
+  purchases.forEach(p => {
+    let qty = Number(p.quantityBase);
+    if(!Number.isFinite(qty) || qty <= 0){
+      qty = toBase(p.quantity, p.purchaseUnit || item.unit);
+    }
+    let cost = Number(p.total);
+    if(!Number.isFinite(cost) || cost < 0){
+      cost = qty * (Number(p.rateBase) || Number(p.rate) || 0);
+    }
+    if(qty > 0){
+      totalQty += qty;
+      totalCost += cost;
+    }
+  });
+
+  if(totalQty > 0) return totalCost / totalQty;
+
+  // Compatibility with older store data formats
+  if(Number(item.averageRateBase) > 0) return Number(item.averageRateBase);
+  if(Number(item.avgRate) > 0) {
+    return Number(item.avgRate) / (baseUnit(item.unit) === "g" || baseUnit(item.unit) === "ml" ? 1000 : 1);
+  }
+  return 0;
+}
+
+function findItem(itemId){
+  return data.items.find(item => String(item.id) === String(itemId));
+}
+
+function ingredientCost(ingredient){
+  const item = findItem(ingredient.itemId);
+  if(!item) return 0;
+  const qty = Number(ingredient.quantityBase) || toBase(ingredient.quantity, ingredient.unit);
+  return qty * itemAverageRate(item);
+}
+
+function recipeCost(recipe){
+  return (recipe.ingredients || []).reduce((sum, ing) => sum + ingredientCost(ing), 0);
+}
+
+function render(){
+  loadData();
+  document.getElementById("recipeCount").textContent = data.recipes.length;
+  document.getElementById("itemCount").textContent = data.items.length;
+
+  const costs = data.recipes.map(recipeCost);
+  const avg = costs.length ? costs.reduce((a,b)=>a+b,0) / costs.length : 0;
+  document.getElementById("avgCost").textContent = money(avg);
+
+  const search = document.getElementById("search").value.trim().toLowerCase();
+  const recipes = data.recipes.filter(r => String(r.name || "").toLowerCase().includes(search));
+  const tbody = document.getElementById("recipeRows");
+  const empty = document.getElementById("empty");
+
+  if(recipes.length === 0){
+    tbody.innerHTML = "";
+    empty.hidden = false;
+    if(search) empty.innerHTML = "<p>No matching recipes found.</p>";
+    else empty.innerHTML = '<div style="font-size:32px">🍲</div><p>No recipes added yet.</p><button onclick="openNew()">＋ Create First Recipe</button>';
+    return;
+  }
+  empty.hidden = true;
+
+  tbody.innerHTML = recipes.map(r => {
+    const count = (r.ingredients || []).length;
+    const category = r.category || "Other";
+    return `<tr>
+      <td><b>${esc(r.name)}</b><br><span class="pill">${esc(category)}</span></td>
+      <td>${count} item${count === 1 ? "" : "s"}</td>
+      <td><b>${money(recipeCost(r))}</b></td>
+      <td><div class="actions">
+        <button class="secondary" onclick="viewRecipe('${esc(r.id)}')">View</button>
+        <button onclick="editRecipe('${esc(r.id)}')">Edit</button>
+        <button class="danger" onclick="deleteRecipe('${esc(r.id)}')">Delete</button>
+      </div></td>
+    </tr>`;
+  }).join("");
+}
+
+function openNew(){
+  loadData();
+  document.getElementById("recipeForm").reset();
+  document.getElementById("recipeId").value = "";
+  document.getElementById("formTitle").textContent = "Add Recipe";
+  document.getElementById("ingredientRows").innerHTML = "";
+  addIngredient();
+  updateCost();
+  document.getElementById("editDialog").showModal();
+}
+
+function editRecipe(recipeId){
+  loadData();
+  const recipe = data.recipes.find(r => String(r.id) === String(recipeId));
+  if(!recipe) return alert("Recipe nahi mila.");
+
+  document.getElementById("recipeForm").reset();
+  document.getElementById("recipeId").value = recipe.id;
+  document.getElementById("recipeName").value = recipe.name || "";
+  document.getElementById("recipeCategory").value = recipe.category || "Other";
+  document.getElementById("recipeNotes").value = recipe.notes || "";
+  document.getElementById("formTitle").textContent = "Edit Recipe";
+  document.getElementById("ingredientRows").innerHTML = "";
+
+  if(Array.isArray(recipe.ingredients) && recipe.ingredients.length){
+    recipe.ingredients.forEach(ing => addIngredient(ing));
+  } else {
+    addIngredient();
+  }
+  updateCost();
+  closeDialog("viewDialog");
+  document.getElementById("editDialog").showModal();
+}
+
+function addIngredient(existing = null){
+  loadData();
+  const container = document.getElementById("ingredientRows");
+  const row = document.createElement("div");
+  row.className = "ingredient-row";
+
+  const options = data.items.map(item => {
+    const compatible = existing ? baseUnit(item.unit) === baseUnit(existing.unit) : true;
+    const selected = existing && String(existing.itemId) === String(item.id) ? "selected" : "";
+    return `<option value="${esc(item.id)}" ${selected}>${esc(itemName(item))} (${esc(item.unit || baseUnit(item.unit))})${compatible ? "" : " — unit mismatch"}</option>`;
+  }).join("");
+
+  const chosenItem = existing ? findItem(existing.itemId) : null;
+  let initialUnit = existing?.unit || (chosenItem ? baseUnit(chosenItem.unit) : "g");
+  if(!["g","ml","pcs"].includes(initialUnit)) initialUnit = baseUnit(initialUnit) || "g";
+
+  row.innerHTML = `
+    <div class="ingredient-grid">
+      <div class="food-select">
+        <label class="muted">Store Item</label>
+        <select class="ing-item" required>
+          <option value="">Select item</option>${options}
+        </select>
+      </div>
+      <div>
+        <label class="muted">Quantity</label>
+        <input class="ing-qty" type="number" min="0.001" step="any" required placeholder="e.g. 100" value="${existing ? esc(existing.quantity) : ""}">
+      </div>
+      <div>
+        <label class="muted">Unit</label>
+        <select class="ing-unit">
+          <option value="g" ${initialUnit==="g"?"selected":""}>Grams (g)</option>
+          <option value="ml" ${initialUnit==="ml"?"selected":""}>Millilitres (ml)</option>
+          <option value="pcs" ${initialUnit==="pcs"?"selected":""}>Pieces (pcs)</option>
+        </select>
+      </div>
+    </div>
+    <div class="ingredient-bottom">
+      <span class="muted ing-cost">Cost: Rs 0.00</span>
+      <button type="button" class="danger remove-ing">Remove</button>
+    </div>`;
+
+  container.appendChild(row);
+
+  const itemSelect = row.querySelector(".ing-item");
+  const unitSelect = row.querySelector(".ing-unit");
+
+  function adjustUnit(){
+    const item = findItem(itemSelect.value);
+    if(!item) return;
+    const family = baseUnit(item.unit);
+    if(["g","ml","pcs"].includes(family)) unitSelect.value = family;
+    updateCost();
+  }
+
+  itemSelect.addEventListener("change", adjustUnit);
+  row.querySelector(".ing-qty").addEventListener("input", updateCost);
+  unitSelect.addEventListener("change", updateCost);
+  row.querySelector(".remove-ing").addEventListener("click", () => {
+    row.remove();
+    updateCost();
+  });
+
+  if(existing && existing.itemId) itemSelect.value = String(existing.itemId);
+  updateCost();
+}
+
+function collectIngredients(){
+  const rows = [...document.querySelectorAll("#ingredientRows .ingredient-row")];
+  const ingredients = [];
+
+  for(const row of rows){
+    const itemId = row.querySelector(".ing-item").value;
+    const quantity = Number(row.querySelector(".ing-qty").value);
+    const unit = row.querySelector(".ing-unit").value;
+
+    if(!itemId && !row.querySelector(".ing-qty").value) continue;
+    if(!itemId) throw new Error("Har ingredient ke liye Store Item select karein.");
+    if(!Number.isFinite(quantity) || quantity <= 0) throw new Error("Ingredient quantity zero se zyada honi chahiye.");
+
+    const item = findItem(itemId);
+    if(!item) throw new Error("Selected store item nahi mila.");
+
+    if(baseUnit(item.unit) !== baseUnit(unit)){
+      throw new Error(itemName(item) + " ki store unit aur recipe unit match nahi karti.");
+    }
+
+    const quantityBase = toBase(quantity, unit);
+    ingredients.push({
+      itemId: item.id,
+      itemName: itemName(item),
+      quantity,
+      unit,
+      quantityBase
+    });
+  }
+
+  if(!ingredients.length) throw new Error("Kam se kam ek ingredient add karein.");
+  return ingredients;
+}
+
+function updateCost(){
+  loadData();
+  let total = 0;
+  const rows = [...document.querySelectorAll("#ingredientRows .ingredient-row")];
+
+  rows.forEach(row => {
+    const item = findItem(row.querySelector(".ing-item").value);
+    const qty = Number(row.querySelector(".ing-qty").value) || 0;
+    const unit = row.querySelector(".ing-unit").value;
+    let cost = 0;
+
+    if(item && qty > 0 && baseUnit(item.unit) === baseUnit(unit)){
+      cost = toBase(qty, unit) * itemAverageRate(item);
+    }
+    total += cost;
+    row.querySelector(".ing-cost").textContent = "Cost: " + money(cost);
+  });
+
+  document.getElementById("liveCost").textContent = money(total);
+  document.getElementById("ingredientHint").textContent = data.items.length
+    ? "Rates are calculated from recorded purchases. Items without purchase rates show Rs 0.00."
+    : "Pehle Store & Purchase page par store items aur purchase rates add karein.";
+}
+
+document.getElementById("recipeForm").addEventListener("submit", function(event){
+  event.preventDefault();
+  loadData();
+
+  const name = document.getElementById("recipeName").value.trim();
+  if(!name) return alert("Recipe ka naam likhein.");
+
+  let ingredients;
+  try {
+    ingredients = collectIngredients();
+  } catch(error) {
+    return alert(error.message);
+  }
+
+  const recipeId = document.getElementById("recipeId").value;
+  const recipe = {
+    id: recipeId || id(),
+    name,
+    category: document.getElementById("recipeCategory").value,
+    servingLabel: "1 serving",
+    ingredients,
+    notes: document.getElementById("recipeNotes").value.trim(),
+    updatedAt: new Date().toISOString()
+  };
+
+  if(recipeId){
+    const index = data.recipes.findIndex(r => String(r.id) === String(recipeId));
+    if(index < 0) return alert("Recipe nahi mila. Page refresh karke dobara koshish karein.");
+    data.recipes[index] = {...data.recipes[index], ...recipe};
+  } else {
+    data.recipes.push(recipe);
+  }
+
+  if(!saveData()) return;
+  closeDialog("editDialog");
+  render();
+  alert("Recipe save ho gayi bhai!");
+});
+
+function viewRecipe(recipeId){
+  loadData();
+  const recipe = data.recipes.find(r => String(r.id) === String(recipeId));
+  if(!recipe) return alert("Recipe nahi mila.");
+
+  currentViewId = recipe.id;
+  const ingredients = recipe.ingredients || [];
+  const lines = ingredients.map(ing => {
+    const item = findItem(ing.itemId);
+    const name = item ? itemName(item) : (ing.itemName || "Unknown item");
+    const qty = Number(ing.quantity) || 0;
+    const unit = ing.unit || "";
+    return `<div class="view-line">
+      <b>${esc(name)}</b>
+      <span style="float:right">${esc(qty)} ${esc(unit)}</span>
+      <div class="muted">Cost: ${money(ingredientCost(ing))}</div>
+    </div>`;
+  }).join("");
+
+  document.getElementById("viewBody").innerHTML = `
+    <h3>${esc(recipe.name)}</h3>
+    <span class="pill">${esc(recipe.category || "Other")}</span>
+    <p class="muted">Cost for 1 serving</p>
+    ${lines || "<p>No ingredients recorded.</p>"}
+    <div class="total-box"><b>Total cost / serving</b><strong>${money(recipeCost(recipe))}</strong></div>
+    ${recipe.notes ? `<p><b>Notes:</b><br>${esc(recipe.notes)}</p>` : ""}
+    <p class="muted">Costs change when the store's weighted-average purchase rates change.</p>`;
+
+  document.getElementById("viewEditBtn").onclick = () => editRecipe(currentViewId);
+  document.getElementById("viewDialog").showModal();
+}
+
+function deleteRecipe(recipeId){
+  loadData();
+  const recipe = data.recipes.find(r => String(r.id) === String(recipeId));
+  if(!recipe) return alert("Recipe nahi mila.");
+
+  const used = data.meals.some(meal =>
+    String(meal.recipeId) === String(recipeId) ||
+    String(meal.recipe) === String(recipe.name) ||
+    (Array.isArray(meal.recipes) && meal.recipes.some(r =>
+      String(r.recipeId) === String(recipeId) || String(r.name) === String(recipe.name)
+    ))
+  );
+
+  if(used){
+    return alert("Ye recipe purane meal record mein use hui hai. Meal history bachane ke liye delete nahi ki gayi.");
+  }
+
+  if(!confirm('"' + recipe.name + '" recipe delete karni hai?')) return;
+  data.recipes = data.recipes.filter(r => String(r.id) !== String(recipeId));
+  if(saveData()) render();
+}
+
+function closeDialog(dialogId){
+  const dialog = document.getElementById(dialogId);
+  if(dialog && dialog.open) dialog.close();
+}
+
+document.querySelectorAll("dialog").forEach(dialog => {
+  dialog.addEventListener("click", event => {
+    if(event.target === dialog) dialog.close();
+  });
+});
+
+render();
+</script>
+</body>
+</html>

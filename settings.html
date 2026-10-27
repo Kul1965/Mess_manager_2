@@ -1,1 +1,242 @@
 
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Mess Settings</title>
+<style>
+:root{--g:#176747;--deep:#10563e;--bg:#f2f6f3;--white:#fff;--text:#214d3b;--muted:#78857e;--border:#dce5df;--red:#bd3942}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);font-family:Arial,sans-serif;color:var(--text)}
+header{background:var(--g);color:white;padding:20px 16px}
+header h2{margin:0 0 6px;font-size:22px}
+header p{margin:0;font-size:13px;opacity:.9}
+nav{display:flex;gap:8px;overflow-x:auto;padding:12px;background:white;border-bottom:1px solid var(--border)}
+nav a{white-space:nowrap;text-decoration:none;background:#eaf3ed;color:var(--g);padding:9px 12px;border-radius:8px;font-size:13px;font-weight:bold}
+main{max-width:760px;margin:18px auto;padding:0 12px 30px}
+.card{background:white;border:1px solid var(--border);border-radius:13px;padding:17px;margin-bottom:14px}
+h3{margin:0 0 8px;font-size:18px}
+.help{font-size:13px;color:var(--muted);line-height:1.5;margin:0 0 16px}
+label{display:block;font-size:13px;font-weight:bold;margin:13px 0 6px}
+input,select,textarea{width:100%;padding:12px;border:1px solid var(--border);border-radius:8px;font-size:16px;background:#fff;color:var(--text)}
+button{border:0;border-radius:9px;padding:12px 15px;font-weight:bold;font-size:14px;cursor:pointer}
+.primary{background:var(--g);color:white;width:100%;margin-top:17px}
+.secondary{background:#eaf3ed;color:var(--g)}
+.warning{background:#fff4df;color:#77551c;border-radius:8px;padding:12px;font-size:13px;line-height:1.5}
+.status{font-size:13px;margin-top:12px;line-height:1.5}
+small{color:var(--muted)}
+footer{text-align:center;color:var(--muted);font-size:12px;padding:10px}
+</style>
+</head>
+<body>
+<header>
+  <h2>CRPF Smart Mess Manager</h2>
+  <p>Mess Settings & Common Advance</p>
+</header>
+
+<nav>
+  <a href="index.html">Dashboard</a>
+  <a href="members.html">Members</a>
+  <a href="store.html">Store</a>
+  <a href="recipes.html">Recipes</a>
+  <a href="meals.html">Meals</a>
+  <a href="accounts.html">Accounts</a>
+  <a href="settlement.html">Settlement</a>
+  <a href="settings.html">Settings</a>
+</nav>
+
+<main>
+  <section class="card">
+    <h3>Mess Details</h3>
+    <p class="help">Yahan mess ki basic details aur naye members ke liye common default amount set karein.</p>
+
+    <label for="messName">Mess ka naam</label>
+    <input id="messName" placeholder="CRPF Smart Mess">
+
+    <label for="commonAdvance">Common Mess Advance (Rs)</label>
+    <input id="commonAdvance" type="number" min="0" step="0.01" value="4000">
+    <p class="help">Yeh sirf naye member form ka default amount hai. Isse kisi purane member ka balance, payment ya advance jama nahi badlega.</p>
+
+    <label for="monthlyBudget">Monthly Food Budget / Entitlement (Rs)</label>
+    <input id="monthlyBudget" type="number" min="0" step="0.01" value="0">
+    <p class="help">Food budget ko member ke Mess Advance se alag rakhein. Yahan actual payment ya ration purchase entry nahi hoti.</p>
+
+    <label for="warningAt">Budget Warning (%)</label>
+    <input id="warningAt" type="number" min="1" max="100" step="1" value="80">
+
+    <label for="currency">Currency</label>
+    <select id="currency">
+      <option value="Rs">Rs</option>
+      <option value="NPR">NPR</option>
+      <option value="INR">INR</option>
+    </select>
+
+    <button class="primary" onclick="saveSettings()">Save Settings</button>
+    <div id="status" class="status" aria-live="polite"></div>
+  </section>
+
+  <section class="card">
+    <h3>Record Safety</h3>
+    <div class="warning">
+      Settings save karne se pehle app purane storage records ko check karta hai. Existing members, meals, purchases aur payments ko jaanbujhkar delete nahi kiya jata.
+      <br><br>
+      Important: browser ka localStorage backup ka replacement nahi hai. Regular backup rakhein. Alag mobile par data automatic share nahi hota.
+    </div>
+    <button class="secondary" style="margin-top:12px;width:100%" onclick="exportBackup()">Download JSON Backup</button>
+  </section>
+</main>
+
+<footer>CRPF Smart Mess Manager · Local browser storage</footer>
+
+<script>
+(function(){
+  "use strict";
+
+  const KEYS = ["crpfMessProfessionalV1","crpfMessPrototypeV2"];
+  const ARRAY_FIELDS = [
+    "members","items","recipes","meals","ledger","expenses",
+    "handovers","limitHistory","movements","purchases","transactions",
+    "records","receipts","refunds"
+  ];
+
+  function parse(key){
+    try {
+      const raw = localStorage.getItem(key);
+      if(!raw) return null;
+      const obj = JSON.parse(raw);
+      return obj && typeof obj === "object" && !Array.isArray(obj) ? obj : null;
+    } catch(e){ return null; }
+  }
+
+  function array(v){ return Array.isArray(v) ? v : []; }
+
+  function mergeArrays(a,b){
+    const out = [];
+    const seen = new Set();
+    [...array(a),...array(b)].forEach((item)=>{
+      const key = item && item.id != null
+        ? "id:"+String(item.id)
+        : "json:"+JSON.stringify(item);
+      if(!seen.has(key)){ seen.add(key); out.push(item); }
+    });
+    return out;
+  }
+
+  function loadData(){
+    const a = parse(KEYS[0]) || {};
+    const b = parse(KEYS[1]) || {};
+    const data = {...b,...a};
+
+    ARRAY_FIELDS.forEach(field=>{
+      data[field] = mergeArrays(a[field],b[field]);
+    });
+
+    data.settings = {
+      ...(b.settings || {}),
+      ...(a.settings || {})
+    };
+
+    if(!data.settings || typeof data.settings !== "object"){
+      data.settings = {};
+    }
+
+    return data;
+  }
+
+  let data = loadData();
+
+  function saveData(){
+    // Save a safety copy before updating the primary key.
+    const old = localStorage.getItem(KEYS[0]);
+    if(old){
+      try {
+        localStorage.setItem("crpfMessSettingsSafetyCopy",old);
+      } catch(e){}
+    }
+    localStorage.setItem(KEYS[0],JSON.stringify(data));
+  }
+
+  function value(id){
+    return document.getElementById(id).value.trim();
+  }
+
+  function numberValue(id){
+    const n = Number(value(id));
+    return Number.isFinite(n) && n >= 0 ? n : 0;
+  }
+
+  function loadSettings(){
+    const s = data.settings || {};
+    document.getElementById("messName").value = s.messName || "CRPF Smart Mess";
+    document.getElementById("commonAdvance").value =
+      s.commonAdvance ?? s.defaultAdvance ?? 4000;
+    document.getElementById("monthlyBudget").value = s.monthlyBudget ?? 0;
+    document.getElementById("warningAt").value = s.warningAt ?? 80;
+    document.getElementById("currency").value = s.currency || "Rs";
+  }
+
+  window.saveSettings = function(){
+    const warning = numberValue("warningAt");
+    if(warning < 1 || warning > 100){
+      document.getElementById("status").textContent =
+        "Warning limit 1 se 100 ke beech rakhein.";
+      return;
+    }
+
+    // Change only global settings. Do not alter existing member balances.
+    data.settings = {
+      ...(data.settings || {}),
+      messName: value("messName") || "CRPF Smart Mess",
+      commonAdvance: numberValue("commonAdvance"),
+      defaultAdvance: numberValue("commonAdvance"),
+      monthlyBudget: numberValue("monthlyBudget"),
+      warningAt: warning,
+      currency: value("currency") || "Rs",
+      updatedAt: new Date().toISOString()
+    };
+
+    try {
+      saveData();
+      document.getElementById("status").textContent =
+        "Settings save ho gayi. Purane members aur unke actual balances change nahi kiye gaye.";
+    } catch(e){
+      document.getElementById("status").textContent =
+        "Save nahi ho paya. Browser storage full ho sakta hai. Pehle backup download karein.";
+    }
+  };
+
+  window.exportBackup = function(){
+    try{
+      // Export merged data without deleting either original storage key.
+      const backup = {
+        backupType: "CRPF Smart Mess Manager",
+        exportedAt: new Date().toISOString(),
+        data: loadData()
+      };
+      const blob = new Blob([JSON.stringify(backup,null,2)],{
+        type:"application/json"
+      });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "CRPF_Mess_Backup_" +
+        new Date().toISOString().slice(0,10) + ".json";
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
+      URL.revokeObjectURL(url);
+      document.getElementById("status").textContent =
+        "Backup download shuru ho gaya. File ko safe jagah rakhein.";
+    }catch(e){
+      document.getElementById("status").textContent =
+        "Backup nahi bana. Browser download permission check karein.";
+    }
+  };
+
+  loadSettings();
+})();
+</script>
+</body>
+</html>

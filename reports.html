@@ -1,5 +1,4 @@
 
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -7,431 +6,411 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>CRPF Smart Mess Manager - Reports</title>
 <style>
-:root{
-  --g:#176747;--deep:#10563e;--bg:#f2f6f3;
-  --white:#fff;--text:#214d3b;--muted:#78857e;
-  --border:#dce5df;--red:#bd3942;
-}
+:root{--g:#176747;--deep:#10563e;--bg:#f2f6f3;--text:#214d3b;--muted:#78857e;--border:#dce5df;--red:#bd3942}
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--text);
-font-family:Arial,sans-serif;font-size:14px}
-header{background:var(--g);color:white;padding:18px 14px}
-header h2{margin:0 0 6px;font-size:21px}
-header p{margin:0}
-nav{display:flex;gap:7px;overflow-x:auto;padding:10px;
-background:white;border-bottom:1px solid var(--border)}
-nav a{flex-shrink:0;text-decoration:none;color:var(--g);
-border:1px solid var(--border);padding:9px 12px;
-border-radius:8px;font-weight:bold}
+body{margin:0;background:var(--bg);color:var(--text);font-family:Arial,sans-serif;font-size:14px}
+header{background:linear-gradient(120deg,#10583e,#176747);color:white;padding:20px}
+header h1{margin:0 0 7px;font-size:23px}
+header p{margin:0;font-size:13px}
+nav{display:flex;gap:7px;overflow-x:auto;background:white;padding:10px;border-bottom:1px solid var(--border)}
+nav a{white-space:nowrap;text-decoration:none;color:var(--g);padding:10px 13px;border:1px solid var(--border);border-radius:8px;font-weight:bold}
 nav a.active{background:var(--g);color:white}
-main{max-width:1150px;margin:auto;padding:13px}
-.card{background:white;border:1px solid var(--border);
-border-radius:12px;padding:14px;margin-bottom:13px}
-h3{margin:0 0 12px;font-size:17px}
-p.help{color:var(--muted);line-height:1.5}
+main{max-width:1150px;margin:auto;padding:14px}
+.card{background:white;border:1px solid var(--border);border-radius:12px;padding:15px;margin-bottom:14px}
+h2{font-size:19px;margin:0 0 12px}
+h3{font-size:16px;margin:0 0 12px}
+.note{background:#fff8e8;border:1px solid #efdfb8;padding:12px;border-radius:9px;line-height:1.6;margin-bottom:14px}
 .stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
-.stat{background:white;border:1px solid var(--border);
-border-radius:10px;padding:13px;min-width:0}
+.stat{border:1px solid var(--border);border-radius:10px;padding:13px;min-width:0}
 .stat small{display:block;color:var(--muted);margin-bottom:8px}
-.stat strong{font-size:22px;color:var(--g);overflow-wrap:anywhere}
+.stat strong{font-size:21px;color:var(--g);overflow-wrap:anywhere}
 .filters{display:grid;grid-template-columns:1fr 1fr;gap:9px}
-input,select,button{font:inherit;border-radius:8px;padding:11px;
-width:100%;border:1px solid var(--border);background:white;color:var(--text)}
+input,select,button{width:100%;padding:11px;border:1px solid var(--border);border-radius:8px;background:white;color:var(--text);font:inherit}
 button{background:var(--g);color:white;border:0;font-weight:bold;cursor:pointer}
 button.secondary{background:white;color:var(--g);border:1px solid var(--g)}
-.actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
-.tabs{display:flex;flex-wrap:wrap;gap:7px}
-.tabs button{width:auto;padding:9px 12px}
-.tabs button.secondary{background:white}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:10px}
 .tablewrap{overflow-x:auto}
-table{border-collapse:collapse;width:100%;min-width:650px}
-th,td{padding:10px 9px;border-bottom:1px solid var(--border);
-text-align:left;vertical-align:top;overflow-wrap:anywhere}
-th{background:#edf4ef;color:var(--deep)}
-.tag{display:inline-block;padding:4px 7px;border-radius:5px;
-background:#e6f3eb;color:var(--g);font-size:12px}
-.notice{line-height:1.6;background:#fff8e8;border:1px solid #efdfb8;
-padding:11px;border-radius:8px;margin-bottom:12px}
-.empty{text-align:center;padding:25px;color:var(--muted)}
-.sectiontitle{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}
-.sectiontitle button{width:auto}
-footer{text-align:center;color:var(--muted);padding:15px}
-@media(min-width:650px){
- .stats{grid-template-columns:repeat(4,minmax(0,1fr))}
- .filters{grid-template-columns:repeat(4,minmax(0,1fr))}
-}
-@media print{
- body{background:white;font-size:11px}
- header{background:white;color:black;padding:8px 0}
- nav,.no-print,footer{display:none!important}
- main{max-width:none;padding:0}
- .card,.stat{border:1px solid #bbb;break-inside:avoid}
- .tablewrap{overflow:visible}
- table{min-width:0;font-size:10px}
- th,td{padding:5px}
-}
+table{border-collapse:collapse;width:100%;min-width:680px}
+th,td{padding:11px 9px;border-bottom:1px solid var(--border);text-align:left;vertical-align:top}
+th{background:#edf6ef;color:var(--deep)}
+.tag{display:inline-block;background:#e6f3eb;color:var(--g);padding:4px 7px;border-radius:5px;font-size:12px}
+.muted{color:var(--muted);line-height:1.5}
+.empty{text-align:center;color:var(--muted);padding:22px}
+@media(min-width:650px){.stats{grid-template-columns:repeat(4,minmax(0,1fr))}.filters{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media print{body{background:white;font-size:10px}nav,.no-print,footer{display:none!important}main{padding:0}.card{break-inside:avoid;border:1px solid #bbb}table{min-width:0;font-size:9px}th,td{padding:5px}}
 </style>
 </head>
 <body>
 <header>
-  <h2>CRPF Smart Mess Manager</h2>
-  <p>Reports & Registers · Monthly and Complete Records</p>
+<h1>CRPF SMART MESS MANAGER</h1>
+<p>Reports & Registers · Store, Ration, Meals, Members and Accounts</p>
 </header>
 
 <nav class="no-print">
-  <a href="index.html">Dashboard</a>
-  <a href="members.html">Members</a>
-  <a href="store.html">Store</a>
-  <a href="recipes.html">Recipes</a>
-  <a href="meals.html">Meals</a>
-  <a href="accounts.html">Accounts</a>
-  <a href="settlement.html">Settlement</a>
-  <a href="reports.html" class="active">Reports</a>
-  <a href="settings.html">Settings</a>
+<a href="index.html">Dashboard</a>
+<a href="members.html">Members</a>
+<a href="store.html">Store & Purchase</a>
+<a href="recipes.html">Recipes</a>
+<a href="meals.html">Meals</a>
+<a href="accounts.html">Accounts</a>
+<a href="settlement.html">Settlement</a>
+<a href="reports.html" class="active">Reports</a>
+<a href="settings.html">Settings</a>
 </nav>
 
 <main>
-  <div class="notice">
-    <strong>Important:</strong> Reports saved records ko padhkar dikhata hai.
-    Yeh page original entries ko edit ya delete nahi karta. Data isi browser ke
-    local storage mein mila to yahan dikhaya jayega. Alag phone ka data apne aap
-    connect nahi hota. Jis report ka data available nahi hai, uska amount zero
-    hone ka matlab yeh nahi ki actual kharcha bhi zero hai.
-  </div>
+<div class="note">
+<strong>Important:</strong> This page reads saved browser records and does not change the original data. Store stock is calculated from purchase quantities minus recorded meal consumption. Please verify reports against the original register before using them for official settlement.
+</div>
 
-  <section class="stats">
-    <div class="stat"><small>Total Members</small><strong id="memberCount">0</strong></div>
-    <div class="stat"><small>Store Items</small><strong id="itemCount">0</strong></div>
-    <div class="stat"><small>Meal Entries</small><strong id="mealCount">0</strong></div>
-    <div class="stat"><small>Account Entries</small><strong id="ledgerCount">0</strong></div>
-  </section>
+<section class="stats">
+<div class="stat"><small>Total Members</small><strong id="memberCount">0</strong></div>
+<div class="stat"><small>Store Items</small><strong id="itemCount">0</strong></div>
+<div class="stat"><small>Meal Records</small><strong id="mealCount">0</strong></div>
+<div class="stat"><small>Account Entries</small><strong id="ledgerCount">0</strong></div>
+</section>
 
-  <section class="card no-print" style="margin-top:13px">
-    <h3>Report Filters</h3>
-    <div class="filters">
-      <select id="reportType">
-        <option value="all">All Reports</option>
-        <option value="member">Members Record</option>
-        <option value="item">Store Stock Record</option>
-        <option value="purchase">Purchase Record</option>
-        <option value="recipe">Recipe Record</option>
-        <option value="meal">Meals & Ration Record</option>
-        <option value="ledger">Advance & Accounts Record</option>
-        <option value="expense">Other Expenses Record</option>
-        <option value="handover">Commander Handover Record</option>
-      </select>
-      <input id="search" placeholder="Search name / item / detail">
-      <input id="fromDate" type="date" aria-label="From date">
-      <input id="toDate" type="date" aria-label="To date">
-    </div>
-    <div class="actions">
-      <button id="applyBtn">Show Report</button>
-      <button id="resetBtn" class="secondary">Reset Filters</button>
-    </div>
-  </section>
+<section class="card no-print" style="margin-top:14px">
+<h2>Report Filters</h2>
+<div class="filters">
+<select id="reportType">
+<option value="all">All Reports</option>
+<option value="member">Members Record</option>
+<option value="item">Store Stock Record</option>
+<option value="purchase">Purchase Record</option>
+<option value="recipe">Recipe Record</option>
+<option value="meal">Meals & Ration Record</option>
+<option value="ledger">Advance & Accounts</option>
+<option value="expense">Other Expenses</option>
+<option value="handover">Commander Handover</option>
+</select>
+<input id="search" placeholder="Search name, item or details">
+<input id="fromDate" type="date" aria-label="From date">
+<input id="toDate" type="date" aria-label="To date">
+</div>
+<div class="actions">
+<button id="applyBtn">Show Report</button>
+<button class="secondary" id="resetBtn">Reset Filters</button>
+</div>
+</section>
 
-  <section class="card">
-    <div class="sectiontitle">
-      <h3 id="reportHeading">Complete Mess Report</h3>
-      <button class="no-print" id="printBtn">Print / Save PDF</button>
-    </div>
-    <p class="help" id="summary">Loading report...</p>
-    <div class="stats" style="margin:12px 0">
-      <div class="stat"><small>Visible Entries</small><strong id="visibleCount">0</strong></div>
-      <div class="stat"><small>Recorded Amount Total (Rs)</small><strong id="amountTotal">0</strong></div>
-      <div class="stat"><small>First Record Date</small><strong id="firstDate" style="font-size:15px">—</strong></div>
-      <div class="stat"><small>Last Record Date</small><strong id="lastDate" style="font-size:15px">—</strong></div>
-    </div>
-    <div class="tablewrap">
-      <table id="reportTable">
-        <thead>
-          <tr>
-            <th>Date</th><th>Record Type</th><th>Name / Item</th>
-            <th>Details</th><th>Amount (Rs)</th>
-          </tr>
-        </thead>
-        <tbody id="reportBody"></tbody>
-      </table>
-    </div>
-    <div id="empty" class="empty" hidden>No matching records found.</div>
-  </section>
+<section class="card">
+<h2 id="reportHeading">Complete Mess Report</h2>
+<p id="summary" class="muted">Loading...</p>
+<div class="stats" style="margin:12px 0">
+<div class="stat"><small>Visible Entries</small><strong id="visibleCount">0</strong></div>
+<div class="stat"><small>Visible Amount Total (Rs)</small><strong id="amountTotal">0</strong></div>
+<div class="stat"><small>First Date</small><strong id="firstDate" style="font-size:14px">—</strong></div>
+<div class="stat"><small>Last Date</small><strong id="lastDate" style="font-size:14px">—</strong></div>
+</div>
+<div class="tablewrap">
+<table>
+<thead><tr><th>Date</th><th>Record Type</th><th>Name / Item</th><th>Details</th><th>Amount (Rs)</th></tr></thead>
+<tbody id="reportBody"></tbody>
+</table>
+</div>
+<div id="empty" class="empty" hidden>No matching records found.</div>
+<div class="actions no-print">
+<button id="printBtn">Print / Save PDF</button>
+<button id="csvBtn">Download CSV</button>
+</div>
+</section>
 
-  <section class="card">
-    <h3>Monthly Financial Summary</h3>
-    <p class="help">This section shows totals only where corresponding recorded entries are found.
-    Purchase totals and other expense totals are not automatically treated as the full food budget.</p>
-    <div class="tablewrap">
-      <table>
-        <thead><tr><th>Financial Record</th><th>Recorded Total (Rs)</th><th>Meaning</th></tr></thead>
-        <tbody>
-          <tr><td>Ration Purchases</td><td id="purchaseTotal">0</td><td>Recorded purchase amounts found</td></tr>
-          <tr><td>Member Payments / Deposits</td><td id="depositTotal">0</td><td>Recorded deposits found</td></tr>
-          <tr><td>Meal Charges</td><td id="chargeTotal">0</td><td>Recorded member charges found</td></tr>
-          <tr><td>Other Expenses</td><td id="expenseTotal">0</td><td>Recorded expense amounts found</td></tr>
-        </tbody>
-      </table>
-    </div>
-    <p class="help" id="financialNote"></p>
-  </section>
+<section class="card">
+<h2>Financial Register Summary</h2>
+<p class="muted">These totals include recognized saved entries only. They are not a substitute for checking the original accounts.</p>
+<div class="tablewrap">
+<table>
+<thead><tr><th>Register</th><th>Recorded Total (Rs)</th><th>Record Count</th></tr></thead>
+<tbody>
+<tr><td>Purchases</td><td id="purchaseTotal">0</td><td id="purchaseCount">0</td></tr>
+<tr><td>Member Payments / Deposits</td><td id="depositTotal">0</td><td id="depositCount">0</td></tr>
+<tr><td>Member Charges</td><td id="chargeTotal">0</td><td id="chargeCount">0</td></tr>
+<tr><td>Other Expenses</td><td id="expenseTotal">0</td><td id="expenseCount">0</td></tr>
+</tbody>
+</table>
+</div>
+</section>
 
-  <section class="card no-print">
-    <h3>Export Report</h3>
-    <div class="actions">
-      <button id="csvBtn">Download CSV</button>
-      <button id="refreshBtn" class="secondary">Refresh Records</button>
-    </div>
-    <p class="help">CSV file spreadsheet apps mein khul sakti hai. Print / Save PDF se phone ke print menu mein PDF save kar sakte hain.</p>
-  </section>
+<section class="card no-print">
+<h3>Refresh Saved Records</h3>
+<p class="muted">Refresh the report after adding a purchase, meal, payment or member record.</p>
+<button id="refreshBtn">Refresh Reports</button>
+</section>
 </main>
-
-<footer>CRPF Smart Mess Manager · Reports</footer>
+<footer class="muted" style="text-align:center;padding:18px">CRPF Smart Mess Manager · Reports</footer>
 
 <script>
-(function(){
 "use strict";
 
 const KEYS=["crpfMessProfessionalV1","crpfMessPrototypeV2"];
 const $=id=>document.getElementById(id);
-let data={};
-let records=[];
-let visible=[];
-
-function arr(v){return Array.isArray(v)?v:[]}
-function first(o,keys,fallback=""){
-  for(const k of keys){
-    if(o && o[k]!==undefined && o[k]!==null && o[k]!=="")return o[k];
-  }
+const arr=x=>Array.isArray(x)?x:[];
+const val=(o,keys,fallback="")=>{
+  for(const k of keys)if(o&&o[k]!==undefined&&o[k]!==null&&o[k]!=="")return o[k];
   return fallback;
-}
-function str(v){
-  if(v===null||v===undefined)return "";
-  if(typeof v==="object")return "";
-  return String(v);
-}
-function num(v){
-  if(v===null||v===undefined||v==="")return 0;
-  const n=Number(v);
-  return Number.isFinite(n)?n:0;
-}
-function money(v){
-  return num(v).toLocaleString("en-IN",{maximumFractionDigits:2});
-}
-function dateOf(o){
-  let d=str(first(o,["date","joiningDate","createdAt","confirmedAt","updatedAt","timestamp"],""));
-  if(d.includes("T"))d=d.slice(0,d.indexOf("T"));
-  return /^\d{4}-\d{2}-\d{2}$/.test(d)?d:"";
-}
+};
+const str=x=>x===null||x===undefined?"":typeof x==="object"?"":String(x);
+const num=x=>x!==""&&x!==null&&x!==undefined&&Number.isFinite(Number(x))?Number(x):0;
+const money=x=>num(x).toLocaleString("en-IN",{minimumFractionDigits:2,maximumFractionDigits:2});
+
 function read(key){
   try{
     const raw=localStorage.getItem(key);
     if(!raw)return {};
-    const v=JSON.parse(raw);
-    return v&&typeof v==="object"?v:{};
+    const d=JSON.parse(raw);
+    return d&&typeof d==="object"?d:{};
   }catch(e){return {}}
 }
-function load(){
+function loadData(){
   const sources=KEYS.map(read);
-  const out={};
-  const keys=["members","items","purchases","recipes","meals","ledger",
-              "movements","expenses","handovers"];
+  const d={};
+  const keys=["members","items","purchases","recipes","meals","ledger","expenses","handovers"];
   keys.forEach(k=>{
     const seen=new Set();
-    out[k]=[];
-    sources.forEach(s=>arr(s[k]).forEach((v,i)=>{
-      const sig=(v&&v.id!==undefined)?String(v.id):JSON.stringify(v);
-      if(!seen.has(sig)){seen.add(sig);out[k].push(v)}
+    d[k]=[];
+    sources.forEach(s=>arr(s[k]).forEach(v=>{
+      const sig=v&&v.id!==undefined?k+":"+String(v.id):k+":"+JSON.stringify(v);
+      if(!seen.has(sig)){seen.add(sig);d[k].push(v);}
     }));
   });
-  sources.forEach(s=>{
-    if(s.settings&&typeof s.settings==="object")
-      out.settings=Object.assign({},out.settings||{},s.settings);
+  return d;
+}
+function dateOf(o){
+  let s=str(val(o,["date","joiningDate","createdAt","confirmedAt","updatedAt","timestamp"],""));
+  if(s.includes("T"))s=s.split("T")[0];
+  return /^\d{4}-\d{2}-\d{2}$/.test(s)?s:"";
+}
+function baseUnit(unit){
+  if(unit==="kg"||unit==="g")return "g";
+  if(unit==="ltr"||unit==="l"||unit==="litre"||unit==="liter"||unit==="ml")return "ml";
+  return "pcs";
+}
+function toBase(qty,unit){
+  qty=num(qty);
+  if(unit==="kg"||unit==="ltr"||unit==="l"||unit==="litre"||unit==="liter")return qty*1000;
+  return qty;
+}
+function baseQuantity(p,item){
+  // Prefer the exact base quantity used by the Store page.
+  if(p.quantityBase!==undefined&&p.quantityBase!==null&&p.quantityBase!=="")
+    return num(p.quantityBase);
+
+  // Compatibility fallback for older purchase entries.
+  const qty=val(p,["quantity","qty"],"");
+  const unit=str(val(p,["purchaseUnit","unit"],item.unit||""));
+  if(qty==="")return 0;
+  if(baseUnit(unit)!==baseUnit(item.unit||unit))return 0;
+  return toBase(qty,unit);
+}
+function purchaseTotal(p){
+  if(p.total!==undefined&&p.total!==null&&p.total!=="")return num(p.total);
+  const qty=num(val(p,["quantity","qty"],0));
+  const rate=num(val(p,["rate","unitRate"],0));
+  return qty*rate;
+}
+function mealConsumption(d,item){
+  let used=0;
+  arr(d.meals).forEach(m=>{
+    if(m.cancelled===true||String(m.status||"").toLowerCase()==="cancelled")return;
+    arr(m.ration).forEach(r=>{
+      if(String(r.itemId)===String(item.id)){
+        if(r.quantityBase!==undefined&&r.quantityBase!==null&&r.quantityBase!==""){
+          used+=num(r.quantityBase);
+        }else{
+          const q=val(r,["quantity","qty"],"");
+          const unit=str(val(r,["unit","purchaseUnit"],item.unit||""));
+          if(q!==""&&baseUnit(unit)===baseUnit(item.unit||unit))used+=toBase(q,unit);
+        }
+      }
+    });
   });
-  return out;
+  return used;
+}
+function storeStock(d,item){
+  const ps=arr(item.purchases);
+  const purchased=ps.reduce((s,p)=>s+baseQuantity(p,item),0);
+  const purchaseValue=ps.reduce((s,p)=>s+purchaseTotal(p),0);
+  const average=purchased>0?purchaseValue/purchased:0;
+  const used=mealConsumption(d,item);
+  const stock=Math.max(0,purchased-used);
+  return {purchased,purchaseValue,average,used,stock,value:stock*average,unit:baseUnit(item.unit||"pcs")};
 }
 function memberName(o){
-  return str(first(o,["memberName","fullName","name","nameOfMember","serviceId","memberId"],""));
+  return str(val(o,["memberName","fullName","name","nameOfMember","serviceId","memberId"],""));
 }
+let data={},records=[],visible=[];
+
 function add(type,label,o,details,amount){
   o=o||{};
-  records.push({
-    date:dateOf(o),type,label:str(label)||type,
-    details:str(details),amount:amount===""||amount===null||amount===undefined?"":num(amount)
-  });
+  records.push({date:dateOf(o),type,label:str(label)||type,details:str(details),
+    amount:amount===null||amount===undefined||amount===""?"":num(amount)});
 }
-function build(){
-  records=[];
-  data=load();
+function collect(){
+  data=loadData();records=[];
 
   arr(data.members).forEach(m=>{
     add("member",memberName(m)||"Member",m,
-      [first(m,["serviceId","memberId"],""),
-       first(m,["rank"],""),first(m,["duty"],""),
-       first(m,["status"],"")].filter(Boolean).join(" · "),"");
+      [val(m,["serviceId","memberId"]),val(m,["rank"]),val(m,["duty"]),val(m,["status"])]
+      .filter(Boolean).join(" · "),"");
   });
 
   arr(data.items).forEach(i=>{
-    add("item",first(i,["name","itemName"],"Store item"),i,
-      "Stock: "+str(first(i,["stock","quantity","currentStock"],"Not specified"))+
-      " "+str(first(i,["unit","baseUnit"],"")),"");
-    arr(i.purchases).forEach(p=>{
-      add("purchase",first(i,["name","itemName"],"Purchase"),p,
-        "Qty: "+str(first(p,["quantity","quantityBase"],""))+" "+
-        str(first(p,["purchaseUnit","unit"],""))+
-        (first(p,["supplier"],"")?" · Supplier: "+str(p.supplier):""),
-        first(p,["total","totalCost","amount"],""));
-    });
+    const s=storeStock(data,i);
+    add("item",val(i,["name","itemName"],"Store item"),i,
+      "Current Stock: "+s.stock.toLocaleString("en-IN",{maximumFractionDigits:3})+
+      " "+s.unit+" · Average Rate: Rs "+s.average.toFixed(4)+"/"+s.unit+
+      " · Stock Value: Rs "+money(s.value),s.value);
+
+    // Purchase details are included in the Purchase Register below.
   });
 
+  // Collect top-level purchases. Nested item purchases are included too,
+  // unless the same purchase ID already exists.
+  const purchaseEntries=[];
+  const seenPurchases=new Set();
+  arr(data.items).forEach(i=>arr(i.purchases).forEach(p=>{
+    const id=p.id!==undefined?String(p.id):JSON.stringify([i.id,p.date,p.quantity,p.rate,p.total,p.invoice]);
+    if(!seenPurchases.has(id)){
+      seenPurchases.add(id);
+      purchaseEntries.push({p,itemName:val(i,["name","itemName"],"Purchase item"),item:i});
+    }
+  }));
   arr(data.purchases).forEach(p=>{
-    add("purchase",first(p,["itemName","name"],"Purchase"),p,
-      str(first(p,["supplier","invoice","notes"],"Purchase entry")),
-      first(p,["total","totalCost","amount"],""));
+    const id=p.id!==undefined?String(p.id):JSON.stringify([p.itemId,p.itemName,p.date,p.quantity,p.rate,p.total,p.invoice]);
+    if(!seenPurchases.has(id)){
+      seenPurchases.add(id);
+      const item=arr(data.items).find(i=>String(i.id)===String(p.itemId));
+      purchaseEntries.push({p,itemName:val(p,["itemName","name"],item?item.name:"Purchase item"),item:item||{unit:val(p,["purchaseUnit","unit"],"pcs")}});
+    }
+  });
+  purchaseEntries.forEach(({p,itemName,item})=>{
+    const q=val(p,["quantity","qty"],"");
+    const unit=val(p,["purchaseUnit","unit"],item.unit||"");
+    add("purchase",itemName,p,
+      "Quantity: "+str(q)+" "+str(unit)+
+      " · Rate: Rs "+money(val(p,["rate"],0))+
+      (p.supplier?" · Supplier: "+str(p.supplier):"")+
+      (p.invoice?" · Bill: "+str(p.invoice):""),
+      purchaseTotal(p));
   });
 
   arr(data.recipes).forEach(r=>{
-    add("recipe",first(r,["name","recipeName"],"Recipe"),r,
+    add("recipe",val(r,["name","recipeName"],"Recipe"),r,
       "Ingredients: "+arr(r.ingredients).length,"");
   });
-
   arr(data.meals).forEach(m=>{
-    const status=str(first(m,["status"],""));
-    add("meal",first(m,["recipeName","type"],"Meal"),m,
-      "Meal: "+str(first(m,["type"],""))+
-      " · Servings: "+str(first(m,["servings"],""))+
-      " · Members: "+arr(first(m,["attendance","members"],[])).length+
-      " · Status: "+status,
-      first(m,["totalCost","amount"],""));
+    add("meal",val(m,["recipeName","type"],"Meal"),m,
+      "Meal: "+str(val(m,["type"],""))+
+      " · Servings: "+str(val(m,["servings"],""))+
+      " · Members: "+arr(val(m,["attendance","members"],[])).length+
+      " · Status: "+str(val(m,["status"],"")),
+      val(m,["totalCost","amount"],""));
   });
-
   arr(data.ledger).forEach(l=>{
-    add("ledger",memberName(l)||first(l,["description","transactionType","type"],"Account entry"),
-      l,str(first(l,["description","transactionType","type"],"Account entry")),
-      first(l,["amount","total"],""));
+    add("ledger",memberName(l)||val(l,["description","transactionType","type"],"Account entry"),l,
+      str(val(l,["description","transactionType","type"],"Account entry")),
+      val(l,["amount","total"],""));
   });
-
   arr(data.expenses).forEach(e=>{
-    add("expense",first(e,["name","title","description"],"Other expense"),e,
-      str(first(e,["category","notes"],"")),
-      first(e,["amount","total"],""));
+    add("expense",val(e,["name","title","description"],"Other expense"),e,
+      str(val(e,["category","notes"],"")),
+      val(e,["amount","total"],""));
   });
-
   arr(data.handovers).forEach(h=>{
-    add("handover",first(h,["commanderName","name","title"],"Commander handover"),h,
-      str(first(h,["notes","remarks","fromCommander"],"Handover record")),
-      first(h,["amount","cash","cashAmount"],""));
+    add("handover",val(h,["commanderName","name","title"],"Commander handover"),h,
+      str(val(h,["notes","remarks","fromCommander"],"Handover record")),
+      val(h,["amount","cash","cashAmount"],""));
   });
 
   $("memberCount").textContent=arr(data.members).length;
   $("itemCount").textContent=arr(data.items).length;
   $("mealCount").textContent=arr(data.meals).length;
   $("ledgerCount").textContent=arr(data.ledger).length;
-  updateFinancialSummary();
+  financialSummary(purchaseEntries);
   render();
 }
-function updateFinancialSummary(){
-  const purchaseRecords=records.filter(r=>r.type==="purchase");
-  // Nested and top-level purchase entries can overlap; avoid claiming this is
-  // a verified accounting total until the app's purchase schema is confirmed.
-  const topPurchases=arr(data.purchases);
-  const hasTop=topPurchases.length>0;
-  const purchaseSum=hasTop?
-    topPurchases.reduce((s,p)=>s+num(first(p,["total","totalCost","amount"],0)),0):
-    purchaseRecords.reduce((s,r)=>s+num(r.amount),0);
+function financialSummary(purchaseEntries){
+  $("purchaseTotal").textContent=money(purchaseEntries.reduce((s,x)=>s+purchaseTotal(x.p),0));
+  $("purchaseCount").textContent=purchaseEntries.length;
+
   const deposits=arr(data.ledger).filter(l=>{
-    const t=str(first(l,["transactionType","type"],"")).toLowerCase();
-    return t==="deposit"||t==="payment"||t==="advance"||t==="refund";
-  }).reduce((s,l)=>s+num(first(l,["amount","total"],0)),0);
+    const t=str(val(l,["transactionType","type"],"")).toLowerCase();
+    return t==="deposit"||t==="payment"||t==="advance";
+  });
   const charges=arr(data.ledger).filter(l=>{
-    const t=str(first(l,["transactionType","type"],"")).toLowerCase();
+    const t=str(val(l,["transactionType","type"],"")).toLowerCase();
     return t.includes("charge")||t==="meal";
-  }).reduce((s,l)=>s+num(first(l,["amount","total"],0)),0);
-  const expenses=arr(data.expenses).reduce((s,e)=>s+num(first(e,["amount","total"],0)),0);
-  $("purchaseTotal").textContent=money(purchaseSum);
-  $("depositTotal").textContent=money(deposits);
-  $("chargeTotal").textContent=money(charges);
-  $("expenseTotal").textContent=money(expenses);
-  $("financialNote").textContent=
-    "These totals are based on recognized fields only. Unrecognized transaction types or nested records may not be included. Verify them against the original registers before using for official settlement.";
+  });
+  $("depositTotal").textContent=money(deposits.reduce((s,x)=>s+num(val(x,["amount","total"],0)),0));
+  $("depositCount").textContent=deposits.length;
+  $("chargeTotal").textContent=money(charges.reduce((s,x)=>s+num(val(x,["amount","total"],0)),0));
+  $("chargeCount").textContent=charges.length;
+  $("expenseTotal").textContent=money(arr(data.expenses).reduce((s,x)=>s+num(val(x,["amount","total"],0)),0));
+  $("expenseCount").textContent=arr(data.expenses).length;
 }
 function render(){
   const q=$("search").value.trim().toLowerCase();
-  const type=$("reportType").value;
-  const from=$("fromDate").value;
-  const to=$("toDate").value;
+  const type=$("reportType").value,from=$("fromDate").value,to=$("toDate").value;
+  const headings={all:"Complete Mess Report",member:"Members Record",item:"Store Stock Record",
+    purchase:"Purchase Record",recipe:"Recipe Record",meal:"Meals & Ration Record",
+    ledger:"Advance & Accounts Record",expense:"Other Expenses Record",handover:"Commander Handover Record"};
 
   visible=records.filter(r=>{
     if(type!=="all"&&r.type!==type)return false;
     if(from&&(!r.date||r.date<from))return false;
     if(to&&(!r.date||r.date>to))return false;
-    const hay=[r.date,r.type,r.label,r.details,r.amount].join(" ").toLowerCase();
-    return !q||hay.includes(q);
+    return !q||[r.date,r.type,r.label,r.details,r.amount].join(" ").toLowerCase().includes(q);
   }).sort((a,b)=>b.date.localeCompare(a.date));
 
-  const labels={
-    all:"Complete Mess Report",member:"Members Record",item:"Store Stock Record",
-    purchase:"Purchase Record",recipe:"Recipe Record",meal:"Meals & Ration Record",
-    ledger:"Advance & Accounts Record",expense:"Other Expenses Record",
-    handover:"Commander Handover Record"
-  };
-  $("reportHeading").textContent=labels[type]||"Mess Report";
+  $("reportHeading").textContent=headings[type]||"Mess Report";
   $("summary").textContent="Showing "+visible.length+" of "+records.length+
-    " saved entries. Amount total includes only visible entries with recognized amounts.";
+    " saved entries. Store stock quantities are calculated from purchase and meal records.";
   $("visibleCount").textContent=visible.length;
   $("amountTotal").textContent=money(visible.reduce((s,r)=>s+num(r.amount),0));
   const dates=visible.map(r=>r.date).filter(Boolean).sort();
   $("firstDate").textContent=dates[0]||"—";
   $("lastDate").textContent=dates[dates.length-1]||"—";
 
-  const body=$("reportBody");
-  body.replaceChildren();
+  const body=$("reportBody");body.replaceChildren();
   visible.forEach(r=>{
     const tr=document.createElement("tr");
-    [r.date||"—",r.type,r.label,r.details||"—",r.amount===""?"—":money(r.amount)]
-      .forEach((v,i)=>{
-        const td=document.createElement("td");
-        if(i===1){
-          const tag=document.createElement("span");
-          tag.className="tag";tag.textContent=v;td.appendChild(tag);
-        }else td.textContent=v;
-        tr.appendChild(td);
-      });
+    [r.date||"—",r.type,r.label,r.details||"—",r.amount===""?"—":money(r.amount)].forEach((v,i)=>{
+      const td=document.createElement("td");
+      if(i===1){const tag=document.createElement("span");tag.className="tag";tag.textContent=v;td.appendChild(tag);}
+      else td.textContent=v;
+      tr.appendChild(td);
+    });
     body.appendChild(tr);
   });
   $("empty").hidden=visible.length!==0;
 }
 function csvEscape(v){
-  let s=String(v===null||v===undefined?"":v);
+  let s=String(v??"");
   if(/^[=+\-@]/.test(s))s="'"+s;
   return '"'+s.replace(/"/g,'""')+'"';
 }
 $("applyBtn").addEventListener("click",render);
-["search","reportType","fromDate","toDate"].forEach(id=>{
+["reportType","search","fromDate","toDate"].forEach(id=>{
   $(id).addEventListener("input",render);
   $(id).addEventListener("change",render);
 });
 $("resetBtn").addEventListener("click",()=>{
-  $("reportType").value="all";
-  $("search").value="";
-  $("fromDate").value="";
-  $("toDate").value="";
-  render();
+  $("reportType").value="all";$("search").value="";
+  $("fromDate").value="";$("toDate").value="";render();
 });
 $("printBtn").addEventListener("click",()=>window.print());
-$("refreshBtn").addEventListener("click",build);
 $("csvBtn").addEventListener("click",()=>{
   const rows=[["Date","Record Type","Name / Item","Details","Amount (Rs)"]];
   visible.forEach(r=>rows.push([r.date,r.type,r.label,r.details,r.amount]));
-  const csv="\uFEFF"+rows.map(row=>row.map(csvEscape).join(",")).join("\r\n");
-  const blob=new Blob([csv],{type:"text/csv;charset=utf-8;"});
-  const url=URL.createObjectURL(blob);
-  const a=document.createElement("a");
-  a.href=url;
-  a.download="CRPF-Mess-Report-"+new Date().toISOString().slice(0,10)+".csv";
+  const blob=new Blob(["\uFEFF"+rows.map(r=>r.map(csvEscape).join(",")).join("\r\n")],{type:"text/csv;charset=utf-8"});
+  const url=URL.createObjectURL(blob),a=document.createElement("a");
+  a.href=url;a.download="CRPF-Mess-Report-"+new Date().toISOString().slice(0,10)+".csv";
   document.body.appendChild(a);a.click();a.remove();
   setTimeout(()=>URL.revokeObjectURL(url),1000);
 });
-build();
-})();
+$("refreshBtn").addEventListener("click",collect);
+collect();
 </script>
 </body>
 </html>

@@ -4,47 +4,57 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>CRPF Smart Mess Manager - Reports</title>
+<title>CRPF Smart Mess - Settlement & Handover</title>
 <style>
-:root{--g:#176747;--deep:#10563e;--bg:#f2f6f3;--text:#214d3b;--muted:#78857e;--border:#dce5df}
+:root{--g:#176747;--deep:#10563e;--bg:#f2f6f3;--text:#214d3b;--muted:#78857e;--border:#dce5df;--red:#b8323c;--gold:#9b6b12}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--text);font-family:Arial,sans-serif;font-size:14px}
 header{background:linear-gradient(120deg,#10583e,#176747);color:white;padding:20px}
 header h1{margin:0 0 7px;font-size:23px}
-header p{margin:0;font-size:13px;line-height:1.5}
+header p{margin:0;line-height:1.5}
 nav{display:flex;gap:7px;overflow-x:auto;background:white;padding:10px;border-bottom:1px solid var(--border)}
 nav a{white-space:nowrap;text-decoration:none;color:var(--g);padding:10px 13px;border:1px solid var(--border);border-radius:8px;font-weight:bold}
 nav a.active{background:var(--g);color:white}
-main{max-width:1150px;margin:auto;padding:14px}
+main{max-width:1100px;margin:auto;padding:14px}
 .card{background:white;border:1px solid var(--border);border-radius:12px;padding:15px;margin-bottom:14px}
 h2{font-size:19px;margin:0 0 12px}
 h3{font-size:16px;margin:0 0 12px}
-.note{background:#fff8e8;border:1px solid #efdfb8;padding:12px;border-radius:9px;line-height:1.6;margin-bottom:14px}
-.stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
-.stat{border:1px solid var(--border);border-radius:10px;padding:13px;min-width:0}
-.stat small{display:block;color:var(--muted);margin-bottom:8px}
-.stat strong{font-size:20px;color:var(--g);overflow-wrap:anywhere}
-.filters{display:grid;grid-template-columns:1fr 1fr;gap:9px}
-input,select,button{width:100%;padding:11px;border:1px solid var(--border);border-radius:8px;background:white;color:var(--text);font:inherit}
+.muted{color:var(--muted);line-height:1.6}
+.note{padding:12px;border:1px solid #efdfb8;background:#fff8e8;border-radius:9px;line-height:1.6;margin-bottom:14px}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px}
+.tabs button{width:auto;flex:1;min-width:110px}
+button,input,select,textarea{font:inherit;padding:11px;border:1px solid var(--border);border-radius:8px;width:100%;color:var(--text);background:white}
 button{background:var(--g);color:white;border:0;font-weight:bold;cursor:pointer}
 button.secondary{background:white;color:var(--g);border:1px solid var(--g)}
-.actions{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:10px}
+button.active{background:var(--deep);outline:2px solid #a7cbb7}
+button.danger{background:var(--red)}
+label{display:block;font-weight:bold;font-size:13px;margin:0 0 6px}
+.field{min-width:0}
+.grid{display:grid;grid-template-columns:1fr;gap:12px}
+.stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+.stat{border:1px solid var(--border);border-radius:10px;padding:12px;min-width:0}
+.stat small{display:block;color:var(--muted);margin-bottom:7px;line-height:1.4}
+.stat strong{font-size:20px;overflow-wrap:anywhere;color:var(--g)}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:12px}
 .tablewrap{overflow-x:auto}
-table{border-collapse:collapse;width:100%;min-width:620px}
-th,td{padding:10px 9px;border-bottom:1px solid var(--border);text-align:left;vertical-align:top}
+table{border-collapse:collapse;width:100%;min-width:600px}
+th,td{padding:10px 8px;border-bottom:1px solid var(--border);text-align:left;vertical-align:top}
 th{background:#edf6ef;color:var(--deep)}
-.tag{display:inline-block;background:#e6f3eb;color:var(--g);padding:4px 7px;border-radius:5px;font-size:12px}
-.muted{color:var(--muted);line-height:1.5}
-.empty{text-align:center;color:var(--muted);padding:22px}
-.totalrow{font-weight:bold;background:#edf6ef}
-@media(min-width:650px){.stats{grid-template-columns:repeat(4,minmax(0,1fr))}.filters{grid-template-columns:repeat(4,minmax(0,1fr))}}
-@media print{body{background:white;font-size:10px}nav,.no-print,footer{display:none!important}main{padding:0}.card{break-inside:avoid;border:1px solid #bbb}table{min-width:0;font-size:9px}th,td{padding:5px}}
+.hidden{display:none!important}
+.status{padding:11px;border-radius:8px;background:#edf6ef;line-height:1.6;white-space:pre-wrap;overflow-wrap:anywhere}
+.warning{background:#fff8e8;border:1px solid #efdfb8;border-radius:9px;padding:12px;line-height:1.6}
+.positive{color:var(--g)!important}
+.negative{color:var(--red)!important}
+.totalrow{background:#edf6ef;font-weight:bold}
+.badge{display:inline-block;border-radius:5px;padding:4px 7px;background:#e6f3eb;color:var(--g);font-size:12px}
+@media(min-width:650px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.stats{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media print{body{background:white;font-size:10px}nav,.no-print,.tabs,button,footer{display:none!important}main{padding:0}.card{break-inside:avoid}.hidden{display:none!important}table{min-width:0}th,td{padding:5px}}
 </style>
 </head>
 <body>
 <header>
 <h1>CRPF SMART MESS MANAGER</h1>
-<p>Reports & Registers · Store, Ration, Meals, Members and Accounts</p>
+<p>Monthly Settlement · Common Mess Advance · Expenses · Commander Handover</p>
 </header>
 
 <nav class="no-print">
@@ -54,131 +64,175 @@ th{background:#edf6ef;color:var(--deep)}
 <a href="recipes.html">Recipes</a>
 <a href="meals.html">Meals</a>
 <a href="accounts.html">Accounts</a>
-<a href="settlement.html" class="active">Settlement</a> 
 <a href="reports.html">Reports</a>
+<a href="settlement.html" class="active">Settlement</a>
 <a href="settings.html">Settings</a>
 </nav>
 
 <main>
 <div class="note">
-<strong>Report guide:</strong> Select one report or All Reports. For one day, use the same date in both date fields. For multiple days, select From Date and To Date. Purchase totals, stock value and ration expense are shown separately; unrelated amounts are never added into one financial total.
+<strong>Settlement rule:</strong> Common Mess Advance is calculated using the monthly rate from Settings divided by 30 days. Meal attendance, recorded ration cost, extra expenses, cash, bank and stock are shown separately. Surplus is an accounting estimate until verified against actual receipts and balances.
 </div>
 
-<section class="stats">
-<div class="stat"><small>Total Members</small><strong id="memberCount">0</strong></div>
-<div class="stat"><small>Store Items</small><strong id="itemCount">0</strong></div>
-<div class="stat"><small>Meal Records</small><strong id="mealCount">0</strong></div>
-<div class="stat"><small>Account Entries</small><strong id="ledgerCount">0</strong></div>
-</section>
-
-<section class="card no-print" style="margin-top:14px">
-<h2>Report Filters</h2>
-<div class="filters">
-<select id="reportType">
-<option value="all">All Reports</option>
-<option value="member">Members Record</option>
-<option value="item">Store Stock Record</option>
-<option value="purchase">Purchase Record</option>
-<option value="recipe">Recipe Record</option>
-<option value="meal">Meals Record</option>
-<option value="ration">Daily Ration Summary</option>
-<option value="ledger">Advance & Accounts</option>
-<option value="expense">Other Expenses</option>
-<option value="handover">Commander Handover</option>
-</select>
-<input id="search" placeholder="Search name, item or details">
-<input id="fromDate" type="date" aria-label="From date">
-<input id="toDate" type="date" aria-label="To date">
+<div class="tabs no-print">
+<button type="button" class="active" data-tab="overview">Monthly Summary</button>
+<button type="button" data-tab="expenses">Other Expenses</button>
+<button type="button" data-tab="handover">Commander Handover</button>
+<button type="button" data-tab="records">Saved Records</button>
 </div>
-<div class="actions">
-<button id="applyBtn" type="button">Show Report</button>
-<button id="resetBtn" type="button" class="secondary">Reset Filters</button>
-</div>
-</section>
 
-<section class="card">
-<h2 id="reportHeading">Complete Mess Report</h2>
-<p id="summary" class="muted">Loading saved records...</p>
-
-<div class="stats" style="margin:12px 0">
-<div class="stat"><small>Visible Entries</small><strong id="visibleCount">0</strong></div>
-<div class="stat"><small>Amount Total (Rs)</small><strong id="amountTotal">—</strong></div>
-<div class="stat"><small>First Date</small><strong id="firstDate" style="font-size:14px">—</strong></div>
-<div class="stat"><small>Last Date</small><strong id="lastDate" style="font-size:14px">—</strong></div>
+<section id="overview" class="panel">
+<div class="card">
+<h2>Settlement Period</h2>
+<div class="grid">
+<div class="field"><label for="fromDate">From Date</label><input id="fromDate" type="date"></div>
+<div class="field"><label for="toDate">To Date</label><input id="toDate" type="date"></div>
 </div>
-<p id="amountNote" class="muted">All Reports: amounts are not combined because different record types represent different kinds of value.</p>
-
-<div class="tablewrap">
-<table>
-<thead><tr><th>Date</th><th>Record Type</th><th>Name / Item</th><th>Details</th><th>Amount (Rs)</th></tr></thead>
-<tbody id="reportBody"></tbody>
-</table>
-</div>
-<div id="empty" class="empty" hidden>No matching records found.</div>
 <div class="actions no-print">
-<button id="printBtn" type="button">Print / Save PDF</button>
-<button id="csvBtn" type="button">Download CSV</button>
+<button type="button" id="calculateBtn">Calculate Settlement</button>
+<button type="button" class="secondary" id="currentMonthBtn">Current Month</button>
 </div>
-</section>
+<p id="sourceInfo" class="muted">Checking saved data...</p>
+</div>
 
-<section class="card" id="rationCard">
-<h2>Daily Ration Summary</h2>
-<p id="rationSummary" class="muted">Select dates and press Show Report.</p>
+<div class="stats">
+<div class="stat"><small>Monthly Common Advance / Member</small><strong id="monthlyRate">Rs 0.00</strong></div>
+<div class="stat"><small>Daily Rate / Member (÷ 30)</small><strong id="dailyRate">Rs 0.00</strong></div>
+<div class="stat"><small>Members With Meal Records</small><strong id="memberCount">0</strong></div>
+<div class="stat"><small>Recorded Member Meal-Days</small><strong id="memberDays">0</strong></div>
+<div class="stat"><small>Calculated Food Budget</small><strong id="budgetTotal">Rs 0.00</strong></div>
+<div class="stat"><small>Recorded Ration Expense</small><strong id="foodExpense">Rs 0.00</strong></div>
+<div class="stat"><small>Surplus / Shortfall Before Extras</small><strong id="surplus">Rs 0.00</strong></div>
+<div class="stat"><small>Approved Extra Expenses</small><strong id="extraTotal">Rs 0.00</strong></div>
+</div>
+
+<div class="card" style="margin-top:14px">
+<h2>Member-wise Meal & Advance Calculation</h2>
+<p class="muted">A meal-day is counted once per member per calendar date, even if multiple meals were recorded that day. The budget uses the member's configured monthly advance where available, otherwise the Common Mess Advance from Settings.</p>
 <div class="tablewrap">
 <table>
-<thead><tr><th>Date</th><th>Ration Item</th><th>Quantity</th><th>Unit</th></tr></thead>
-<tbody id="rationBody"></tbody>
+<thead><tr><th>Member</th><th>Meal Days</th><th>Monthly Rate (Rs)</th><th>Daily Rate (Rs)</th><th>Calculated Budget (Rs)</th></tr></thead>
+<tbody id="memberBody"></tbody>
 </table>
 </div>
-<div id="rationEmpty" class="empty" hidden>No saved ration quantities found for this date range.</div>
+<div id="memberEmpty" class="muted">No member meal attendance found for this period.</div>
+</div>
+
+<div class="card">
+<h2>Financial Summary — Separate Values</h2>
+<div class="stats">
+<div class="stat"><small>Purchases in Period (Rs)</small><strong id="purchaseTotal">Rs 0.00</strong></div>
+<div class="stat"><small>Current Store Stock Value (Rs)</small><strong id="stockValue">Rs 0.00</strong></div>
+<div class="stat"><small>Member Dues Outstanding (Rs)</small><strong id="memberDues">Rs 0.00</strong></div>
+<div class="stat"><small>Member Advance Liability (Rs)</small><strong id="advanceLiability">Rs 0.00</strong></div>
+<div class="stat"><small>Recorded Cash Balance (Rs)</small><strong id="cashBalance">Rs 0.00</strong></div>
+<div class="stat"><small>Recorded Bank Balance (Rs)</small><strong id="bankBalance">Rs 0.00</strong></div>
+<div class="stat"><small>Surplus After Extra Expenses (Rs)</small><strong id="surplusAfter">Rs 0.00</strong></div>
+<div class="stat"><small>Unverified / Missing Values</small><strong id="missingCount">0</strong></div>
+</div>
+<p class="muted" id="financialNote"></p>
+</div>
 </section>
 
-<section class="card">
-<h2>Financial Register Summary</h2>
-<p class="muted">These figures are kept separate. Purchase spending, remaining stock value, member deposits and member charges are not the same type of amount.</p>
-<div class="stats" style="margin-bottom:12px">
-<div class="stat"><small>Purchase Total (Rs)</small><strong id="purchaseTotal">0.00</strong></div>
-<div class="stat"><small>Current Stock Value (Rs)</small><strong id="stockValue">0.00</strong></div>
-<div class="stat"><small>Member Deposits (Rs)</small><strong id="depositTotal">0.00</strong></div>
-<div class="stat"><small>Member Charges (Rs)</small><strong id="chargeTotal">0.00</strong></div>
+<section id="expenses" class="panel hidden">
+<div class="card">
+<h2>Other Expenses Entry</h2>
+<p class="muted">Record approved non-ration expenses separately. This page does not automatically deduct an expense from any member's balance.</p>
+<div class="grid">
+<div class="field"><label for="expenseDate">Expense Date *</label><input id="expenseDate" type="date"></div>
+<div class="field"><label for="expenseCategory">Category *</label>
+<select id="expenseCategory">
+<option value="Maintenance">Maintenance</option>
+<option value="Cleaning">Cleaning</option>
+<option value="Fuel / Gas">Fuel / Gas</option>
+<option value="Equipment">Equipment</option>
+<option value="Other">Other</option>
+</select></div>
+<div class="field"><label for="expenseTitle">Expense Details *</label><input id="expenseTitle" placeholder="Description of expense"></div>
+<div class="field"><label for="expenseAmount">Amount (Rs) *</label><input id="expenseAmount" type="number" min="0" step="0.01" placeholder="0.00"></div>
+<div class="field"><label for="expenseApprovedBy">Approved By</label><input id="expenseApprovedBy" placeholder="Commander / authorised person"></div>
+<div class="field"><label for="expenseRef">Bill / Voucher Reference</label><input id="expenseRef" placeholder="Bill number or reference"></div>
 </div>
+<div class="field" style="margin-top:12px"><label for="expenseNotes">Notes</label><textarea id="expenseNotes" rows="3" placeholder="Optional notes"></textarea></div>
+<div class="actions">
+<button type="button" id="saveExpenseBtn">Save Expense</button>
+<button type="button" class="secondary" id="clearExpenseBtn">Clear Form</button>
+</div>
+<p id="expenseStatus" class="status" style="margin-top:12px">Ready.</p>
+</div>
+<div class="card">
+<h2>Extra Expenses in Selected Period</h2>
 <div class="tablewrap">
 <table>
-<thead><tr><th>Register</th><th>Recorded Total (Rs)</th><th>Record Count</th></tr></thead>
-<tbody>
-<tr><td>Purchases</td><td id="purchaseTotal2">0.00</td><td id="purchaseCount">0</td></tr>
-<tr><td>Member Payments / Deposits</td><td id="depositTotal2">0.00</td><td id="depositCount">0</td></tr>
-<tr><td>Member Charges</td><td id="chargeTotal2">0.00</td><td id="chargeCount">0</td></tr>
-<tr><td>Other Expenses</td><td id="expenseTotal">0.00</td><td id="expenseCount">0</td></tr>
-</tbody>
+<thead><tr><th>Date</th><th>Category</th><th>Description</th><th>Amount (Rs)</th><th>Approval / Reference</th></tr></thead>
+<tbody id="expenseBody"></tbody>
 </table>
+</div>
 </div>
 </section>
 
-<section class="card no-print">
-<h3>Refresh Saved Records</h3>
-<p class="muted">Refresh after adding or editing a member, purchase, meal or account entry.</p>
-<button id="refreshBtn" type="button">Refresh Reports</button>
+<section id="handover" class="panel hidden">
+<div class="card">
+<h2>Mess Commander Handover</h2>
+<p class="muted">Names and financial figures are fetched from saved records where identifiable. Verify actual cash, bank and physical stock before signing. Saving creates a handover snapshot and does not alter member transactions.</p>
+<div class="grid">
+<div class="field"><label for="handoverDate">Handover Date *</label><input id="handoverDate" type="date"></div>
+<div class="field"><label for="outgoing">Outgoing Commander *</label><select id="outgoing"></select></div>
+<div class="field"><label for="incoming">Incoming Commander / Mess NCO *</label><select id="incoming"></select></div>
+<div class="field"><label for="verifiedCash">Verified Cash Handed Over (Rs) *</label><input id="verifiedCash" type="number" min="0" step="0.01" value="0"></div>
+<div class="field"><label for="verifiedBank">Verified Bank Balance (Rs) *</label><input id="verifiedBank" type="number" min="0" step="0.01" value="0"></div>
+<div class="field"><label for="verifiedStock">Verified Stock Value (Rs)</label><input id="verifiedStock" type="number" min="0" step="0.01" value="0"></div>
+<div class="field"><label for="verifiedDues">Member Dues (Rs)</label><input id="verifiedDues" type="number" min="0" step="0.01" value="0"></div>
+<div class="field"><label for="verifiedLiability">Member Advance Liability (Rs)</label><input id="verifiedLiability" type="number" min="0" step="0.01" value="0"></div>
+<div class="field"><label for="verifiedSurplus">Surplus After Extras (Rs)</label><input id="verifiedSurplus" type="number" step="0.01" value="0"></div>
+<div class="field"><label for="handoverPeriod">Settlement Period</label><input id="handoverPeriod" readonly></div>
+</div>
+<div class="field" style="margin-top:12px"><label for="handoverNotes">Notes / Discrepancies</label><textarea id="handoverNotes" rows="3" placeholder="Physical count differences, outstanding bills, verification notes"></textarea></div>
+<div class="actions no-print">
+<button type="button" id="fetchHandoverBtn">Fetch Latest Figures</button>
+<button type="button" id="saveHandoverBtn">Save Handover</button>
+</div>
+<p id="handoverStatus" class="status" style="margin-top:12px">Verify all figures before saving.</p>
+</div>
 </section>
+
+<section id="records" class="panel hidden">
+<div class="card">
+<h2>Saved Commander Handover Records</h2>
+<div class="tablewrap">
+<table>
+<thead><tr><th>Date</th><th>Outgoing Commander</th><th>Incoming Commander</th><th>Cash (Rs)</th><th>Bank (Rs)</th><th>Stock (Rs)</th><th>Surplus (Rs)</th></tr></thead>
+<tbody id="handoverBody"></tbody>
+</table>
+</div>
+<div id="handoverEmpty" class="muted">No handover records saved yet.</div>
+<div class="actions no-print">
+<button type="button" id="printBtn">Print / Save PDF</button>
+<button type="button" class="secondary" id="csvBtn">Download Handover CSV</button>
+</div>
+</div>
+</section>
+
 </main>
-
-<footer class="muted" style="text-align:center;padding:18px">CRPF Smart Mess Manager · Reports</footer>
+<footer class="muted" style="text-align:center;padding:18px">CRPF Smart Mess Manager · Settlement</footer>
 
 <script>
 "use strict";
-
-const KEYS=["crpfMessProfessionalV1","crpfMessPrototypeV2"];
+const STORAGE_KEYS=["crpfMessProfessionalV1","crpfMessPrototypeV2"];
 const $=id=>document.getElementById(id);
 const arr=x=>Array.isArray(x)?x:[];
 const num=x=>x!==""&&x!==null&&x!==undefined&&Number.isFinite(Number(x))?Number(x):0;
 const str=x=>x===null||x===undefined?"":typeof x==="object"?"":String(x);
-const money=x=>num(x).toLocaleString("en-IN",{minimumFractionDigits:2,maximumFractionDigits:2});
-
-function val(o,keys,fallback=""){
+const money=x=>"Rs "+num(x).toLocaleString("en-IN",{minimumFractionDigits:2,maximumFractionDigits:2});
+const val=(o,keys,fallback="")=>{
   for(const k of keys)if(o&&o[k]!==undefined&&o[k]!==null&&o[k]!=="")return o[k];
   return fallback;
-}
-function read(key){
+};
+const today=()=>new Date().toISOString().slice(0,10);
+let db={},dbKey="",summary={},memberRows=[],expenseRows=[],handoverRows=[],purchaseRows=[];
+let activeTab="overview";
+
+function readDB(key){
   try{
     const raw=localStorage.getItem(key);
     if(!raw)return null;
@@ -186,375 +240,497 @@ function read(key){
     return d&&typeof d==="object"?d:null;
   }catch(e){return null}
 }
-function dataScore(d){
+function scoreDB(d){
   return ["members","items","purchases","recipes","meals","ledger","expenses","handovers"]
-    .reduce((s,k)=>s+arr(d[k]).length,0);
+    .reduce((n,k)=>n+arr(d[k]).length,0);
 }
-/* Select one main dataset. Do not merge both storage keys into one report. */
-function loadData(){
-  const found=KEYS.map(key=>({key,data:read(key)}))
+function loadDB(){
+  const found=STORAGE_KEYS.map(key=>({key,data:readDB(key)}))
     .filter(x=>x.data&&typeof x.data==="object");
-  found.sort((a,b)=>dataScore(b.data)-dataScore(a.data));
-  if(!found.length)return {
-    key:"",members:[],items:[],purchases:[],recipes:[],meals:[],
-    ledger:[],expenses:[],handovers:[]
-  };
-  const source=found[0];
-  const d=source.data;
+  found.sort((a,b)=>scoreDB(b.data)-scoreDB(a.data));
+  if(found.length){
+    dbKey=found[0].key;
+    db=found[0].data;
+  }else{
+    dbKey=STORAGE_KEYS[0];
+    db={members:[],items:[],purchases:[],recipes:[],meals:[],ledger:[],expenses:[],handovers:[]};
+  }
   ["members","items","purchases","recipes","meals","ledger","expenses","handovers"]
-    .forEach(k=>{if(!Array.isArray(d[k]))d[k]=[]});
-  d._reportSourceKey=source.key;
-  return d;
+    .forEach(k=>{if(!Array.isArray(db[k]))db[k]=[]});
+  if(!db.settings||typeof db.settings!=="object")db.settings={};
+}
+function saveDB(){
+  try{
+    localStorage.setItem(dbKey,JSON.stringify(db));
+    return true;
+  }catch(e){
+    alert("Save failed: "+e.message+". Please check browser storage and make a backup.");
+    return false;
+  }
 }
 function dateOf(o){
-  let s=str(val(o,["date","joiningDate","createdAt","confirmedAt","updatedAt","timestamp"],""));
+  let s=str(val(o,["date","mealDate","joiningDate","createdAt","confirmedAt","timestamp"],""));
   if(s.includes("T"))s=s.split("T")[0];
   return /^\d{4}-\d{2}-\d{2}$/.test(s)?s:"";
 }
-function baseUnit(unit){
-  unit=str(unit).toLowerCase();
-  if(["kg","g","gram","grams"].includes(unit))return "g";
-  if(["ltr","l","litre","liter","litres","liters","ml"].includes(unit))return "ml";
-  return "pcs";
+function inPeriod(date){
+  const from=$("fromDate").value,to=$("toDate").value;
+  return (!from||date>=from)&&(!to||date<=to);
 }
-function toBase(qty,unit){
-  unit=str(unit).toLowerCase();
-  qty=num(qty);
-  if(["kg","ltr","l","litre","liter","litres","liters"].includes(unit))return qty*1000;
-  return qty;
+function memberId(m){
+  return str(val(m,["id","memberId","serviceId","serviceNo"],""));
 }
-function displayQty(q){
-  return num(q).toLocaleString("en-IN",{maximumFractionDigits:3});
+function memberLabel(m){
+  return str(val(m,["fullName","name","memberName"],"Unknown member"));
 }
-function memberName(o){
-  return str(val(o,["memberName","fullName","name","nameOfMember","serviceId","memberId"],""));
+function memberRate(m){
+  const direct=val(m,["monthlyLimit","monthlyAdvance","commonMessAdvance","messAdvance","monthlyFoodBudget"],"");
+  if(direct!=="")return num(direct);
+  return commonRate();
 }
-function purchaseTotal(p){
+function findSettingValue(keys){
+  const containers=[db.settings,db.config,db.preferences,db];
+  for(const c of containers){
+    if(!c||typeof c!=="object")continue;
+    for(const key of keys){
+      if(c[key]!==undefined&&c[key]!==null&&c[key]!=="")return c[key];
+    }
+  }
+  return "";
+}
+function commonRate(){
+  const x=findSettingValue([
+    "commonMessAdvance","commonMessAdvanceAmount","commonAdvance",
+    "monthlyMessAdvance","monthlyFoodBudget","monthlyLimit","messAdvance",
+    "monthlyAdvance","defaultMonthlyLimit"
+  ]);
+  return num(x)||4000;
+}
+function normalizeType(o){
+  return str(val(o,["transactionType","type","category","kind"],"")).toLowerCase();
+}
+function amountOf(o){
+  return num(val(o,["amount","total","value","totalAmount"],0));
+}
+function transactionMethod(o){
+  return str(val(o,["paymentMethod","method","accountType","paymentMode","mode"],"")).toLowerCase();
+}
+function getLedgerDirection(o){
+  const t=normalizeType(o);
+  if(/deposit|payment received|receipt|advance received|credit|income/.test(t))return "in";
+  if(/withdraw|expense|purchase|payment made|debit|refund paid/.test(t))return "out";
+  const d=str(val(o,["direction","drCr"],"")).toLowerCase();
+  if(["in","credit","cr","received"].includes(d))return "in";
+  if(["out","debit","dr","paid"].includes(d))return "out";
+  return "";
+}
+function mealMembers(m){
+  const list=val(m,["attendees","attendance","members","memberIds","participants"],[]);
+  if(!Array.isArray(list))return [];
+  return list.map(x=>{
+    if(x&&typeof x==="object")return str(val(x,["memberId","id","serviceId","memberID"],""));
+    return str(x);
+  }).filter(Boolean);
+}
+function mealCost(m){
+  for(const k of ["totalCost","consumptionCost","mealCost","cost","amount"]){
+    if(m[k]!==undefined&&m[k]!==null&&m[k]!=="")return num(m[k]);
+  }
+  const servings=num(val(m,["servings"],0));
+  const per=num(val(m,["perServing","costPerServing","recipeCost"],0));
+  return servings*per;
+}
+function mealRationRows(m){
+  return arr(val(m,["ration","needs","ingredientsUsed"],[]));
+}
+function makePurchaseRows(){
+  const rows=[],seen=new Set();
+  db.items.forEach(item=>arr(item.purchases).forEach(p=>{
+    const sig=p.id!==undefined?"id:"+p.id:JSON.stringify([item.id,p.date,p.quantity,p.rate,p.total,p.invoice]);
+    if(seen.has(sig))return;
+    seen.add(sig);
+    rows.push({p,item});
+  }));
+  db.purchases.forEach(p=>{
+    const sig=p.id!==undefined?"id:"+p.id:JSON.stringify([p.itemId,p.itemName,p.date,p.quantity,p.rate,p.total,p.invoice]);
+    if(seen.has(sig))return;
+    seen.add(sig);
+    rows.push({p,item:db.items.find(i=>String(i.id)===String(p.itemId))||{unit:val(p,["unit","purchaseUnit"],"pcs")}});
+  });
+  return rows;
+}
+function purchaseCost(p){
   if(p.total!==undefined&&p.total!==null&&p.total!=="")return num(p.total);
   if(p.totalCost!==undefined&&p.totalCost!==null&&p.totalCost!=="")return num(p.totalCost);
   return num(val(p,["quantity","qty"],0))*num(val(p,["rate","unitRate"],0));
 }
-function purchaseEntries(){
-  const out=[],seen=new Set();
-  /* Nested purchases are used by the Store page. */
-  data.items.forEach(i=>arr(i.purchases).forEach(p=>{
-    const sig=p.id!==undefined?"id:"+String(p.id):JSON.stringify([i.id,p.date,p.quantity,p.rate,p.total,p.invoice]);
-    if(seen.has(sig))return;
-    seen.add(sig);
-    out.push({p,item:i,itemName:val(i,["name","itemName"],"Purchase item")});
-  }));
-  /* Add top-level purchases only if they are not the same purchase. */
-  data.purchases.forEach(p=>{
-    const sig=p.id!==undefined?"id:"+String(p.id):JSON.stringify([p.itemId,p.itemName,p.date,p.quantity,p.rate,p.total,p.invoice]);
-    if(seen.has(sig))return;
-    seen.add(sig);
-    const item=data.items.find(i=>String(i.id)===String(p.itemId));
-    out.push({p,item:item||{unit:val(p,["purchaseUnit","unit"],"pcs")},
-      itemName:val(p,["itemName","name"],item?item.name:"Purchase item")});
-  });
-  return out;
+function baseUnit(u){
+  u=str(u).toLowerCase();
+  if(["kg","g","gram","grams"].includes(u))return "g";
+  if(["l","ltr","litre","liter","litres","liters","ml"].includes(u))return "ml";
+  return "pcs";
 }
-function baseQuantity(p,item){
+function baseQty(p,item){
   if(p.quantityBase!==undefined&&p.quantityBase!==null&&p.quantityBase!=="")return num(p.quantityBase);
   const q=val(p,["quantity","qty"],"");
   const unit=str(val(p,["purchaseUnit","unit"],item.unit||""));
   if(q==="")return 0;
   if(baseUnit(unit)!==baseUnit(item.unit||unit))return 0;
-  return toBase(q,unit);
+  return ["kg","l","ltr","litre","liter","litres","liters"].includes(unit.toLowerCase())?num(q)*1000:num(q);
 }
-function mealConsumption(item){
-  let used=0;
-  data.meals.forEach(m=>{
-    if(m.cancelled===true||String(m.status||"").toLowerCase()==="cancelled")return;
-    arr(m.ration).forEach(r=>{
-      if(String(r.itemId)!==String(item.id))return;
-      if(r.quantityBase!==undefined&&r.quantityBase!==null&&r.quantityBase!==""){
-        used+=num(r.quantityBase);
-      }else{
-        const q=val(r,["quantity","qty"],"");
-        const unit=str(val(r,["unit","purchaseUnit"],item.unit||""));
-        if(q!==""&&baseUnit(unit)===baseUnit(item.unit||unit))used+=toBase(q,unit);
-      }
-    });
-  });
-  return used;
-}
-function storeStock(item){
+function itemStock(item){
   const ps=arr(item.purchases);
-  const purchased=ps.reduce((s,p)=>s+baseQuantity(p,item),0);
-  const value=ps.reduce((s,p)=>s+purchaseTotal(p),0);
-  const average=purchased>0?value/purchased:0;
-  const used=mealConsumption(item);
-  const stock=Math.max(0,purchased-used);
-  return {purchased,average,used,stock,value:stock*average,unit:baseUnit(item.unit||"pcs")};
+  const qty=ps.reduce((s,p)=>s+baseQty(p,item),0);
+  const value=ps.reduce((s,p)=>s+purchaseCost(p),0);
+  const used=db.meals.reduce((s,m)=>{
+    if(m.cancelled===true||String(m.status||"").toLowerCase()==="cancelled")return s;
+    return s+mealRationRows(m).reduce((n,r)=>{
+      if(String(r.itemId)!==String(item.id))return n;
+      if(r.quantityBase!==undefined&&r.quantityBase!==null&&r.quantityBase!=="")return n+num(r.quantityBase);
+      const q=val(r,["quantity","qty"],"");
+      const u=str(val(r,["unit","purchaseUnit"],item.unit||""));
+      if(q==="")return n;
+      if(baseUnit(u)!==baseUnit(item.unit||u))return n;
+      return n+(["kg","l","ltr","litre","liter","litres","liters"].includes(u.toLowerCase())?num(q)*1000:num(q));
+    },0);
+  },0);
+  const avg=qty>0?value/qty:0;
+  const stock=Math.max(0,qty-used);
+  return {qty,used,avg,stock,value:stock*avg,unit:baseUnit(item.unit||"pcs")};
 }
-
-let data={},records=[],visible=[],rationRows=[];
-
-function add(type,label,o,details,amount){
-  records.push({date:dateOf(o),type,label:str(label)||type,details:str(details),
-    amount:amount===null||amount===undefined||amount===""?"":num(amount)});
+function getCurrentStockValue(){
+  return db.items.reduce((s,i)=>s+itemStock(i).value,0);
 }
-function collect(){
-  data=loadData();
-  records=[];
-
-  data.members.forEach(m=>{
-    add("member",memberName(m)||"Member",m,
-      [val(m,["serviceId","memberId"]),val(m,["rank"]),val(m,["duty"]),val(m,["status"])]
-      .filter(Boolean).join(" · "),"");
-  });
-
-  data.items.forEach(i=>{
-    const s=storeStock(i);
-    add("item",val(i,["name","itemName"],"Store item"),i,
-      "Current Stock: "+displayQty(s.stock)+" "+s.unit+
-      " · Average Rate: Rs "+s.average.toFixed(4)+"/"+s.unit+
-      " · Stock Value: Rs "+money(s.value),s.value);
-  });
-
-  const ps=purchaseEntries();
-  ps.forEach(({p,itemName,item})=>{
-    const q=val(p,["quantity","qty"],"");
-    const unit=val(p,["purchaseUnit","unit"],item.unit||"");
-    add("purchase",itemName,p,
-      "Quantity: "+str(q)+" "+str(unit)+
-      " · Rate: Rs "+money(val(p,["rate","unitRate"],0))+
-      (p.supplier?" · Supplier: "+str(p.supplier):"")+
-      (p.invoice?" · Bill: "+str(p.invoice):""),
-      purchaseTotal(p));
-  });
-
-  data.recipes.forEach(r=>{
-    add("recipe",val(r,["name","recipeName"],"Recipe"),r,
-      "Ingredients: "+arr(r.ingredients).length,"");
-  });
-
-  data.meals.forEach(m=>{
-    add("meal",val(m,["recipeName","type"],"Meal"),m,
-      "Meal: "+str(val(m,["type"],""))+
-      " · Servings: "+str(val(m,["servings"],""))+
-      " · Ration items: "+arr(m.ration).length+
-      " · Status: "+str(val(m,["status"],"")),
-      val(m,["totalCost","cost","amount"],""));
-  });
-
-  data.ledger.forEach(l=>{
-    add("ledger",memberName(l)||val(l,["description","transactionType","type"],"Account entry"),l,
-      str(val(l,["description","transactionType","type"],"Account entry")),
-      val(l,["amount","total"],""));
-  });
-
-  data.expenses.forEach(e=>{
-    add("expense",val(e,["name","title","description"],"Other expense"),e,
-      str(val(e,["category","notes"],"")),
-      val(e,["amount","total"],""));
-  });
-
-  data.handovers.forEach(h=>{
-    add("handover",val(h,["commanderName","name","title"],"Commander handover"),h,
-      str(val(h,["notes","remarks","fromCommander"],"Handover record")),
-      val(h,["amount","cash","cashAmount"],""));
-  });
-
-  $("memberCount").textContent=data.members.length;
-  $("itemCount").textContent=data.items.length;
-  $("mealCount").textContent=data.meals.length;
-  $("ledgerCount").textContent=data.ledger.length;
-
-  financialSummary(ps);
-  render();
+function getSettingDays(){
+  const x=num(findSettingValue(["monthDays","monthlyDays","commonMessDays","daysInMonth"]));
+  return x>0?x:30;
 }
-function financialSummary(ps){
-  const purchaseSum=ps.reduce((s,x)=>s+purchaseTotal(x.p),0);
-  let stockSum=0;
-  data.items.forEach(i=>stockSum+=storeStock(i).value);
-
-  const deposits=data.ledger.filter(l=>{
-    const t=str(val(l,["transactionType","type"],"")).toLowerCase();
-    return ["deposit","payment","advance"].includes(t);
-  });
-  const charges=data.ledger.filter(l=>{
-    const t=str(val(l,["transactionType","type"],"")).toLowerCase();
-    return t.includes("charge")||t==="meal";
-  });
-
-  const depositSum=deposits.reduce((s,x)=>s+num(val(x,["amount","total"],0)),0);
-  const chargeSum=charges.reduce((s,x)=>s+num(val(x,["amount","total"],0)),0);
-
-  $("purchaseTotal").textContent=money(purchaseSum);
-  $("purchaseTotal2").textContent=money(purchaseSum);
-  $("purchaseCount").textContent=ps.length;
-  $("stockValue").textContent=money(stockSum);
-  $("depositTotal").textContent=money(depositSum);
-  $("depositTotal2").textContent=money(depositSum);
-  $("depositCount").textContent=deposits.length;
-  $("chargeTotal").textContent=money(chargeSum);
-  $("chargeTotal2").textContent=money(chargeSum);
-  $("chargeCount").textContent=charges.length;
-  $("expenseTotal").textContent=money(data.expenses.reduce((s,x)=>s+num(val(x,["amount","total"],0)),0));
-  $("expenseCount").textContent=data.expenses.length;
-}
-function selectedRange(){
-  return {from:$("fromDate").value,to:$("toDate").value};
-}
-function withinDate(date,from,to){
-  if(from&&(!date||date<from))return false;
-  if(to&&(!date||date>to))return false;
-  return true;
-}
-function rationName(r){
-  const item=data.items.find(i=>String(i.id)===String(r.itemId));
-  return str(val(r,["itemName","name"],item?val(item,["name","itemName"],"Ration item"):"Ration item"));
-}
-function rationQuantity(r){
-  if(r.quantityBase!==undefined&&r.quantityBase!==null&&r.quantityBase!==""){
-    const item=data.items.find(i=>String(i.id)===String(r.itemId));
-    return {qty:num(r.quantityBase),unit:baseUnit(item?item.unit:val(r,["unit"],"pcs"))};
-  }
-  const q=val(r,["quantity","qty","requiredQuantity"],"");
-  const unit=str(val(r,["unit","purchaseUnit"],"pcs"));
-  if(q==="")return {qty:0,unit:baseUnit(unit)};
-  return {qty:toBase(q,unit),unit:baseUnit(unit)};
-}
-function buildRation(){
-  const {from,to}=selectedRange();
-  const q=$("search").value.trim().toLowerCase();
-  const perDay=new Map(),totals=new Map();
-
-  data.meals.forEach(m=>{
-    const date=dateOf(m);
-    if(!withinDate(date,from,to))return;
-    if(m.cancelled===true||String(m.status||"").toLowerCase()==="cancelled")return;
-
-    arr(m.ration).forEach(r=>{
-      const name=rationName(r);
-      if(q&&!name.toLowerCase().includes(q))return;
-      const info=rationQuantity(r);
-      if(!info.qty)return;
-
-      const key=name+"|"+info.unit;
-      const dayKey=date+"|"+key;
-      if(!perDay.has(dayKey))perDay.set(dayKey,{date,name,unit:info.unit,qty:0});
-      perDay.get(dayKey).qty+=info.qty;
-      if(!totals.has(key))totals.set(key,{name,unit:info.unit,qty:0});
-      totals.get(key).qty+=info.qty;
+function memberMealDayMap(){
+  const map=new Map();
+  db.members.forEach(m=>map.set(memberId(m),new Set()));
+  db.meals.forEach(meal=>{
+    const date=dateOf(meal);
+    if(!date||!inPeriod(date)||meal.cancelled===true||String(meal.status||"").toLowerCase()==="cancelled")return;
+    const ids=mealMembers(meal);
+    ids.forEach(id=>{
+      if(!map.has(id))map.set(id,new Set());
+      map.get(id).add(date);
     });
   });
+  return map;
+}
+function getMemberLedgerBalance(m){
+  const id=memberId(m),name=memberLabel(m).toLowerCase();
+  let balance=0;
+  db.ledger.forEach(l=>{
+    const lid=str(val(l,["memberId","memberID","serviceId","serviceNo"],""));
+    const lname=str(val(l,["memberName","fullName","name"],"")).toLowerCase();
+    if((id&&lid===id)||(!lid&&lname===name)){
+      const t=normalizeType(l),a=amountOf(l);
+      if(/charge|meal|deduct|expense|debit|consumption/.test(t))balance-=a;
+      else if(/deposit|advance|payment received|credit|refund received/.test(t))balance+=a;
+      else{
+        const dir=getLedgerDirection(l);
+        if(dir==="in")balance+=a;
+        if(dir==="out")balance-=a;
+      }
+    }
+  });
+  return balance;
+}
+function calculate(){
+  const days=getSettingDays();
+  const dailyCommon=commonRate()/days;
+  const dayMap=memberMealDayMap();
+  memberRows=[];
+  let memberDayCount=0,budget=0;
+  const body=$("memberBody");body.replaceChildren();
 
-  const rows=Array.from(perDay.values()).sort((a,b)=>a.date.localeCompare(b.date)||a.name.localeCompare(b.name));
-  const totalRows=Array.from(totals.values()).sort((a,b)=>a.name.localeCompare(b.name));
-  rationRows=rows;
-
-  const body=$("rationBody");body.replaceChildren();
-  rows.forEach(r=>{
+  db.members.forEach(m=>{
+    const id=memberId(m),dates=dayMap.get(id)||new Set();
+    const daysEaten=dates.size,rate=memberRate(m),daily=rate/days;
+    const allowed=daysEaten*daily;
+    if(daysEaten>0){
+      memberRows.push({id,name:memberLabel(m),days:daysEaten,rate,daily,budget:allowed});
+      memberDayCount+=daysEaten;
+      budget+=allowed;
+    }
+  });
+  memberRows.forEach(r=>{
     const tr=document.createElement("tr");
-    [r.date,r.name,displayQty(r.qty),r.unit].forEach(v=>{
+    [r.name,r.days,money(r.rate),money(r.daily),money(r.budget)].forEach(v=>{
       const td=document.createElement("td");td.textContent=v;tr.appendChild(td);
     });
     body.appendChild(tr);
   });
+  $("memberEmpty").style.display=memberRows.length?"none":"block";
 
-  totalRows.forEach(r=>{
-    const tr=document.createElement("tr");tr.className="totalrow";
-    const td1=document.createElement("td");td1.textContent="RANGE TOTAL";
-    const td2=document.createElement("td");td2.textContent=r.name;
-    const td3=document.createElement("td");td3.textContent=displayQty(r.qty);
-    const td4=document.createElement("td");td4.textContent=r.unit;
-    [td1,td2,td3,td4].forEach(td=>tr.appendChild(td));
-    body.appendChild(tr);
+  let foodExpense=0,mealCount=0,missingMealCost=0;
+  db.meals.forEach(m=>{
+    if(!inPeriod(dateOf(m))||!dateOf(m))return;
+    if(m.cancelled===true||String(m.status||"").toLowerCase()==="cancelled")return;
+    mealCount++;
+    const cost=mealCost(m);
+    foodExpense+=cost;
+    if(cost===0&&mealRationRows(m).length)missingMealCost++;
   });
 
-  $("rationEmpty").hidden=rows.length!==0;
-  const period=from||to?(from||"Beginning")+" to "+(to||"Latest"):"All saved dates";
-  $("rationSummary").textContent=period+" · "+rows.length+
-    " daily item entries · "+totalRows.length+" different ration items. Range totals are shown in the green rows.";
+  const ps=makePurchaseRows().filter(x=>dateOf(x.p)&&inPeriod(dateOf(x.p)));
+  const purchaseTotal=ps.reduce((s,x)=>s+purchaseCost(x.p),0);
+  const stockValue=getCurrentStockValue();
+
+  const expenses=db.expenses.filter(e=>dateOf(e)&&inPeriod(dateOf(e)));
+  const extra=expenses.reduce((s,e)=>s+amountOf(e),0);
+
+  const surplus=budget-foodExpense;
+  const surplusAfter=surplus-extra;
+
+  let dues=0,liability=0;
+  db.members.forEach(m=>{
+    const bal=getMemberLedgerBalance(m);
+    if(bal<0)dues+=Math.abs(bal);
+    if(bal>0)liability+=bal;
+  });
+
+  $("monthlyRate").textContent=money(commonRate());
+  $("dailyRate").textContent=money(dailyCommon);
+  $("memberCount").textContent=memberRows.length;
+  $("memberDays").textContent=memberDayCount;
+  $("budgetTotal").textContent=money(budget);
+  $("foodExpense").textContent=money(foodExpense);
+  $("surplus").textContent=money(surplus);
+  $("extraTotal").textContent=money(extra);
+  $("purchaseTotal").textContent=money(purchaseTotal);
+  $("stockValue").textContent=money(stockValue);
+  $("memberDues").textContent=money(dues);
+  $("advanceLiability").textContent=money(liability);
+  $("surplusAfter").textContent=money(surplusAfter);
+  $("missingCount").textContent=missingMealCost;
+  $("cashBalance").textContent="Verify";
+  $("bankBalance").textContent="Verify";
+
+  $("surplus").className=surplus<0?"negative":"positive";
+  $("surplusAfter").className=surplusAfter<0?"negative":"positive";
+  $("sourceInfo").textContent="Data source: "+dbKey+
+    " · Period: "+($("fromDate").value||"Start")+" to "+($("toDate").value||"Latest")+
+    " · Meal records: "+mealCount+" · Expenses: "+expenses.length;
+  $("financialNote").textContent=
+    "Budget is calculated from member meal-days × member monthly rate ÷ "+days+
+    ". Food expense uses saved meal cost fields. Missing meal costs: "+missingMealCost+
+    ". Stock value is current stock, not a cash balance. Verify the figures against actual receipts, cash and bank statements before approving surplus or extra spending.";
+
+  summary={days, dailyCommon,budget,foodExpense,surplus,extra,surplusAfter,
+    purchaseTotal,stockValue,dues,liability,memberDayCount,memberCount:memberRows.length};
+  renderExpenses();
+  fillHandoverNames();
+  $("handoverPeriod").value=($("fromDate").value||"Start")+" to "+($("toDate").value||"Latest");
 }
-function render(){
-  const q=$("search").value.trim().toLowerCase();
-  const type=$("reportType").value;
-  const {from,to}=selectedRange();
+function fillHandoverNames(){
+  const outgoing=$("outgoing"),incoming=$("incoming");
+  const oldOut=outgoing.value,oldIn=incoming.value;
+  outgoing.replaceChildren();incoming.replaceChildren();
 
-  const headings={
-    all:"Complete Mess Report",member:"Members Record",item:"Store Stock Record",
-    purchase:"Purchase Record",recipe:"Recipe Record",meal:"Meals Record",
-    ration:"Daily Ration Summary",ledger:"Advance & Accounts Record",
-    expense:"Other Expenses Record",handover:"Commander Handover Record"
+  const addOpt=(sel,value,label)=>{
+    const o=document.createElement("option");o.value=value;o.textContent=label;sel.appendChild(o);
   };
+  addOpt(outgoing,"","Select outgoing commander");
+  addOpt(incoming,"","Select incoming commander / Mess NCO");
 
-  visible=records.filter(r=>{
-    if(type!=="all"&&type!=="ration"&&r.type!==type)return false;
-    if(type==="ration")return false;
-    if(!withinDate(r.date,from,to))return false;
-    return !q||[r.date,r.type,r.label,r.details,r.amount].join(" ").toLowerCase().includes(q);
-  }).sort((a,b)=>b.date.localeCompare(a.date)||a.type.localeCompare(b.type)||a.label.localeCompare(b.label));
+  const members=db.members;
+  members.forEach(m=>{
+    const id=memberId(m),name=memberLabel(m),rank=str(val(m,["rank"],""));
+    const duty=str(val(m,["duty","role","position"],""));
+    const label=name+(rank?" · "+rank:"")+(duty?" · "+duty:"");
+    addOpt(outgoing,id,label);
+    addOpt(incoming,id,label);
+  });
 
-  $("reportHeading").textContent=headings[type]||"Mess Report";
-  $("summary").textContent="Showing "+visible.length+" matching entries from "+records.length+
-    " entries in the selected saved dataset.";
+  if(members.some(m=>memberId(m)===oldOut))outgoing.value=oldOut;
+  if(members.some(m=>memberId(m)===oldIn))incoming.value=oldIn;
 
-  $("visibleCount").textContent=visible.length;
-  const amountTypes=["purchase","ledger","expense","handover"];
-  if(type==="all"||type==="item"||type==="member"||type==="recipe"||type==="meal"||type==="ration"){
-    $("amountTotal").textContent="—";
-    $("amountNote").textContent="No combined financial total is shown for this report because the visible records may represent different kinds of value.";
-  }else{
-    const amount=visible.filter(r=>r.amount!=="").reduce((s,r)=>s+num(r.amount),0);
-    $("amountTotal").textContent=money(amount);
-    $("amountNote").textContent="Total for the selected record type only. This is not a combined total across different registers.";
+  /* Prefer the latest saved handover's incoming commander as next outgoing. */
+  const previous=[...db.handovers].sort((a,b)=>dateOf(b).localeCompare(dateOf(a)))[0];
+  if(!outgoing.value&&previous){
+    const id=str(val(previous,["incomingCommanderId","incomingId"],""));
+    if(id&&members.some(m=>memberId(m)===id))outgoing.value=id;
   }
-
-  const dates=visible.map(r=>r.date).filter(Boolean).sort();
-  $("firstDate").textContent=dates[0]||"—";
-  $("lastDate").textContent=dates[dates.length-1]||"—";
-
-  const body=$("reportBody");body.replaceChildren();
-  visible.forEach(r=>{
+  /* Auto-select the member whose duty indicates Mess NCO / Commander. */
+  if(!incoming.value){
+    const candidate=members.find(m=>/mess\s*nco|mess commander/i.test(str(val(m,["duty","role","position"],""))));
+    if(candidate)incoming.value=memberId(candidate);
+  }
+}
+function renderExpenses(){
+  const body=$("expenseBody");body.replaceChildren();
+  expenseRows=db.expenses.filter(e=>dateOf(e)&&inPeriod(dateOf(e)));
+  expenseRows.forEach(e=>{
     const tr=document.createElement("tr");
-    [r.date||"—",r.type,r.label,r.details||"—",r.amount===""?"—":money(r.amount)].forEach((v,i)=>{
-      const td=document.createElement("td");
-      if(i===1){
-        const tag=document.createElement("span");tag.className="tag";tag.textContent=v;td.appendChild(tag);
-      }else td.textContent=v;
-      tr.appendChild(td);
+    [dateOf(e),str(val(e,["category"],"Other")),str(val(e,["name","title","description"],"Expense")),
+      money(amountOf(e)),str(val(e,["approvedBy","reference","bill"],"—"))].forEach(v=>{
+      const td=document.createElement("td");td.textContent=v;tr.appendChild(td);
     });
     body.appendChild(tr);
   });
-  $("empty").hidden=visible.length!==0;
-  buildRation();
+  if(!expenseRows.length){
+    const tr=document.createElement("tr"),td=document.createElement("td");
+    td.colSpan=5;td.textContent="No expenses for this period.";td.style.textAlign="center";tr.appendChild(td);body.appendChild(tr);
+  }
+}
+function saveExpense(){
+  const date=$("expenseDate").value,title=$("expenseTitle").value.trim(),amount=$("expenseAmount").value;
+  if(!date||!title||amount===""||num(amount)<0){
+    $("expenseStatus").textContent="Please enter expense date, details and a valid amount.";
+    return;
+  }
+  const record={
+    id:"expense-"+Date.now(),date,category:$("expenseCategory").value,
+    title,description:title,amount:num(amount),
+    approvedBy:$("expenseApprovedBy").value.trim(),
+    reference:$("expenseRef").value.trim(),
+    notes:$("expenseNotes").value.trim(),createdAt:new Date().toISOString()
+  };
+  db.expenses.push(record);
+  if(!saveDB()){db.expenses.pop();return;}
+  $("expenseStatus").textContent="Expense saved. Existing member balances were not changed.";
+  $("expenseTitle").value="";$("expenseAmount").value="";
+  $("expenseApprovedBy").value="";$("expenseRef").value="";$("expenseNotes").value="";
+  calculate();
+}
+function ledgerBalanceByMethod(method){
+  let balance=0,found=false;
+  db.ledger.forEach(l=>{
+    const m=transactionMethod(l);
+    if(!m||!m.includes(method))return;
+    const dir=getLedgerDirection(l);
+    if(!dir)return;
+    found=true;
+    balance+=(dir==="in"?1:-1)*amountOf(l);
+  });
+  return {balance,found};
+}
+function fetchHandover(){
+  calculate();
+  const cash=ledgerBalanceByMethod("cash");
+  const bank=ledgerBalanceByMethod("bank");
+  $("verifiedStock").value=summary.stockValue.toFixed(2);
+  $("verifiedDues").value=summary.dues.toFixed(2);
+  $("verifiedLiability").value=summary.liability.toFixed(2);
+  $("verifiedSurplus").value=summary.surplusAfter.toFixed(2);
+  if(cash.found)$("verifiedCash").value=cash.balance.toFixed(2);
+  if(bank.found)$("verifiedBank").value=bank.balance.toFixed(2);
+  $("handoverStatus").textContent=
+    "Fetched saved figures.\n"+
+    "Stock value, dues, advance liability and calculated surplus are populated.\n"+
+    "Cash and bank are populated only when ledger entries clearly identify the payment method and transaction direction.\n"+
+    "Please verify physical cash, bank statement and stock count before saving.";
+}
+function saveHandover(){
+  const date=$("handoverDate").value;
+  const outId=$("outgoing").value,inId=$("incoming").value;
+  if(!date||!outId||!inId){
+    $("handoverStatus").textContent="Please select handover date, outgoing commander and incoming commander.";
+    return;
+  }
+  if(outId===inId){
+    $("handoverStatus").textContent="Outgoing and incoming commanders cannot be the same person.";
+    return;
+  }
+  const out=db.members.find(m=>memberId(m)===outId);
+  const incoming=db.members.find(m=>memberId(m)===inId);
+  const record={
+    id:"handover-"+Date.now(),date,
+    outgoingCommanderId:outId,outgoingCommander:memberLabel(out),
+    incomingCommanderId:inId,incomingCommander:memberLabel(incoming),
+    cash:num($("verifiedCash").value),
+    cashAmount:num($("verifiedCash").value),
+    bankBalance:num($("verifiedBank").value),
+    stockValue:num($("verifiedStock").value),
+    memberDues:num($("verifiedDues").value),
+    memberAdvanceLiability:num($("verifiedLiability").value),
+    surplus:num($("verifiedSurplus").value),
+    fromDate:$("fromDate").value,toDate:$("toDate").value,
+    notes:$("handoverNotes").value.trim(),
+    createdAt:new Date().toISOString()
+  };
+  db.handovers.push(record);
+  if(!saveDB()){db.handovers.pop();return;}
+  $("handoverStatus").textContent="Handover saved successfully. The saved record contains a snapshot of the verified figures. No member ledger entry was created.";
+  renderHandovers();
+}
+function renderHandovers(){
+  handoverRows=[...db.handovers].sort((a,b)=>dateOf(b).localeCompare(dateOf(a)));
+  const body=$("handoverBody");body.replaceChildren();
+  handoverRows.forEach(h=>{
+    const tr=document.createElement("tr");
+    [dateOf(h),val(h,["outgoingCommander","commanderName"],"—"),
+      val(h,["incomingCommander","newCommander"],"—"),
+      money(val(h,["cash","cashAmount"],0)),money(val(h,["bankBalance"],0)),
+      money(val(h,["stockValue"],0)),money(val(h,["surplus"],0))].forEach(v=>{
+      const td=document.createElement("td");td.textContent=str(v);tr.appendChild(td);
+    });
+    body.appendChild(tr);
+  });
+  $("handoverEmpty").style.display=handoverRows.length?"none":"block";
+}
+function setTab(name){
+  activeTab=name;
+  document.querySelectorAll(".panel").forEach(p=>p.classList.add("hidden"));
+  $(name).classList.remove("hidden");
+  document.querySelectorAll("[data-tab]").forEach(b=>b.classList.toggle("active",b.dataset.tab===name));
+  if(name==="records")renderHandovers();
+  if(name==="expenses")renderExpenses();
+}
+function setCurrentMonth(){
+  const d=new Date();
+  const first=new Date(d.getFullYear(),d.getMonth(),1);
+  $("fromDate").value=first.getFullYear()+"-"+String(first.getMonth()+1).padStart(2,"0")+"-01";
+  $("toDate").value=d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+  calculate();
 }
 function csvEscape(v){
   let s=String(v??"");
   if(/^[=+\-@]/.test(s))s="'"+s;
   return '"'+s.replace(/"/g,'""')+'"';
 }
-
-$("applyBtn").addEventListener("click",render);
-$("resetBtn").addEventListener("click",()=>{
-  $("reportType").value="all";
-  $("search").value="";
-  $("fromDate").value="";
-  $("toDate").value="";
-  render();
-});
-["reportType","search","fromDate","toDate"].forEach(id=>{
-  $(id).addEventListener("change",render);
-});
-$("printBtn").addEventListener("click",()=>window.print());
-$("csvBtn").addEventListener("click",()=>{
-  const rows=[["Date","Record Type","Name / Item","Details","Amount (Rs)"]];
-  visible.forEach(r=>rows.push([r.date,r.type,r.label,r.details,r.amount]));
-  const {from,to}=selectedRange();
+function downloadCSV(){
+  const rows=[["Date","Outgoing Commander","Incoming Commander","Cash","Bank","Stock Value","Member Dues","Advance Liability","Surplus","Notes"]];
+  handoverRows.forEach(h=>rows.push([
+    dateOf(h),val(h,["outgoingCommander"],""),val(h,["incomingCommander"],""),
+    val(h,["cash","cashAmount"],0),val(h,["bankBalance"],0),val(h,["stockValue"],0),
+    val(h,["memberDues"],0),val(h,["memberAdvanceLiability"],0),val(h,["surplus"],0),val(h,["notes"],"")
+  ]));
   const blob=new Blob(["\uFEFF"+rows.map(r=>r.map(csvEscape).join(",")).join("\r\n")],{type:"text/csv;charset=utf-8"});
   const url=URL.createObjectURL(blob),a=document.createElement("a");
-  a.href=url;
-  a.download="CRPF-Mess-Report-"+(from||"start")+"-to-"+(to||"latest")+".csv";
+  a.href=url;a.download="CRPF-Commander-Handover.csv";
   document.body.appendChild(a);a.click();a.remove();
   setTimeout(()=>URL.revokeObjectURL(url),1000);
+}
+document.querySelectorAll("[data-tab]").forEach(b=>b.addEventListener("click",()=>setTab(b.dataset.tab)));
+$("calculateBtn").addEventListener("click",calculate);
+$("currentMonthBtn").addEventListener("click",setCurrentMonth);
+$("saveExpenseBtn").addEventListener("click",saveExpense);
+$("clearExpenseBtn").addEventListener("click",()=>{
+  ["expenseTitle","expenseAmount","expenseApprovedBy","expenseRef","expenseNotes"].forEach(id=>$(id).value="");
+  $("expenseStatus").textContent="Form cleared.";
 });
-$("refreshBtn").addEventListener("click",collect);
+$("fetchHandoverBtn").addEventListener("click",fetchHandover);
+$("saveHandoverBtn").addEventListener("click",saveHandover);
+$("printBtn").addEventListener("click",()=>window.print());
+$("csvBtn").addEventListener("click",downloadCSV);
+$("fromDate").addEventListener("change",calculate);
+$("toDate").addEventListener("change",calculate);
 
-collect();
+function init(){
+  loadDB();
+  $("fromDate").value=new Date().getFullYear()+"-"+String(new Date().getMonth()+1).padStart(2,"0")+"-01";
+  $("toDate").value=today();
+  $("expenseDate").value=today();
+  $("handoverDate").value=today();
+  calculate();
+  renderHandovers();
+  $("handoverStatus").textContent="Select commanders, fetch figures and verify before saving.";
+}
+init();
 </script>
 </body>
 </html>

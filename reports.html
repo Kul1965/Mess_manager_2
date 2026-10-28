@@ -11,7 +11,7 @@
 body{margin:0;background:var(--bg);color:var(--text);font-family:Arial,sans-serif;font-size:14px}
 header{background:linear-gradient(120deg,#10583e,#176747);color:white;padding:20px}
 header h1{margin:0 0 7px;font-size:23px}
-header p{margin:0;font-size:13px}
+header p{margin:0;font-size:13px;line-height:1.5}
 nav{display:flex;gap:7px;overflow-x:auto;background:white;padding:10px;border-bottom:1px solid var(--border)}
 nav a{white-space:nowrap;text-decoration:none;color:var(--g);padding:10px 13px;border:1px solid var(--border);border-radius:8px;font-weight:bold}
 nav a.active{background:var(--g);color:white}
@@ -23,7 +23,7 @@ h3{font-size:16px;margin:0 0 12px}
 .stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
 .stat{border:1px solid var(--border);border-radius:10px;padding:13px;min-width:0}
 .stat small{display:block;color:var(--muted);margin-bottom:8px}
-.stat strong{font-size:21px;color:var(--g);overflow-wrap:anywhere}
+.stat strong{font-size:20px;color:var(--g);overflow-wrap:anywhere}
 .filters{display:grid;grid-template-columns:1fr 1fr;gap:9px}
 input,select,button{width:100%;padding:11px;border:1px solid var(--border);border-radius:8px;background:white;color:var(--text);font:inherit}
 button{background:var(--g);color:white;border:0;font-weight:bold;cursor:pointer}
@@ -36,7 +36,7 @@ th{background:#edf6ef;color:var(--deep)}
 .tag{display:inline-block;background:#e6f3eb;color:var(--g);padding:4px 7px;border-radius:5px;font-size:12px}
 .muted{color:var(--muted);line-height:1.5}
 .empty{text-align:center;color:var(--muted);padding:22px}
-.ration-total{font-weight:bold;background:#edf6ef}
+.totalrow{font-weight:bold;background:#edf6ef}
 @media(min-width:650px){.stats{grid-template-columns:repeat(4,minmax(0,1fr))}.filters{grid-template-columns:repeat(4,minmax(0,1fr))}}
 @media print{body{background:white;font-size:10px}nav,.no-print,footer{display:none!important}main{padding:0}.card{break-inside:avoid;border:1px solid #bbb}table{min-width:0;font-size:9px}th,td{padding:5px}}
 </style>
@@ -61,10 +61,7 @@ th{background:#edf6ef;color:var(--deep)}
 
 <main>
 <div class="note">
-<strong>Report instructions:</strong> Select a report and enter From Date and To Date.
-For one day's report, enter the same date in both fields. For multiple days, select the
-start and end dates. Ration totals are calculated from saved Meals records; original data
-is not changed.
+<strong>Report guide:</strong> Select one report or All Reports. For one day, use the same date in both date fields. For multiple days, select From Date and To Date. Purchase totals, stock value and ration expense are shown separately; unrelated amounts are never added into one financial total.
 </div>
 
 <section class="stats">
@@ -95,7 +92,7 @@ is not changed.
 </div>
 <div class="actions">
 <button id="applyBtn" type="button">Show Report</button>
-<button class="secondary" id="resetBtn" type="button">Reset Filters</button>
+<button id="resetBtn" type="button" class="secondary">Reset Filters</button>
 </div>
 </section>
 
@@ -105,10 +102,11 @@ is not changed.
 
 <div class="stats" style="margin:12px 0">
 <div class="stat"><small>Visible Entries</small><strong id="visibleCount">0</strong></div>
-<div class="stat"><small>Visible Amount Total (Rs)</small><strong id="amountTotal">0.00</strong></div>
+<div class="stat"><small>Amount Total (Rs)</small><strong id="amountTotal">—</strong></div>
 <div class="stat"><small>First Date</small><strong id="firstDate" style="font-size:14px">—</strong></div>
 <div class="stat"><small>Last Date</small><strong id="lastDate" style="font-size:14px">—</strong></div>
 </div>
+<p id="amountNote" class="muted">All Reports: amounts are not combined because different record types represent different kinds of value.</p>
 
 <div class="tablewrap">
 <table>
@@ -117,7 +115,6 @@ is not changed.
 </table>
 </div>
 <div id="empty" class="empty" hidden>No matching records found.</div>
-
 <div class="actions no-print">
 <button id="printBtn" type="button">Print / Save PDF</button>
 <button id="csvBtn" type="button">Download CSV</button>
@@ -126,26 +123,32 @@ is not changed.
 
 <section class="card" id="rationCard">
 <h2>Daily Ration Summary</h2>
-<p id="rationSummary" class="muted">Select dates above and press Show Report.</p>
+<p id="rationSummary" class="muted">Select dates and press Show Report.</p>
 <div class="tablewrap">
 <table>
-<thead><tr><th>Date</th><th>Ration Item</th><th>Total Quantity</th><th>Unit</th></tr></thead>
+<thead><tr><th>Date</th><th>Ration Item</th><th>Quantity</th><th>Unit</th></tr></thead>
 <tbody id="rationBody"></tbody>
 </table>
 </div>
-<div id="rationEmpty" class="empty" hidden>No ration quantities found for this date range.</div>
+<div id="rationEmpty" class="empty" hidden>No saved ration quantities found for this date range.</div>
 </section>
 
 <section class="card">
 <h2>Financial Register Summary</h2>
-<p class="muted">Recorded totals from saved entries. Check the original register before official settlement.</p>
+<p class="muted">These figures are kept separate. Purchase spending, remaining stock value, member deposits and member charges are not the same type of amount.</p>
+<div class="stats" style="margin-bottom:12px">
+<div class="stat"><small>Purchase Total (Rs)</small><strong id="purchaseTotal">0.00</strong></div>
+<div class="stat"><small>Current Stock Value (Rs)</small><strong id="stockValue">0.00</strong></div>
+<div class="stat"><small>Member Deposits (Rs)</small><strong id="depositTotal">0.00</strong></div>
+<div class="stat"><small>Member Charges (Rs)</small><strong id="chargeTotal">0.00</strong></div>
+</div>
 <div class="tablewrap">
 <table>
 <thead><tr><th>Register</th><th>Recorded Total (Rs)</th><th>Record Count</th></tr></thead>
 <tbody>
-<tr><td>Purchases</td><td id="purchaseTotal">0.00</td><td id="purchaseCount">0</td></tr>
-<tr><td>Member Payments / Deposits</td><td id="depositTotal">0.00</td><td id="depositCount">0</td></tr>
-<tr><td>Member Charges</td><td id="chargeTotal">0.00</td><td id="chargeCount">0</td></tr>
+<tr><td>Purchases</td><td id="purchaseTotal2">0.00</td><td id="purchaseCount">0</td></tr>
+<tr><td>Member Payments / Deposits</td><td id="depositTotal2">0.00</td><td id="depositCount">0</td></tr>
+<tr><td>Member Charges</td><td id="chargeTotal2">0.00</td><td id="chargeCount">0</td></tr>
 <tr><td>Other Expenses</td><td id="expenseTotal">0.00</td><td id="expenseCount">0</td></tr>
 </tbody>
 </table>
@@ -154,7 +157,7 @@ is not changed.
 
 <section class="card no-print">
 <h3>Refresh Saved Records</h3>
-<p class="muted">Press refresh after saving a new purchase, meal, payment or member record.</p>
+<p class="muted">Refresh after adding or editing a member, purchase, meal or account entry.</p>
 <button id="refreshBtn" type="button">Refresh Reports</button>
 </section>
 </main>
@@ -172,9 +175,7 @@ const str=x=>x===null||x===undefined?"":typeof x==="object"?"":String(x);
 const money=x=>num(x).toLocaleString("en-IN",{minimumFractionDigits:2,maximumFractionDigits:2});
 
 function val(o,keys,fallback=""){
-  for(const k of keys){
-    if(o&&o[k]!==undefined&&o[k]!==null&&o[k]!=="")return o[k];
-  }
+  for(const k of keys)if(o&&o[k]!==undefined&&o[k]!==null&&o[k]!=="")return o[k];
   return fallback;
 }
 function read(key){
@@ -185,28 +186,26 @@ function read(key){
     return d&&typeof d==="object"?d:null;
   }catch(e){return null}
 }
-
-/* Choose the main saved data set instead of blindly combining two copies.
-   This prevents the same records in both old keys appearing twice. */
+function dataScore(d){
+  return ["members","items","purchases","recipes","meals","ledger","expenses","handovers"]
+    .reduce((s,k)=>s+arr(d[k]).length,0);
+}
+/* Select one main dataset. Do not merge both storage keys into one report. */
 function loadData(){
-  const sources=KEYS.map(read).filter(Boolean);
-  if(!sources.length)return {
-    members:[],items:[],purchases:[],recipes:[],meals:[],
+  const found=KEYS.map(key=>({key,data:read(key)}))
+    .filter(x=>x.data&&typeof x.data==="object");
+  found.sort((a,b)=>dataScore(b.data)-dataScore(a.data));
+  if(!found.length)return {
+    key:"",members:[],items:[],purchases:[],recipes:[],meals:[],
     ledger:[],expenses:[],handovers:[]
   };
-
-  sources.sort((a,b)=>{
-    const score=d=>["members","items","purchases","recipes","meals","ledger","expenses","handovers"]
-      .reduce((n,k)=>n+arr(d[k]).length,0);
-    return score(b)-score(a);
-  });
-
-  const d=sources[0];
+  const source=found[0];
+  const d=source.data;
   ["members","items","purchases","recipes","meals","ledger","expenses","handovers"]
     .forEach(k=>{if(!Array.isArray(d[k]))d[k]=[]});
+  d._reportSourceKey=source.key;
   return d;
 }
-
 function dateOf(o){
   let s=str(val(o,["date","joiningDate","createdAt","confirmedAt","updatedAt","timestamp"],""));
   if(s.includes("T"))s=s.split("T")[0];
@@ -219,8 +218,8 @@ function baseUnit(unit){
   return "pcs";
 }
 function toBase(qty,unit){
-  qty=num(qty);
   unit=str(unit).toLowerCase();
+  qty=num(qty);
   if(["kg","ltr","l","litre","liter","litres","liters"].includes(unit))return qty*1000;
   return qty;
 }
@@ -237,18 +236,21 @@ function purchaseTotal(p){
 }
 function purchaseEntries(){
   const out=[],seen=new Set();
+  /* Nested purchases are used by the Store page. */
   data.items.forEach(i=>arr(i.purchases).forEach(p=>{
-    const sig=p.id!==undefined?"id:"+p.id:JSON.stringify([i.id,p.date,p.quantity,p.rate,p.total,p.invoice]);
+    const sig=p.id!==undefined?"id:"+String(p.id):JSON.stringify([i.id,p.date,p.quantity,p.rate,p.total,p.invoice]);
     if(seen.has(sig))return;
     seen.add(sig);
     out.push({p,item:i,itemName:val(i,["name","itemName"],"Purchase item")});
   }));
+  /* Add top-level purchases only if they are not the same purchase. */
   data.purchases.forEach(p=>{
-    const sig=p.id!==undefined?"id:"+p.id:JSON.stringify([p.itemId,p.itemName,p.date,p.quantity,p.rate,p.total,p.invoice]);
+    const sig=p.id!==undefined?"id:"+String(p.id):JSON.stringify([p.itemId,p.itemName,p.date,p.quantity,p.rate,p.total,p.invoice]);
     if(seen.has(sig))return;
     seen.add(sig);
     const item=data.items.find(i=>String(i.id)===String(p.itemId));
-    out.push({p,item:item||{unit:val(p,["purchaseUnit","unit"],"pcs")},itemName:val(p,["itemName","name"],item?item.name:"Purchase item")});
+    out.push({p,item:item||{unit:val(p,["purchaseUnit","unit"],"pcs")},
+      itemName:val(p,["itemName","name"],item?item.name:"Purchase item")});
   });
   return out;
 }
@@ -265,13 +267,13 @@ function mealConsumption(item){
   data.meals.forEach(m=>{
     if(m.cancelled===true||String(m.status||"").toLowerCase()==="cancelled")return;
     arr(m.ration).forEach(r=>{
-      if(String(r.itemId)===String(item.id)){
-        if(r.quantityBase!==undefined&&r.quantityBase!==null&&r.quantityBase!=="")used+=num(r.quantityBase);
-        else{
-          const q=val(r,["quantity","qty"],"");
-          const unit=str(val(r,["unit","purchaseUnit"],item.unit||""));
-          if(q!==""&&baseUnit(unit)===baseUnit(item.unit||unit))used+=toBase(q,unit);
-        }
+      if(String(r.itemId)!==String(item.id))return;
+      if(r.quantityBase!==undefined&&r.quantityBase!==null&&r.quantityBase!==""){
+        used+=num(r.quantityBase);
+      }else{
+        const q=val(r,["quantity","qty"],"");
+        const unit=str(val(r,["unit","purchaseUnit"],item.unit||""));
+        if(q!==""&&baseUnit(unit)===baseUnit(item.unit||unit))used+=toBase(q,unit);
       }
     });
   });
@@ -281,20 +283,18 @@ function storeStock(item){
   const ps=arr(item.purchases);
   const purchased=ps.reduce((s,p)=>s+baseQuantity(p,item),0);
   const value=ps.reduce((s,p)=>s+purchaseTotal(p),0);
-  const avg=purchased>0?value/purchased:0;
-  const stock=Math.max(0,purchased-mealConsumption(item));
-  return {stock,avg,value:stock*avg,unit:baseUnit(item.unit||"pcs")};
+  const average=purchased>0?value/purchased:0;
+  const used=mealConsumption(item);
+  const stock=Math.max(0,purchased-used);
+  return {purchased,average,used,stock,value:stock*average,unit:baseUnit(item.unit||"pcs")};
 }
 
 let data={},records=[],visible=[],rationRows=[];
 
 function add(type,label,o,details,amount){
-  records.push({
-    date:dateOf(o),type,label:str(label)||type,details:str(details),
-    amount:amount===null||amount===undefined||amount===""?"":num(amount)
-  });
+  records.push({date:dateOf(o),type,label:str(label)||type,details:str(details),
+    amount:amount===null||amount===undefined||amount===""?"":num(amount)});
 }
-
 function collect(){
   data=loadData();
   records=[];
@@ -309,11 +309,12 @@ function collect(){
     const s=storeStock(i);
     add("item",val(i,["name","itemName"],"Store item"),i,
       "Current Stock: "+displayQty(s.stock)+" "+s.unit+
-      " · Average Rate: Rs "+s.avg.toFixed(4)+"/"+s.unit+
+      " · Average Rate: Rs "+s.average.toFixed(4)+"/"+s.unit+
       " · Stock Value: Rs "+money(s.value),s.value);
   });
 
-  purchaseEntries().forEach(({p,itemName,item})=>{
+  const ps=purchaseEntries();
+  ps.forEach(({p,itemName,item})=>{
     const q=val(p,["quantity","qty"],"");
     const unit=val(p,["purchaseUnit","unit"],item.unit||"");
     add("purchase",itemName,p,
@@ -330,11 +331,10 @@ function collect(){
   });
 
   data.meals.forEach(m=>{
-    const rationCount=arr(m.ration).length;
     add("meal",val(m,["recipeName","type"],"Meal"),m,
       "Meal: "+str(val(m,["type"],""))+
       " · Servings: "+str(val(m,["servings"],""))+
-      " · Ration items: "+rationCount+
+      " · Ration items: "+arr(m.ration).length+
       " · Status: "+str(val(m,["status"],"")),
       val(m,["totalCost","cost","amount"],""));
   });
@@ -362,32 +362,39 @@ function collect(){
   $("mealCount").textContent=data.meals.length;
   $("ledgerCount").textContent=data.ledger.length;
 
-  financialSummary();
+  financialSummary(ps);
   render();
 }
-
-function financialSummary(){
-  const ps=purchaseEntries();
-  $("purchaseTotal").textContent=money(ps.reduce((s,x)=>s+purchaseTotal(x.p),0));
-  $("purchaseCount").textContent=ps.length;
+function financialSummary(ps){
+  const purchaseSum=ps.reduce((s,x)=>s+purchaseTotal(x.p),0);
+  let stockSum=0;
+  data.items.forEach(i=>stockSum+=storeStock(i).value);
 
   const deposits=data.ledger.filter(l=>{
     const t=str(val(l,["transactionType","type"],"")).toLowerCase();
-    return t==="deposit"||t==="payment"||t==="advance";
+    return ["deposit","payment","advance"].includes(t);
   });
   const charges=data.ledger.filter(l=>{
     const t=str(val(l,["transactionType","type"],"")).toLowerCase();
     return t.includes("charge")||t==="meal";
   });
 
-  $("depositTotal").textContent=money(deposits.reduce((s,x)=>s+num(val(x,["amount","total"],0)),0));
+  const depositSum=deposits.reduce((s,x)=>s+num(val(x,["amount","total"],0)),0);
+  const chargeSum=charges.reduce((s,x)=>s+num(val(x,["amount","total"],0)),0);
+
+  $("purchaseTotal").textContent=money(purchaseSum);
+  $("purchaseTotal2").textContent=money(purchaseSum);
+  $("purchaseCount").textContent=ps.length;
+  $("stockValue").textContent=money(stockSum);
+  $("depositTotal").textContent=money(depositSum);
+  $("depositTotal2").textContent=money(depositSum);
   $("depositCount").textContent=deposits.length;
-  $("chargeTotal").textContent=money(charges.reduce((s,x)=>s+num(val(x,["amount","total"],0)),0));
+  $("chargeTotal").textContent=money(chargeSum);
+  $("chargeTotal2").textContent=money(chargeSum);
   $("chargeCount").textContent=charges.length;
   $("expenseTotal").textContent=money(data.expenses.reduce((s,x)=>s+num(val(x,["amount","total"],0)),0));
   $("expenseCount").textContent=data.expenses.length;
 }
-
 function selectedRange(){
   return {from:$("fromDate").value,to:$("toDate").value};
 }
@@ -413,8 +420,7 @@ function rationQuantity(r){
 function buildRation(){
   const {from,to}=selectedRange();
   const q=$("search").value.trim().toLowerCase();
-  const perDay=new Map();
-  const totals=new Map();
+  const perDay=new Map(),totals=new Map();
 
   data.meals.forEach(m=>{
     const date=dateOf(m);
@@ -429,10 +435,8 @@ function buildRation(){
 
       const key=name+"|"+info.unit;
       const dayKey=date+"|"+key;
-
       if(!perDay.has(dayKey))perDay.set(dayKey,{date,name,unit:info.unit,qty:0});
       perDay.get(dayKey).qty+=info.qty;
-
       if(!totals.has(key))totals.set(key,{name,unit:info.unit,qty:0});
       totals.get(key).qty+=info.qty;
     });
@@ -442,9 +446,7 @@ function buildRation(){
   const totalRows=Array.from(totals.values()).sort((a,b)=>a.name.localeCompare(b.name));
   rationRows=rows;
 
-  const body=$("rationBody");
-  body.replaceChildren();
-
+  const body=$("rationBody");body.replaceChildren();
   rows.forEach(r=>{
     const tr=document.createElement("tr");
     [r.date,r.name,displayQty(r.qty),r.unit].forEach(v=>{
@@ -453,22 +455,21 @@ function buildRation(){
     body.appendChild(tr);
   });
 
-  if(totalRows.length){
-    const tr=document.createElement("tr");tr.className="ration-total";
-    const td1=document.createElement("td");td1.colSpan=2;td1.textContent="DATE RANGE TOTAL";
-    tr.appendChild(td1);
-    const td2=document.createElement("td");
-    td2.textContent=totalRows.map(r=>r.name+": "+displayQty(r.qty)+" "+r.unit).join(" | ");
-    tr.appendChild(td2);
-    const td3=document.createElement("td");td3.textContent="All items";
-    tr.appendChild(td3);body.appendChild(tr);
-  }
+  totalRows.forEach(r=>{
+    const tr=document.createElement("tr");tr.className="totalrow";
+    const td1=document.createElement("td");td1.textContent="RANGE TOTAL";
+    const td2=document.createElement("td");td2.textContent=r.name;
+    const td3=document.createElement("td");td3.textContent=displayQty(r.qty);
+    const td4=document.createElement("td");td4.textContent=r.unit;
+    [td1,td2,td3,td4].forEach(td=>tr.appendChild(td));
+    body.appendChild(tr);
+  });
 
   $("rationEmpty").hidden=rows.length!==0;
   const period=from||to?(from||"Beginning")+" to "+(to||"Latest"):"All saved dates";
-  $("rationSummary").textContent=period+" · "+rows.length+" daily item entries · "+totalRows.length+" different ration items. Date-wise quantities and range totals are shown above.";
+  $("rationSummary").textContent=period+" · "+rows.length+
+    " daily item entries · "+totalRows.length+" different ration items. Range totals are shown in the green rows.";
 }
-
 function render(){
   const q=$("search").value.trim().toLowerCase();
   const type=$("reportType").value;
@@ -490,10 +491,18 @@ function render(){
 
   $("reportHeading").textContent=headings[type]||"Mess Report";
   $("summary").textContent="Showing "+visible.length+" matching entries from "+records.length+
-    " saved entries. The ration table below shows daily quantities and the total for the selected date range.";
+    " entries in the selected saved dataset.";
 
   $("visibleCount").textContent=visible.length;
-  $("amountTotal").textContent=money(visible.reduce((s,r)=>s+num(r.amount),0));
+  const amountTypes=["purchase","ledger","expense","handover"];
+  if(type==="all"||type==="item"||type==="member"||type==="recipe"||type==="meal"||type==="ration"){
+    $("amountTotal").textContent="—";
+    $("amountNote").textContent="No combined financial total is shown for this report because the visible records may represent different kinds of value.";
+  }else{
+    const amount=visible.filter(r=>r.amount!=="").reduce((s,r)=>s+num(r.amount),0);
+    $("amountTotal").textContent=money(amount);
+    $("amountNote").textContent="Total for the selected record type only. This is not a combined total across different registers.";
+  }
 
   const dates=visible.map(r=>r.date).filter(Boolean).sort();
   $("firstDate").textContent=dates[0]||"—";
@@ -512,18 +521,14 @@ function render(){
     body.appendChild(tr);
   });
   $("empty").hidden=visible.length!==0;
-
-  $("rationCard").style.display=(type==="all"||type==="ration"||type==="meal")?"block":"block";
   buildRation();
 }
-
 function csvEscape(v){
   let s=String(v??"");
   if(/^[=+\-@]/.test(s))s="'"+s;
   return '"'+s.replace(/"/g,'""')+'"';
 }
 
-/* One handler per button. Typing/changing a filter updates the report once. */
 $("applyBtn").addEventListener("click",render);
 $("resetBtn").addEventListener("click",()=>{
   $("reportType").value="all";
@@ -549,7 +554,6 @@ $("csvBtn").addEventListener("click",()=>{
 });
 $("refreshBtn").addEventListener("click",collect);
 
-/* Load the saved data once on opening the page. */
 collect();
 </script>
 </body>

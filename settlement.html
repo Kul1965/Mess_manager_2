@@ -6,454 +6,600 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>CRPF Smart Mess - Settlement</title>
 <style>
-:root{--g:#176747;--deep:#10563e;--bg:#f2f6f3;--text:#214d3b;--muted:#78857e;--border:#dce5df;--red:#b8323c;--blue:#245a91}
+:root{--g:#176747;--deep:#10563e;--bg:#f2f6f3;--text:#214d3b;--muted:#78857e;--border:#dce5df;--red:#b8323c;--gold:#9b6b12;--blue:#245a8d}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:var(--text);font:14px Arial,sans-serif}
-header{background:linear-gradient(120deg,#10583e,#176747);color:white;padding:20px}
-header h1{margin:0 0 7px;font-size:23px}
-header p{margin:0;line-height:1.5}
+header{background:linear-gradient(120deg,#10583e,#207c59);color:white;padding:22px 16px}
+header h1{margin:0 0 8px;font-size:24px}
+header p{margin:0;line-height:1.6}
 nav{display:flex;gap:7px;overflow-x:auto;background:white;padding:10px;border-bottom:1px solid var(--border)}
-nav a{white-space:nowrap;text-decoration:none;color:var(--g);padding:10px 12px;border:1px solid var(--border);border-radius:8px;font-weight:bold}
-nav a.active{background:var(--g);color:white}
-main{max-width:1100px;margin:auto;padding:14px}
-.card{background:white;border:1px solid var(--border);border-radius:12px;padding:15px;margin-bottom:14px}
-h2{font-size:19px;margin:0 0 13px}
+nav a{white-space:nowrap;text-decoration:none;color:var(--g);padding:10px 13px;border:1px solid var(--border);border-radius:9px;font-weight:bold;font-size:13px}
+nav a.active,button{background:var(--g);color:white}
+main{max-width:1200px;margin:auto;padding:15px}
+.card{background:white;border:1px solid var(--border);border-radius:15px;padding:17px;margin-bottom:15px;box-shadow:0 3px 10px #17462b08}
+h2{font-size:20px;margin:0 0 14px}
 h3{font-size:16px;margin:0 0 12px}
-.muted{color:var(--muted);line-height:1.6}
-.note{padding:12px;background:#fff8e8;border:1px solid #efdfb8;border-radius:9px;line-height:1.6;margin-bottom:14px}
-.tabs{display:flex;gap:7px;flex-wrap:wrap;margin-bottom:14px}
-.tabs button{flex:1;min-width:110px}
-button,input,select,textarea{font:inherit;padding:11px;border:1px solid var(--border);border-radius:8px;width:100%;background:white;color:var(--text)}
-button{background:var(--g);color:white;border:0;font-weight:bold;cursor:pointer}
-button.secondary{background:white;color:var(--g);border:1px solid var(--g)}
-button.active{background:var(--deep)}
+p{line-height:1.6}
+.muted,.small{color:var(--muted);line-height:1.6}
+.small{font-size:12px}
+.note{padding:13px;border:1px solid #e9d9a7;background:#fff9e9;border-radius:10px;line-height:1.7;margin-bottom:15px}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:15px}
+button,input,select,textarea{font:inherit;padding:11px;border:1px solid var(--border);border-radius:9px;width:100%}
+button{border:0;font-weight:bold;cursor:pointer}
+button.secondary{background:#edf5ef;color:var(--g);border:1px solid var(--border)}
+button.danger{background:#b8323c;color:white}
+button.blue{background:var(--blue)}
+.tabs button{width:auto;flex:1;min-width:130px}
+button:disabled{opacity:.5}
 label{display:block;font-weight:bold;font-size:13px;margin-bottom:6px}
 .field{min-width:0;margin-bottom:12px}
-.grid{display:grid;grid-template-columns:1fr;gap:10px}
-.stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
-.stat{border:1px solid var(--border);border-radius:10px;padding:12px;min-width:0}
-.stat small{display:block;color:var(--muted);margin-bottom:8px;line-height:1.4}
-.stat strong{font-size:20px;color:var(--g);overflow-wrap:anywhere}
-.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:10px}
-.actions button{flex:1}
+.grid{display:grid;grid-template-columns:1fr;gap:12px}
+.stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.stat{border:1px solid var(--border);border-radius:12px;padding:13px;min-width:0;background:#fff}
+.stat small{display:block;color:var(--muted);margin-bottom:9px;line-height:1.5}
+.stat strong{font-size:20px;overflow-wrap:anywhere;color:var(--g)}
+.stat.red strong{color:var(--red)}
+.stat.gold strong{color:var(--gold)}
+.stat.blue strong{color:var(--blue)}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:12px}
 .tablewrap{overflow-x:auto}
-table{border-collapse:collapse;width:100%;min-width:650px}
-th,td{padding:10px 8px;border-bottom:1px solid var(--border);text-align:left;vertical-align:top}
+table{border-collapse:collapse;width:100%;min-width:680px}
+th,td{padding:11px 9px;border-bottom:1px solid var(--border);text-align:left;vertical-align:top;font-size:13px}
 th{background:#edf6ef;color:var(--deep)}
-.status{white-space:pre-wrap;background:#edf6ef;border-radius:8px;padding:12px;line-height:1.6;overflow-wrap:anywhere}
+tr:hover td{background:#fbfdfb}
+.totalrow{background:#edf6ef;font-weight:bold}
 .hidden{display:none!important}
-.red{color:var(--red)!important}
-.blue{color:var(--blue)!important}
+.status{padding:12px;border-radius:9px;background:#edf6ef;line-height:1.7;white-space:pre-wrap;overflow-wrap:anywhere}
+.badge{display:inline-block;border-radius:20px;padding:5px 9px;background:#e6f3eb;color:var(--g);font-size:11px;font-weight:bold}
+.badge.red{background:#fff0f0;color:var(--red)}
+.badge.gold{background:#fff4d8;color:var(--gold)}
+.badge.blue{background:#eaf2fc;color:var(--blue)}
+.empty{text-align:center;padding:22px;color:var(--muted)}
+.moneyline{display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid var(--border)}
+.moneyline:last-child{border-bottom:0}
+.moneyline strong{text-align:right}
+.section-green{border-left:5px solid var(--g)}
+.section-blue{border-left:5px solid var(--blue)}
+.section-gold{border-left:5px solid #bd8b24}
+.footer{text-align:center;padding:20px;color:var(--muted);font-size:12px}
 @media(min-width:650px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.stats{grid-template-columns:repeat(4,minmax(0,1fr))}}
-@media print{body{background:white;font-size:10px}nav,.no-print,.tabs,button,footer{display:none!important}main{padding:0}.card{break-inside:avoid}table{min-width:0}th,td{padding:5px}}
+@media(max-width:420px){main{padding:9px}.card{padding:13px}.stat{padding:10px}.stat strong{font-size:17px}.actions{grid-template-columns:1fr}.tabs button{min-width:100px}}
+@media print{body{background:white;font-size:10px}nav,.no-print,.tabs,button,footer{display:none!important}main{padding:0;max-width:none}.card{box-shadow:none;break-inside:avoid}.hidden{display:none!important}table{min-width:0}th,td{padding:5px}.stats{grid-template-columns:repeat(4,minmax(0,1fr))}}
 </style>
 </head>
 <body>
 <header>
-<h1>CRPF SMART MESS MANAGER</h1>
-<p>Settlement · Member Advances · Cash & Bank · Expenses · Commander Handover</p>
+<h1>🛡️ CRPF SMART MESS MANAGER</h1>
+<p>Monthly Settlement · Cash & Bank · Other Expenses · Commander Handover</p>
 </header>
+
 <nav class="no-print">
 <a href="index.html">Dashboard</a>
 <a href="members.html">Members</a>
-<a href="store.html">Store</a>
+<a href="store.html">Ration Store</a>
+<a href="recipes.html">Recipes</a>
 <a href="meals.html">Meals</a>
 <a href="accounts.html">Accounts</a>
 <a href="reports.html">Reports</a>
 <a href="settlement.html" class="active">Settlement</a>
 <a href="backup.html">Backup</a>
-<a href="settings.html">Settings</a>
 </nav>
+
 <main>
 <div class="note">
-<strong>Important:</strong> Settings ka monthly advance sirf calculation rate hai. Actual cash aur bank sirf saved transactions se calculate honge. Mess Cutting deposit ko member payment maana jayega; Mess Advance deposit ko refundable liability maana jayega jab tak woh adjust ya refund na ho. Physical cash aur bank statement verify karna zaroori hai.
+<strong>Important:</strong> Cash aur Bank alag hisaab hain. Cash mein payment mile to Cash badhega; Bank Transfer ho to Bank badhega. Other Expenses mein kharcha record karte waqt payment method chunein. Surplus estimate hai; actual cash, bank statement aur stock verify karke hi handover approve karein.
 </div>
 
 <div class="tabs no-print">
-<button class="active" data-tab="summaryPanel">Settlement Summary</button>
-<button class="secondary" data-tab="expensePanel">Other Expenses</button>
-<button class="secondary" data-tab="handoverPanel">Commander Handover</button>
-<button class="secondary" data-tab="recordsPanel">Saved Records</button>
+<button class="active" data-tab="overview">Monthly Summary</button>
+<button data-tab="expenses">Other Expenses</button>
+<button data-tab="handover">Commander Handover</button>
+<button data-tab="records">Saved Records</button>
 </div>
 
-<section id="summaryPanel" class="panel">
+<section id="overview" class="panel">
 <div class="card">
 <h2>Settlement Period</h2>
 <div class="grid">
-<div class="field"><label for="fromDate">From Date</label><input type="date" id="fromDate"></div>
-<div class="field"><label for="toDate">To Date</label><input type="date" id="toDate"></div>
+<div class="field"><label for="fromDate">From Date</label><input id="fromDate" type="date"></div>
+<div class="field"><label for="toDate">To Date</label><input id="toDate" type="date"></div>
 </div>
 <div class="actions no-print">
-<button id="calculateBtn">Calculate</button>
-<button id="monthBtn" class="secondary">Current Month</button>
+<button id="calculateBtn">Calculate Settlement</button>
+<button id="currentMonthBtn" class="secondary">Current Month</button>
 </div>
-<p id="sourceInfo" class="muted"></p>
+<p id="sourceInfo" class="small">Loading saved records...</p>
 </div>
 
 <div class="stats">
-<div class="stat"><small>Monthly Rate / Member</small><strong id="monthlyRate">Rs 0.00</strong></div>
-<div class="stat"><small>Daily Rate (÷ 30)</small><strong id="dailyRate">Rs 0.00</strong></div>
-<div class="stat"><small>Recorded Member Meal-Days</small><strong id="mealDays">0</strong></div>
-<div class="stat"><small>Calculated Food Budget</small><strong id="budget">Rs 0.00</strong></div>
-<div class="stat"><small>Recorded Meal/Ration Cost</small><strong id="foodCost">Rs 0.00</strong></div>
+<div class="stat"><small>Monthly Common Advance / Member</small><strong id="monthlyRate">Rs 0.00</strong></div>
+<div class="stat"><small>Daily Rate / Member</small><strong id="dailyRate">Rs 0.00</strong></div>
+<div class="stat"><small>Members With Meal Records</small><strong id="memberCount">0</strong></div>
+<div class="stat"><small>Recorded Member Meal-Days</small><strong id="memberDays">0</strong></div>
+<div class="stat"><small>Calculated Food Budget</small><strong id="budgetTotal">Rs 0.00</strong></div>
+<div class="stat"><small>Recorded Ration Expense</small><strong id="foodExpense">Rs 0.00</strong></div>
 <div class="stat"><small>Surplus Before Other Expenses</small><strong id="surplus">Rs 0.00</strong></div>
-<div class="stat"><small>Other Expenses</small><strong id="extra">Rs 0.00</strong></div>
-<div class="stat"><small>Surplus After Expenses</small><strong id="surplusAfter">Rs 0.00</strong></div>
-<div class="stat"><small>Recorded Cash Balance</small><strong id="cash">Rs 0.00</strong></div>
-<div class="stat"><small>Recorded Bank Balance</small><strong id="bank">Rs 0.00</strong></div>
-<div class="stat"><small>Current Stock Value</small><strong id="stock">Rs 0.00</strong></div>
-<div class="stat"><small>Purchase Total in Period</small><strong id="purchases">Rs 0.00</strong></div>
-<div class="stat"><small>Member Dues Outstanding</small><strong id="dues">Rs 0.00</strong></div>
-<div class="stat"><small>Refundable Mess Advance Liability</small><strong id="liability">Rs 0.00</strong></div>
-<div class="stat"><small>Mess Cutting Deposits</small><strong id="cutting">Rs 0.00</strong></div>
-<div class="stat"><small>Verified Missing Cost Records</small><strong id="missing">0</strong></div>
+<div class="stat gold"><small>Other Expenses</small><strong id="extraTotal">Rs 0.00</strong></div>
 </div>
 
-<div class="card" style="margin-top:14px">
-<h2>Member-wise Meal & Budget</h2>
-<div class="tablewrap"><table>
-<thead><tr><th>Member</th><th>Meal Days</th><th>Monthly Rate</th><th>Calculated Budget</th></tr></thead>
-<tbody id="memberRows"></tbody>
-</table></div>
-<p id="memberEmpty" class="muted">No meal attendance found for the selected period.</p>
+<div class="card" style="margin-top:15px">
+<h2>Member-wise Meal & Advance Calculation</h2>
+<p class="muted">Meal-days are counted once per member per date. The budget is meal-days × monthly rate ÷ 30 days, or the configured month length.</p>
+<div class="tablewrap">
+<table>
+<thead><tr><th>Member</th><th>Meal Days</th><th>Monthly Rate</th><th>Daily Rate</th><th>Calculated Budget</th></tr></thead>
+<tbody id="memberBody"></tbody>
+</table>
 </div>
+<div id="memberEmpty" class="muted">No member meal attendance found for this period.</div>
+</div>
+
 <div class="card">
-<h2>Cash, Bank & Advance Breakdown</h2>
-<p class="muted">Cash and bank are net amounts from recognized saved transactions, not a physical cash count. The liability is Mess Advance deposits minus explicitly recorded refunds or adjustments.</p>
-<div class="tablewrap"><table>
-<thead><tr><th>Register</th><th>Recorded Amount</th><th>Meaning</th></tr></thead>
-<tbody>
-<tr><td>Mess Cutting Deposits</td><td id="cuttingDetail">Rs 0.00</td><td>Member contribution/payment</td></tr>
-<tr><td>Mess Advance Deposits</td><td id="advanceDetail">Rs 0.00</td><td>Amount held for members</td></tr>
-<tr><td>Cash Net Balance</td><td id="cashDetail">Rs 0.00</td><td>Recognized cash receipts minus recorded cash outflows</td></tr>
-<tr><td>Bank Net Balance</td><td id="bankDetail">Rs 0.00</td><td>Recognized bank receipts minus recorded bank outflows</td></tr>
-<tr><td>Member Dues</td><td id="duesDetail">Rs 0.00</td><td>Meal charges minus recognized member payments</td></tr>
-</tbody></table></div>
-<p id="financeNote" class="muted"></p>
+<h2>💰 Cash, Bank & Remaining Surplus</h2>
+<div class="stats">
+<div class="stat"><small>Cash Balance From Records</small><strong id="cashBalance">Rs 0.00</strong></div>
+<div class="stat"><small>Bank Balance From Records</small><strong id="bankBalance">Rs 0.00</strong></div>
+<div class="stat"><small>Current Stock Value</small><strong id="stockValue">Rs 0.00</strong></div>
+<div class="stat"><small>Purchases in Selected Period</small><strong id="purchaseTotal">Rs 0.00</strong></div>
+<div class="stat red"><small>Member Dues Outstanding</small><strong id="memberDues">Rs 0.00</strong></div>
+<div class="stat gold"><small>Member Advance / Credit Liability</small><strong id="advanceLiability">Rs 0.00</strong></div>
+<div class="stat"><small>Surplus After Other Expenses</small><strong id="surplusAfter">Rs 0.00</strong></div>
+<div class="stat"><small>Expenses in Selected Period</small><strong id="expenseCount">0</strong></div>
+</div>
+<div class="moneyline"><span>Food Budget</span><strong id="lineBudget">Rs 0.00</strong></div>
+<div class="moneyline"><span>Minus Recorded Ration Expense</span><strong id="lineFood">Rs 0.00</strong></div>
+<div class="moneyline"><span>Available Surplus Before Extras</span><strong id="lineSurplus">Rs 0.00</strong></div>
+<div class="moneyline"><span>Minus Other Expenses</span><strong id="lineExtra">Rs 0.00</strong></div>
+<div class="moneyline"><span><b>Remaining Surplus / Shortfall</b></span><strong id="lineRemaining">Rs 0.00</strong></div>
+<p id="financialNote" class="muted"></p>
 </div>
 </section>
 
-<section id="expensePanel" class="panel hidden">
-<div class="card">
-<h2>Other Expense Entry</h2>
-<p class="muted">Surplus ko available cash/bank samajh kar kharch record na karein jab tak actual fund available na ho. Expense method select karne par cash ya bank report mein outflow add hoga.</p>
+<section id="expenses" class="panel hidden">
+<div class="card section-green">
+<h2>🧾 Other Expenses Entry</h2>
+<p class="muted">Approved surplus ko zaroori mess kharchon mein use karne ke liye entry karein. Cash/Bank select karna zaroori hai. Expense record hone par us method ka balance ghatega.</p>
+
+<div class="stats" style="margin-bottom:15px">
+<div class="stat"><small>Available Before Extras</small><strong id="expenseAvailable">Rs 0.00</strong></div>
+<div class="stat"><small>Already Spent</small><strong id="expenseSpent">Rs 0.00</strong></div>
+<div class="stat"><small>Remaining Surplus</small><strong id="expenseRemaining">Rs 0.00</strong></div>
+<div class="stat"><small>Expenses in Period</small><strong id="expenseNumber">0</strong></div>
+</div>
+
 <div class="grid">
-<div class="field"><label for="expenseDate">Date *</label><input id="expenseDate" type="date"></div>
-<div class="field"><label for="expenseCategory">Category</label>
-<select id="expenseCategory"><option>Maintenance</option><option>Cleaning</option><option>Fuel / Gas</option><option>Equipment</option><option>Other</option></select></div>
-<div class="field"><label for="expenseTitle">Expense Details *</label><input id="expenseTitle" placeholder="Expense details"></div>
-<div class="field"><label for="expenseAmount">Amount (Rs) *</label><input id="expenseAmount" type="number" min="0.01" step="0.01"></div>
-<div class="field"><label for="expenseMethod">Paid From *</label><select id="expenseMethod"><option>Cash</option><option>Bank Transfer</option><option>Digital Payment</option></select></div>
-<div class="field"><label for="expenseApproved">Approved By</label><input id="expenseApproved" placeholder="Commander / authorised person"></div>
-<div class="field"><label for="expenseRef">Bill / Reference</label><input id="expenseRef" placeholder="Bill number"></div>
+<div class="field"><label for="expenseDate">Expense Date *</label><input id="expenseDate" type="date" required></div>
+<div class="field"><label for="expenseCategory">Category *</label>
+<select id="expenseCategory">
+<option>Maintenance</option><option>Cleaning</option><option>Fuel / Gas</option><option>Kitchen Equipment</option><option>Utensils</option><option>Transport</option><option>Repair</option><option>Other</option>
+</select></div>
+<div class="field"><label for="expenseTitle">Expense Details *</label><input id="expenseTitle" placeholder="e.g. kitchen repair" required></div>
+<div class="field"><label for="expenseAmount">Amount (Rs) *</label><input id="expenseAmount" type="number" min="0.01" step="0.01" placeholder="0.00" required></div>
+<div class="field"><label for="expenseMethod">Paid From *</label>
+<select id="expenseMethod"><option value="Cash">Cash</option><option value="Bank Transfer">Bank Transfer</option><option value="Digital Payment">Digital Payment</option></select></div>
+<div class="field"><label for="expenseApprovedBy">Approved By</label><input id="expenseApprovedBy" placeholder="Commander / authorised person"></div>
+<div class="field"><label for="expenseRef">Bill / Voucher Number</label><input id="expenseRef" placeholder="Bill number"></div>
+<div class="field"><label for="expenseNotes">Notes</label><input id="expenseNotes" placeholder="Optional notes"></div>
 </div>
-<div class="field"><label for="expenseNotes">Notes</label><textarea id="expenseNotes" rows="3"></textarea></div>
-<div class="actions no-print"><button id="saveExpenseBtn">Save Expense</button><button id="clearExpenseBtn" class="secondary">Clear</button></div>
-<p id="expenseStatus" class="status">Ready.</p>
+<div class="actions no-print">
+<button id="saveExpenseBtn">Save Expense</button>
+<button id="clearExpenseBtn" class="secondary">Clear Form</button>
 </div>
+<p id="expenseStatus" class="status" style="margin-top:12px">Ready to record an expense.</p>
+</div>
+
 <div class="card">
-<h2>Other Expenses in Selected Period</h2>
-<div class="tablewrap"><table><thead><tr><th>Date</th><th>Category</th><th>Details</th><th>Method</th><th>Amount</th></tr></thead><tbody id="expenseRows"></tbody></table></div>
+<h2>📋 Other Expenses Register</h2>
+<p class="muted">Selected period ke expenses, payment method, approval aur voucher details yahan dikhenge.</p>
+<div class="tablewrap">
+<table>
+<thead><tr><th>Date</th><th>Category / Details</th><th>Paid From</th><th>Amount</th><th>Approved By / Bill</th><th class="no-print">Actions</th></tr></thead>
+<tbody id="expenseBody"></tbody>
+<tfoot><tr class="totalrow"><td colspan="3">Total Other Expenses</td><td id="expenseGrandTotal">Rs 0.00</td><td colspan="2"></td></tr></tfoot>
+</table>
+</div>
+<div class="actions no-print">
+<button class="secondary" id="expenseCsvBtn">Download Expense CSV</button>
+<button class="secondary" id="printExpensesBtn">Print Expenses / PDF</button>
+</div>
 </div>
 </section>
 
-<section id="handoverPanel" class="panel hidden">
+<section id="handover" class="panel hidden">
 <div class="card">
-<h2>Commander Handover</h2>
-<p class="muted">Fetch saved figures, verify actual cash and bank, then save the handover snapshot. Saving does not create a new receipt or payment.</p>
+<h2>⭐ Mess Commander Handover</h2>
+<p class="muted">Fetch saved figures, verify cash and bank, then save a dated handover snapshot. The actual cash/bank amounts should be physically checked.</p>
 <div class="grid">
 <div class="field"><label for="handoverDate">Handover Date *</label><input id="handoverDate" type="date"></div>
 <div class="field"><label for="outgoing">Outgoing Commander *</label><select id="outgoing"></select></div>
 <div class="field"><label for="incoming">Incoming Commander / Mess NCO *</label><select id="incoming"></select></div>
-<div class="field"><label for="verifiedCash">Verified Cash Handed Over (Rs)</label><input id="verifiedCash" type="number" min="0" step="0.01"></div>
-<div class="field"><label for="verifiedBank">Verified Bank Balance (Rs)</label><input id="verifiedBank" type="number" min="0" step="0.01"></div>
-<div class="field"><label for="verifiedStock">Stock Value (Rs)</label><input id="verifiedStock" type="number" min="0" step="0.01"></div>
-<div class="field"><label for="verifiedDues">Member Dues (Rs)</label><input id="verifiedDues" type="number" min="0" step="0.01"></div>
-<div class="field"><label for="verifiedLiability">Refundable Advance Liability (Rs)</label><input id="verifiedLiability" type="number" min="0" step="0.01"></div>
-<div class="field"><label for="verifiedCutting">Mess Cutting Deposits (Rs)</label><input id="verifiedCutting" type="number" min="0" step="0.01"></div>
-<div class="field"><label for="verifiedSurplus">Surplus After Expenses (Rs)</label><input id="verifiedSurplus" type="number" step="0.01"></div>
-<div class="field"><label for="verifiedPeriod">Settlement Period</label><input id="verifiedPeriod" readonly></div>
+<div class="field"><label for="verifiedCash">Verified Cash Handed Over (Rs) *</label><input id="verifiedCash" type="number" min="0" step="0.01" value="0"></div>
+<div class="field"><label for="verifiedBank">Verified Bank Balance (Rs) *</label><input id="verifiedBank" type="number" min="0" step="0.01" value="0"></div>
+<div class="field"><label for="verifiedStock">Verified Stock Value (Rs)</label><input id="verifiedStock" type="number" min="0" step="0.01" value="0"></div>
+<div class="field"><label for="verifiedDues">Member Dues (Rs)</label><input id="verifiedDues" type="number" min="0" step="0.01" value="0"></div>
+<div class="field"><label for="verifiedLiability">Member Advance Liability (Rs)</label><input id="verifiedLiability" type="number" min="0" step="0.01" value="0"></div>
+<div class="field"><label for="verifiedExpenses">Other Expenses (Rs)</label><input id="verifiedExpenses" type="number" min="0" step="0.01" value="0"></div>
+<div class="field"><label for="verifiedSurplus">Surplus After Expenses (Rs)</label><input id="verifiedSurplus" type="number" step="0.01" value="0"></div>
+<div class="field"><label for="handoverPeriod">Settlement Period</label><input id="handoverPeriod" readonly></div>
 </div>
-<div class="field"><label for="handoverNotes">Notes / Discrepancies</label><textarea id="handoverNotes" rows="3"></textarea></div>
-<div class="actions no-print"><button id="fetchHandoverBtn">Fetch Latest Figures</button><button id="saveHandoverBtn">Save Handover</button></div>
-<p id="handoverStatus" class="status">Select commanders and fetch figures.</p>
+<div class="field"><label for="handoverNotes">Notes / Discrepancies</label><textarea id="handoverNotes" rows="3" placeholder="Cash difference, pending bills, physical stock notes"></textarea></div>
+<div class="actions no-print">
+<button id="fetchHandoverBtn">Fetch Latest Figures</button>
+<button id="saveHandoverBtn">Save Handover</button>
+</div>
+<p id="handoverStatus" class="status" style="margin-top:12px">Verify all figures before saving.</p>
 </div>
 </section>
 
-<section id="recordsPanel" class="panel hidden">
+<section id="records" class="panel hidden">
 <div class="card">
-<h2>Saved Commander Handovers</h2>
-<div class="tablewrap"><table><thead><tr><th>Date</th><th>Outgoing</th><th>Incoming</th><th>Cash</th><th>Bank</th><th>Stock</th><th>Advance Liability</th></tr></thead><tbody id="handoverRows"></tbody></table></div>
-<div class="actions no-print"><button id="printBtn">Print / Save PDF</button><button class="secondary" id="csvBtn">Download CSV</button></div>
+<h2>Saved Commander Handover Records</h2>
+<div class="tablewrap">
+<table>
+<thead><tr><th>Date</th><th>Outgoing</th><th>Incoming</th><th>Cash</th><th>Bank</th><th>Stock</th><th>Expenses</th><th>Surplus</th></tr></thead>
+<tbody id="handoverBody"></tbody>
+</table>
+</div>
+<div id="handoverEmpty" class="muted">No handover records saved yet.</div>
+<div class="actions no-print">
+<button id="printBtn">Print / Save PDF</button>
+<button class="secondary" id="csvBtn">Download Handover CSV</button>
+</div>
 </div>
 </section>
 </main>
-<footer class="muted" style="text-align:center;padding:18px">CRPF Smart Mess Manager · Settlement</footer>
+<footer class="footer">CRPF Smart Mess Manager · Settlement & Handover</footer>
+
 <script>
 "use strict";
 const KEYS=["crpfMessProfessionalV1","crpfMessPrototypeV2"];
 const $=id=>document.getElementById(id);
 const arr=x=>Array.isArray(x)?x:[];
-const n=x=>x!==""&&x!==null&&x!==undefined&&Number.isFinite(Number(x))?Number(x):0;
-const txt=x=>x===null||x===undefined?"":typeof x==="object"?"":String(x);
-const money=x=>"Rs "+n(x).toLocaleString("en-IN",{minimumFractionDigits:2,maximumFractionDigits:2});
-const val=(o,ks,f="")=>{for(const k of ks)if(o&&o[k]!==undefined&&o[k]!==null&&o[k]!=="")return o[k];return f};
+const num=x=>x!==""&&x!==null&&x!==undefined&&Number.isFinite(Number(x))?Number(x):0;
+const txt=x=>x===null||x===undefined?"":String(x);
+const money=x=>"Rs "+num(x).toLocaleString("en-IN",{minimumFractionDigits:2,maximumFractionDigits:2});
+const val=(o,keys,def="")=>{for(const k of keys)if(o&&o[k]!==undefined&&o[k]!==null&&o[k]!=="")return o[k];return def};
 const today=()=>{const d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")};
-let db={},dbKey=KEYS[0],summary={};
+let db={},dbKey="",summary={},activeTab="overview",editingExpenseId=null;
 
-function read(k){try{const d=JSON.parse(localStorage.getItem(k)||"null");return d&&typeof d==="object"&&!Array.isArray(d)?d:null}catch(e){return null}}
+function readDB(key){try{const d=JSON.parse(localStorage.getItem(key)||"null");return d&&typeof d==="object"?d:null}catch(e){return null}}
 function score(d){return ["members","items","purchases","recipes","meals","ledger","expenses","handovers"].reduce((s,k)=>s+arr(d[k]).length,0)}
 function loadDB(){
- const found=KEYS.map(k=>({k,d:read(k)})).filter(x=>x.d);
- found.sort((a,b)=>score(b.d)-score(a.d));
- if(found.length){dbKey=found[0].k;db=found[0].d}
- else{dbKey=KEYS[0];db={}}
+ const found=KEYS.map(key=>({key,data:readDB(key)})).filter(x=>x.data);
+ found.sort((a,b)=>score(b.data)-score(a.data));
+ if(found.length){dbKey=found[0].key;db=found[0].data}
+ else{dbKey=KEYS[0];db={members:[],items:[],purchases:[],recipes:[],meals:[],ledger:[],expenses:[],handovers:[],settings:{}}}
  ["members","items","purchases","recipes","meals","ledger","expenses","handovers"].forEach(k=>{if(!Array.isArray(db[k]))db[k]=[]});
  if(!db.settings||typeof db.settings!=="object")db.settings={};
 }
-function saveDB(){try{localStorage.setItem(dbKey,JSON.stringify(db));return true}catch(e){alert("Save failed. Backup lein aur storage space check karein.");return false}}
-function dateOf(o){let s=txt(val(o,["date","mealDate","joiningDate","createdAt","confirmedAt","timestamp"],""));if(s.includes("T"))s=s.split("T")[0];return /^\d{4}-\d{2}-\d{2}$/.test(s)?s:""}
-function inPeriod(d){return (! $("fromDate").value||d>=$("fromDate").value)&&(!$("toDate").value||d<=$("toDate").value)}
+function saveDB(){try{localStorage.setItem(dbKey,JSON.stringify(db));return true}catch(e){alert("Save failed. Please make a backup and check browser storage.");return false}}
+function dateOf(o){let d=txt(val(o,["date","mealDate","createdAt","confirmedAt","timestamp"],""));if(d.includes("T"))d=d.split("T")[0];return /^\d{4}-\d{2}-\d{2}$/.test(d)?d:""}
+function inPeriod(d){return !!d&&(! $("fromDate").value||d>=$("fromDate").value)&&(! $("toDate").value||d<=$("toDate").value)}
 function memberId(m){return txt(val(m,["id","memberId","serviceId","serviceNo"],""))}
 function memberName(m){return txt(val(m,["fullName","name","memberName"],"Unknown member"))}
+function memberRate(m){const x=val(m,["monthlyLimit","monthlyAdvance","commonMessAdvance","messAdvance","monthlyFoodBudget"],"");return x!==""?num(x):commonRate()}
 function setting(keys){for(const c of [db.settings,db.config,db.preferences,db])for(const k of keys)if(c&&c[k]!==undefined&&c[k]!==null&&c[k]!=="")return c[k];return ""}
-function monthlyRate(){return n(setting(["commonMessAdvance","commonMessAdvanceAmount","commonAdvance","monthlyMessAdvance","monthlyFoodBudget","monthlyLimit","messAdvance","monthlyAdvance","defaultMonthlyLimit"]))||4000}
-function typeOf(o){return txt(val(o,["transactionType","type","category","kind"],"")).toLowerCase().trim()}
-function amountOf(o){return Math.abs(n(val(o,["amount","total","value","totalAmount"],0)))}
+function commonRate(){return num(setting(["commonMessAdvance","commonMessAdvanceAmount","commonAdvance","monthlyMessAdvance","monthlyFoodBudget","monthlyLimit","messAdvance","monthlyAdvance","defaultMonthlyLimit"]))||4000}
+function monthDays(){return num(setting(["monthDays","monthlyDays","commonMessDays","daysInMonth"]))||30}
+function typeOf(o){return txt(val(o,["transactionType","type","category","kind"],"")).toLowerCase()}
+function amountOf(o){return Math.abs(num(val(o,["amount","totalAmount","value"],0)))}
 function methodOf(o){return txt(val(o,["paymentMethod","paymentMode","method","accountType","mode"],"")).toLowerCase()}
-function isCancelled(m){return m.cancelled===true||txt(m.status).toLowerCase()==="cancelled"}
-function isAdvance(t){return /mess_advance|mess advance/.test(typeOf(t))}
-function isCutting(t){return /mess_cutting|mess cutting/.test(typeOf(t))}
-function isReceipt(t){return /deposit|payment|receipt|credit|received|income|mess_cutting|mess_advance/.test(typeOf(t))}
-function direction(t){
- const x=typeOf(t);
- if(/refund|advance_adjust|advance adjustment|adjustment out/.test(x))return -1;
- if(/expense|purchase|withdraw|debit|charge|meal/.test(x))return -1;
- if(isReceipt(t))return 1;
- const d=txt(val(t,["direction","drCr"],"")).toLowerCase();
- if(["in","credit","cr","received"].includes(d))return 1;
- if(["out","debit","dr","paid"].includes(d))return -1;
- return 0;
+function directionOf(o){
+ const t=typeOf(o);
+ if(/expense|purchase|withdraw|debit|payment made/.test(t))return "out";
+ if(/deposit|payment received|receipt|advance received|credit|income/.test(t))return "in";
+ const d=txt(val(o,["direction","drCr"],"")).toLowerCase();
+ if(["in","credit","cr","received"].includes(d))return "in";
+ if(["out","debit","dr","paid"].includes(d))return "out";
+ return "";
 }
-function mealMembers(m){
+function attendees(m){
  const a=val(m,["attendees","attendance","members","memberIds","participants"],[]);
  if(!Array.isArray(a))return [];
- return a.map(x=>typeof x==="object"?txt(val(x,["memberId","id","serviceId"],"")):txt(x)).filter(Boolean);
+ return a.map(x=>x&&typeof x==="object"?txt(val(x,["memberId","id","serviceId"],"")):txt(x)).filter(Boolean);
 }
 function mealCost(m){
- for(const k of ["totalCost","consumptionCost","mealCost","cost","amount"])if(m[k]!==undefined&&m[k]!==null&&m[k]!=="")return n(m[k]);
- return n(m.servings)*n(val(m,["perServing","costPerServing","recipeCost"],0));
+ for(const k of ["totalCost","consumptionCost","mealCost","cost","amount"])if(m[k]!==undefined&&m[k]!==null&&m[k]!=="")return num(m[k]);
+ return num(val(m,["servings"],0))*num(val(m,["perServing","costPerServing","recipeCost"],0));
 }
-function mealRation(m){return arr(val(m,["ration","needs","ingredientsUsed"],[]))}
-function purchaseRows(){
+function rationRows(m){return arr(val(m,["ration","needs","ingredientsUsed"],[]))}
+function purchases(){
  const out=[],seen=new Set();
- db.items.forEach(i=>arr(i.purchases).forEach(p=>{
-  const sig=p.id!==undefined?"id:"+p.id:JSON.stringify([i.id,p.date,p.quantity,p.rate,p.total,p.invoice]);
-  if(!seen.has(sig)){seen.add(sig);out.push({p,item:i})}
+ db.items.forEach(item=>arr(item.purchases).forEach(p=>{
+  const sig=p.id!==undefined?"id:"+p.id:JSON.stringify([item.id,p.date,p.quantity,p.rate,p.total]);
+  if(!seen.has(sig)){seen.add(sig);out.push({p,item})}
  }));
  db.purchases.forEach(p=>{
-  const sig=p.id!==undefined?"id:"+p.id:JSON.stringify([p.itemId,p.itemName,p.date,p.quantity,p.rate,p.total,p.invoice]);
-  if(!seen.has(sig)){seen.add(sig);out.push({p,item:db.items.find(i=>txt(i.id)===txt(p.itemId))||{unit:val(p,["unit","purchaseUnit"],"pcs")}})}
+  const sig=p.id!==undefined?"id:"+p.id:JSON.stringify([p.itemId,p.itemName,p.date,p.quantity,p.rate,p.total]);
+  if(!seen.has(sig)){seen.add(sig);out.push({p,item:db.items.find(i=>String(i.id)===String(p.itemId))||{unit:p.unit||"pcs"}})}
  });
  return out;
 }
-function purchaseCost(p){if(p.total!==undefined&&p.total!=="")return n(p.total);if(p.totalCost!==undefined&&p.totalCost!=="")return n(p.totalCost);return n(val(p,["quantity","qty"],0))*n(val(p,["rate","unitRate"],0))}
+function purchaseCost(p){if(p.total!==undefined&&p.total!=="")return num(p.total);if(p.totalCost!==undefined&&p.totalCost!=="")return num(p.totalCost);return num(val(p,["quantity","qty"],0))*num(val(p,["rate","unitRate"],0))}
 function baseUnit(u){u=txt(u).toLowerCase();if(["kg","g","gram","grams"].includes(u))return "g";if(["l","ltr","litre","liter","litres","liters","ml"].includes(u))return "ml";return "pcs"}
 function baseQty(p,item){
- if(p.quantityBase!==undefined&&p.quantityBase!=="")return n(p.quantityBase);
- const q=val(p,["quantity","qty"],"");if(q==="")return 0;
- const u=txt(val(p,["purchaseUnit","unit"],item.unit||"")).toLowerCase();
- if(baseUnit(u)!==baseUnit(item.unit||u))return 0;
- return ["kg","l","ltr","litre","liter","litres","liters"].includes(u)?n(q)*1000:n(q);
+ if(p.quantityBase!==undefined&&p.quantityBase!=="")return num(p.quantityBase);
+ const q=val(p,["quantity","qty"],"");const u=txt(val(p,["purchaseUnit","unit"],item.unit||""));
+ if(q===""||baseUnit(u)!==baseUnit(item.unit||u))return 0;
+ return ["kg","l","ltr","litre","liter","litres","liters"].includes(u.toLowerCase())?num(q)*1000:num(q)
 }
-function stockInfo(item){
- const ps=arr(item.purchases),qty=ps.reduce((s,p)=>s+baseQty(p,item),0),value=ps.reduce((s,p)=>s+purchaseCost(p),0);
+function itemStock(item){
+ const ps=arr(item.purchases);
+ const qty=ps.reduce((s,p)=>s+baseQty(p,item),0);
+ const value=ps.reduce((s,p)=>s+purchaseCost(p),0);
  let used=0;
- db.meals.filter(m=>!isCancelled(m)).forEach(m=>mealRation(m).forEach(r=>{
-  if(txt(r.itemId)!==txt(item.id))return;
-  if(r.quantityBase!==undefined&&r.quantityBase!==""){used+=n(r.quantityBase);return}
-  const q=val(r,["quantity","qty"],"");if(q==="")return;
-  const u=txt(val(r,["unit","purchaseUnit"],item.unit||"")).toLowerCase();
-  if(baseUnit(u)!==baseUnit(item.unit||u))return;
-  used+=["kg","l","ltr","litre","liter","litres","liters"].includes(u)?n(q)*1000:n(q);
- }));
- const avg=qty>0?value/qty:0;
- return {qty,used,avg,stock:Math.max(0,qty-used),value:Math.max(0,qty-used)*avg};
-}
-function cashBank(){
- let cash=0,bank=0;
- db.ledger.forEach(t=>{
-  const d=direction(t),m=methodOf(t),a=amountOf(t);
-  if(!d)return;
-  if(m.includes("cash"))cash+=d*a;
-  else if(m.includes("bank")||m.includes("digital")||m.includes("transfer"))bank+=d*a;
+ db.meals.forEach(m=>{
+  if(m.cancelled===true||String(m.status||"").toLowerCase()==="cancelled")return;
+  rationRows(m).forEach(r=>{
+   if(String(val(r,["itemId","item_id"],""))!==String(item.id))return;
+   if(r.quantityBase!==undefined&&r.quantityBase!==""){used+=num(r.quantityBase);return}
+   const q=val(r,["quantity","qty"],"");const u=txt(val(r,["unit","purchaseUnit"],item.unit||""));
+   if(q!==""&&baseUnit(u)===baseUnit(item.unit||u))used+=["kg","l","ltr","litre","liter","litres","liters"].includes(u.toLowerCase())?num(q)*1000:num(q)
+  })
  });
- // Expenses saved in Settlement are also counted as outflows.
- db.expenses.forEach(e=>{
-  if(e.settlementLedgerPosted===true)return;
-  const m=methodOf(e),a=amountOf(e);
-  if(m.includes("cash"))cash-=a;
-  else if(m.includes("bank")||m.includes("digital")||m.includes("transfer"))bank-=a;
- });
- return {cash,bank};
+ const avg=qty>0?value/qty:0;return {stock:Math.max(0,qty-used),value:Math.max(0,qty-used)*avg}
 }
-function memberLedger(m){
- const id=memberId(m),name=memberName(m).toLowerCase();
- let charge=0,paid=0;
+function stockValue(){return db.items.reduce((s,i)=>s+itemStock(i).value,0)}
+function mealDayMap(){
+ const map=new Map();
+ db.meals.forEach(m=>{
+  const d=dateOf(m);if(!inPeriod(d)||m.cancelled===true||String(m.status||"").toLowerCase()==="cancelled")return;
+  attendees(m).forEach(id=>{if(!map.has(id))map.set(id,new Set());map.get(id).add(d)})
+ });
+ return map;
+}
+function memberBalance(m){
+ const id=memberId(m),name=memberName(m).toLowerCase();let balance=0;
  db.ledger.forEach(t=>{
-  const tid=txt(val(t,["memberId","memberID","jawanId","serviceId","serviceNo"],""));
+  const tid=txt(val(t,["memberId","memberID","serviceId","serviceNo","jawanId"],""));
   const tn=txt(val(t,["memberName","fullName","name"],"")).toLowerCase();
   if(!((id&&tid===id)||(!tid&&tn===name)))return;
-  const ty=typeOf(t),a=amountOf(t);
-  if(/charge|meal_charge|consumption/.test(ty))charge+=a;
-  else if(isReceipt(t)&&!isAdvance(t))paid+=a;
+  const typ=typeOf(t),a=amountOf(t);
+  if(/charge|meal|deduct|consumption/.test(typ))balance-=a;
+  else if(/deposit|advance|payment received|credit|refund received|payment/.test(typ))balance+=a;
+  else {const dir=directionOf(t);if(dir==="in")balance+=a;if(dir==="out")balance-=a}
  });
- db.meals.filter(m1=>!isCancelled(m1)&&mealMembers(m1).includes(id)).forEach(meal=>{
-  const linked=db.ledger.some(t=>txt(t.mealId)===txt(meal.id)&&txt(val(t,["memberId","memberID","serviceId"],""))===id&&/charge|meal/.test(typeOf(t)));
-  if(!linked){const people=mealMembers(meal);if(people.length)charge+=mealCost(meal)/people.length}
- });
- return {charge,paid,due:Math.max(0,charge-paid)};
+ return balance;
 }
-function calc(){
- const rate=monthlyRate(),daily=rate/30,memberMap=new Map();
- db.members.forEach(m=>memberMap.set(memberId(m),new Set()));
- db.meals.forEach(m=>{
-  const d=dateOf(m);if(!d||!inPeriod(d)||isCancelled(m))return;
-  mealMembers(m).forEach(id=>{if(!memberMap.has(id))memberMap.set(id,new Set());memberMap.get(id).add(d)});
+function cashBankBalances(){
+ let cash=0,bank=0,cashFound=false,bankFound=false;
+ db.ledger.forEach(t=>{
+  const method=methodOf(t),dir=directionOf(t);
+  if(!dir)return;
+  const a=amountOf(t);
+  if(method.includes("cash")){cashFound=true;cash+=(dir==="in"?a:-a)}
+  else if(method.includes("bank")||method.includes("digital")||method.includes("online")){bankFound=true;bank+=(dir==="in"?a:-a)}
  });
- let days=0,budget=0;
- const body=$("memberRows");body.replaceChildren();
+ // Expenses without linked ledger movement are also counted.
+ db.expenses.forEach(e=>{
+  if(e.ledgerEntryId)return;
+  const m=methodOf(e),a=amountOf(e);
+  if(m.includes("cash")){cashFound=true;cash-=a}
+  else if(m.includes("bank")||m.includes("digital")||m.includes("online")){bankFound=true;bank-=a}
+ });
+ return {cash,bank,cashFound,bankFound}
+}
+function calculate(){
+ const days=monthDays(),map=mealDayMap();let budget=0,memberDays=0,memberRows=[];
+ const body=$("memberBody");body.replaceChildren();
  db.members.forEach(m=>{
-  const ds=memberMap.get(memberId(m))||new Set();if(!ds.size)return;
-  const count=ds.size,allowed=count*rate/30;days+=count;budget+=allowed;
+  const eaten=(map.get(memberId(m))||new Set()).size;
+  if(!eaten)return;
+  const rate=memberRate(m),daily=rate/days,b=eaten*daily;
+  budget+=b;memberDays+=eaten;memberRows.push({name:memberName(m),eaten,rate,daily,b});
+ });
+ memberRows.forEach(r=>{
   const tr=document.createElement("tr");
-  [memberName(m),count,money(rate),money(allowed)].forEach(x=>{const td=document.createElement("td");td.textContent=x;tr.appendChild(td)});
+  [r.name,r.eaten,money(r.rate),money(r.daily),money(r.b)].forEach(v=>{const td=document.createElement("td");td.textContent=v;tr.appendChild(td)});
   body.appendChild(tr);
  });
- $("memberEmpty").style.display=days?"none":"block";
- let food=0,missing=0;
+ $("memberEmpty").style.display=memberRows.length?"none":"block";
+ let food=0,mealCount=0,missing=0;
  db.meals.forEach(m=>{
-  const d=dateOf(m);if(!d||!inPeriod(d)||isCancelled(m))return;
-  const c=mealCost(m);food+=c;if(c===0&&mealRation(m).length)missing++;
+  if(!inPeriod(dateOf(m))||m.cancelled===true||String(m.status||"").toLowerCase()==="cancelled")return;
+  mealCount++;food+=mealCost(m);if(mealCost(m)===0&&rationRows(m).length)missing++;
  });
- const expenses=db.expenses.filter(e=>dateOf(e)&&inPeriod(dateOf(e)));
- const extra=expenses.reduce((s,e)=>s+amountOf(e),0);
+ const purchaseTotal=purchases().filter(x=>inPeriod(dateOf(x.p))).reduce((s,x)=>s+purchaseCost(x.p),0);
+ const extra=db.expenses.filter(e=>inPeriod(dateOf(e))).reduce((s,e)=>s+amountOf(e),0);
  const surplus=budget-food,surplusAfter=surplus-extra;
- const ps=purchaseRows().filter(x=>dateOf(x.p)&&inPeriod(dateOf(x.p)));
- const purchases=ps.reduce((s,x)=>s+purchaseCost(x.p),0);
- const stock=db.items.reduce((s,i)=>s+stockInfo(i).value,0);
- const cb=cashBank();
- let liability=0,cutting=0;
- db.ledger.forEach(t=>{
-  const a=amountOf(t),ty=typeOf(t);
-  if(isAdvance(t)){
-   // A saved advance receipt increases refundable liability.
-   liability+=direction(t)===-1?-a:a;
-  }
-  if(isCutting(t))cutting+=direction(t)===-1?-a:a;
- });
- liability=Math.max(0,liability);
- let dues=0;db.members.forEach(m=>dues+=memberLedger(m).due);
+ let dues=0,liability=0;
+ db.members.forEach(m=>{const b=memberBalance(m);if(b<0)dues+=Math.abs(b);if(b>0)liability+=b});
+ const cb=cashBankBalances();
+ const stock=stockValue();
  const set=(id,v)=>$(id).textContent=v;
- set("monthlyRate",money(rate));set("dailyRate",money(daily));set("mealDays",days);set("budget",money(budget));
- set("foodCost",money(food));set("surplus",money(surplus));set("extra",money(extra));set("surplusAfter",money(surplusAfter));
- set("cash",money(cb.cash));set("bank",money(cb.bank));set("stock",money(stock));set("purchases",money(purchases));
- set("dues",money(dues));set("liability",money(liability));set("cutting",money(cutting));set("missing",missing);
- set("cuttingDetail",money(cutting));set("advanceDetail",money(liability));set("cashDetail",money(cb.cash));set("bankDetail",money(cb.bank));set("duesDetail",money(dues));
- set("sourceInfo","Database: "+dbKey+" · "+($("fromDate").value||"Start")+" to "+($("toDate").value||"Latest")+" · Meals: "+db.meals.filter(m=>dateOf(m)&&inPeriod(dateOf(m))&&!isCancelled(m)).length);
- set("financeNote","Member dues: meal charges less recorded cutting/payment receipts. Refundable liability: Mess Advance deposits less recorded outflows labelled as advance refunds/adjustments. Cash/bank are recognized ledger movements and saved extra expenses; opening balances and unrecorded transactions are not invented.");
- $("surplus").className=surplus<0?"red":"";
- $("surplusAfter").className=surplusAfter<0?"red":"";
- summary={rate,daily,days,budget,food,extra,surplus,surplusAfter,purchases,stock,dues,liability,cutting,cb};
- renderExpenses();fillNames();$("verifiedPeriod").value=($("fromDate").value||"Start")+" to "+($("toDate").value||"Latest");
+ set("monthlyRate",money(commonRate()));set("dailyRate",money(commonRate()/days));
+ set("memberCount",memberRows.length);set("memberDays",memberDays);
+ set("budgetTotal",money(budget));set("foodExpense",money(food));set("surplus",money(surplus));
+ set("extraTotal",money(extra));set("purchaseTotal",money(purchaseTotal));set("stockValue",money(stock));
+ set("memberDues",money(dues));set("advanceLiability",money(liability));
+ set("surplusAfter",money(surplusAfter));set("expenseCount",db.expenses.filter(e=>inPeriod(dateOf(e))).length);
+ set("cashBalance",cb.cashFound?money(cb.cash):"Not recorded");
+ set("bankBalance",cb.bankFound?money(cb.bank):"Not recorded");
+ set("lineBudget",money(budget));set("lineFood",money(food));set("lineSurplus",money(surplus));
+ set("lineExtra",money(extra));set("lineRemaining",money(surplusAfter));
+ set("expenseAvailable",money(surplus));set("expenseSpent",money(extra));set("expenseRemaining",money(surplusAfter));
+ set("expenseNumber",db.expenses.filter(e=>inPeriod(dateOf(e))).length);
+ $("surplus").className=surplus<0?"negative":"positive";
+ $("surplusAfter").className=surplusAfter<0?"negative":"positive";
+ $("lineRemaining").className=surplusAfter<0?"negative":"positive";
+ $("sourceInfo").textContent="Data source: "+dbKey+" · Period: "+($("fromDate").value||"Start")+" to "+($("toDate").value||"Latest")+" · Meals: "+mealCount;
+ $("financialNote").textContent="Food budget = recorded member meal-days × monthly rate ÷ "+days+". Missing meal costs: "+missing+". Cash and bank figures are calculated from clearly identified ledger transactions and saved expenses; if the opening balance was never recorded, the shown balance is not a complete verified balance. Current stock is not cash.";
+ summary={budget,food,surplus,extra,surplusAfter,dues,liability,stock,purchaseTotal,cb};
+ renderExpenses();fillNames();
+ $("handoverPeriod").value=($("fromDate").value||"Start")+" to "+($("toDate").value||"Latest");
 }
 function renderExpenses(){
- const rows=db.expenses.filter(e=>dateOf(e)&&inPeriod(dateOf(e))),body=$("expenseRows");body.replaceChildren();
- rows.forEach(e=>{const tr=document.createElement("tr");[dateOf(e),val(e,["category"],"Other"),val(e,["title","description","name"],"Expense"),val(e,["paymentMethod","method"],"Not recorded"),money(amountOf(e))].forEach(x=>{const td=document.createElement("td");td.textContent=txt(x);tr.appendChild(td)});body.appendChild(tr)});
- if(!rows.length){const tr=document.createElement("tr"),td=document.createElement("td");td.colSpan=5;td.textContent="No expenses in selected period.";tr.appendChild(td);body.appendChild(tr)}
+ const body=$("expenseBody");body.replaceChildren();
+ const rows=db.expenses.filter(e=>inPeriod(dateOf(e))).sort((a,b)=>dateOf(b).localeCompare(dateOf(a)));
+ let total=0;
+ rows.forEach(e=>{
+  total+=amountOf(e);const tr=document.createElement("tr");
+  const details=txt(val(e,["title","description","name"],"Expense"));
+  const approved=txt(val(e,["approvedBy"],"—"));
+  const ref=txt(val(e,["reference","bill"],"—"));
+  const method=txt(val(e,["paymentMethod","paymentMode","method"],"Not specified"));
+  const cells=[dateOf(e),txt(val(e,["category"],"Other"))+" — "+details,method,money(amountOf(e)),approved+" / "+ref];
+  cells.forEach(v=>{const td=document.createElement("td");td.textContent=v;tr.appendChild(td)});
+  const td=document.createElement("td");td.className="no-print";
+  const edit=document.createElement("button");edit.textContent="Edit";edit.className="secondary";edit.style.width="auto";edit.style.marginRight="5px";edit.onclick=()=>editExpense(e.id);
+  const del=document.createElement("button");del.textContent="Delete";del.className="danger";del.style.width="auto";del.onclick=()=>deleteExpense(e.id);
+  td.append(edit,del);tr.appendChild(td);body.appendChild(tr);
+ });
+ if(!rows.length){const tr=document.createElement("tr"),td=document.createElement("td");td.colSpan=6;td.className="empty";td.textContent="No expenses recorded for this period.";tr.appendChild(td);body.appendChild(tr)}
+ $("expenseGrandTotal").textContent=money(total);
+}
+function clearExpense(){
+ editingExpenseId=null;
+ ["expenseTitle","expenseAmount","expenseApprovedBy","expenseRef","expenseNotes"].forEach(id=>$(id).value="");
+ $("expenseDate").value=today();$("expenseCategory").value="Maintenance";$("expenseMethod").value="Cash";
+ $("saveExpenseBtn").textContent="Save Expense";
 }
 function saveExpense(){
- const date=$("expenseDate").value,title=$("expenseTitle").value.trim(),amount=n($("expenseAmount").value);
- if(!date||!title||amount<=0){$("expenseStatus").textContent="Date, details aur valid amount enter karein.";return}
+ const date=$("expenseDate").value,title=$("expenseTitle").value.trim(),amount=$("expenseAmount").value;
+ if(!date||!title||amount===""||num(amount)<=0){$("expenseStatus").textContent="Date, details aur positive amount zaroor enter karein.";return}
  const method=$("expenseMethod").value;
- const e={id:"expense-"+Date.now(),date,category:$("expenseCategory").value,title,description:title,amount,paymentMethod:method,method,approvedBy:$("expenseApproved").value.trim(),reference:$("expenseRef").value.trim(),notes:$("expenseNotes").value.trim(),createdAt:new Date().toISOString()};
- db.expenses.push(e);
- if(!saveDB()){db.expenses.pop();return}
- $("expenseStatus").textContent="Expense saved. Cash/bank report mein method ke mutabik outflow count hoga.";
- ["expenseTitle","expenseAmount","expenseApproved","expenseRef","expenseNotes"].forEach(id=>$(id).value="");
- calc();
+ const old=editingExpenseId?db.expenses.find(e=>String(e.id)===String(editingExpenseId)):null;
+ const record={
+  ...(old||{}),id:old?old.id:"expense-"+Date.now(),date,
+  category:$("expenseCategory").value,title,description:title,amount:num(amount),
+  paymentMethod:method,method,approvedBy:$("expenseApprovedBy").value.trim(),
+  reference:$("expenseRef").value.trim(),notes:$("expenseNotes").value.trim(),
+  createdAt:old?.createdAt||new Date().toISOString(),updatedAt:new Date().toISOString()
+ };
+ if(old){
+  const index=db.expenses.indexOf(old);db.expenses[index]=record;
+ }else db.expenses.push(record);
+ if(!saveDB()){
+  if(old){const i=db.expenses.findIndex(e=>String(e.id)===String(old.id));if(i>=0)db.expenses[i]=old}
+  else db.expenses.pop();
+  return;
+ }
+ $("expenseStatus").textContent=(old?"Expense updated.":"Expense saved.")+" Payment method: "+method+". Surplus aur balances dobara calculate hue.";
+ clearExpense();calculate();
+}
+function editExpense(id){
+ const e=db.expenses.find(x=>String(x.id)===String(id));if(!e)return;
+ editingExpenseId=e.id;
+ $("expenseDate").value=dateOf(e)||today();$("expenseCategory").value=e.category||"Other";
+ $("expenseTitle").value=e.title||e.description||e.name||"";
+ $("expenseAmount").value=amountOf(e);
+ $("expenseMethod").value=e.paymentMethod||e.paymentMode||e.method||"Cash";
+ $("expenseApprovedBy").value=e.approvedBy||"";$("expenseRef").value=e.reference||e.bill||"";
+ $("expenseNotes").value=e.notes||"";$("saveExpenseBtn").textContent="Update Expense";
+ $("expenseStatus").textContent="Editing saved expense. Save changes to update it.";
+ window.scrollTo({top:0,behavior:"smooth"});
+}
+function deleteExpense(id){
+ const e=db.expenses.find(x=>String(x.id)===String(id));if(!e)return;
+ if(!confirm("Is expense ko delete karein? Balance aur surplus dobara calculate honge."))return;
+ const i=db.expenses.indexOf(e);db.expenses.splice(i,1);
+ if(!saveDB()){db.expenses.splice(i,0,e);return}
+ $("expenseStatus").textContent="Expense deleted. Figures recalculated.";calculate();
 }
 function fillNames(){
- const oldOut=$("outgoing").value,oldIn=$("incoming").value;
- for(const id of ["outgoing","incoming"]){
-  const s=$(id);s.replaceChildren();const first=document.createElement("option");first.value="";first.textContent=id==="outgoing"?"Select outgoing commander":"Select incoming commander / Mess NCO";s.appendChild(first);
-  db.members.forEach(m=>{const o=document.createElement("option");o.value=memberId(m);o.textContent=memberName(m)+" · "+txt(m.rank||"") +" · "+txt(m.duty||"");s.appendChild(o)});
- }
- if([...$("outgoing").options].some(o=>o.value===oldOut))$("outgoing").value=oldOut;
- if([...$("incoming").options].some(o=>o.value===oldIn))$("incoming").value=oldIn;
+ const out=$("outgoing"),inc=$("incoming"),oldO=out.value,oldI=inc.value;
+ out.replaceChildren();inc.replaceChildren();
+ const add=(s,v,t)=>{const o=document.createElement("option");o.value=v;o.textContent=t;s.appendChild(o)};
+ add(out,"","Select outgoing commander");add(inc,"","Select incoming commander / Mess NCO");
+ db.members.forEach(m=>{
+  const label=memberName(m)+(m.rank?" · "+m.rank:"")+(m.duty?" · "+m.duty:"");
+  add(out,memberId(m),label);add(inc,memberId(m),label);
+ });
+ if([...out.options].some(o=>o.value===oldO))out.value=oldO;
+ if([...inc.options].some(o=>o.value===oldI))inc.value=oldI;
  const prev=[...db.handovers].sort((a,b)=>dateOf(b).localeCompare(dateOf(a)))[0];
- if(!$("outgoing").value&&prev){const v=txt(val(prev,["incomingCommanderId","incomingId"],""));if([...$("outgoing").options].some(o=>o.value===v))$("outgoing").value=v}
- if(!$("incoming").value){const m=db.members.find(m=>/mess\s*nco|mess commander/i.test(txt(m.duty||m.role||"")));if(m)$("incoming").value=memberId(m)}
+ if(!out.value&&prev){const id=txt(val(prev,["incomingCommanderId","incomingId"],""));if([...out.options].some(o=>o.value===id))out.value=id}
+ if(!inc.value){const m=db.members.find(m=>/mess\s*nco|mess commander/i.test(txt(val(m,["duty","role","position"],""))));if(m)inc.value=memberId(m)}
 }
 function fetchHandover(){
- calc();const s=summary;
- $("verifiedCash").value=s.cb.cash.toFixed(2);$("verifiedBank").value=s.cb.bank.toFixed(2);
+ calculate();const s=summary;
  $("verifiedStock").value=s.stock.toFixed(2);$("verifiedDues").value=s.dues.toFixed(2);
- $("verifiedLiability").value=s.liability.toFixed(2);$("verifiedCutting").value=s.cutting.toFixed(2);
+ $("verifiedLiability").value=s.liability.toFixed(2);$("verifiedExpenses").value=s.extra.toFixed(2);
  $("verifiedSurplus").value=s.surplusAfter.toFixed(2);
- $("handoverStatus").textContent="Figures fetched from saved records.\nCash: "+money(s.cb.cash)+"\nBank: "+money(s.cb.bank)+"\nAdvance liability: "+money(s.liability)+"\nVerify actual cash and bank statements before saving.";
+ if(s.cb.cashFound)$("verifiedCash").value=s.cb.cash.toFixed(2);
+ if(s.cb.bankFound)$("verifiedBank").value=s.cb.bank.toFixed(2);
+ $("handoverStatus").textContent="Latest saved figures fetched. Cash and bank are only as complete as the recorded transactions. Physically verify cash, bank statement, stock and outstanding bills before signing.";
 }
 function saveHandover(){
  const date=$("handoverDate").value,outId=$("outgoing").value,inId=$("incoming").value;
  if(!date||!outId||!inId){$("handoverStatus").textContent="Date, outgoing aur incoming commander select karein.";return}
- if(outId===inId){$("handoverStatus").textContent="Outgoing aur incoming commander alag hone chahiye.";return}
+ if(outId===inId){$("handoverStatus").textContent="Outgoing aur incoming commander same nahi ho sakte.";return}
  const out=db.members.find(m=>memberId(m)===outId),inc=db.members.find(m=>memberId(m)===inId);
- const rec={id:"handover-"+Date.now(),date,outgoingCommanderId:outId,outgoingCommander:memberName(out),incomingCommanderId:inId,incomingCommander:memberName(inc),cash:n($("verifiedCash").value),cashAmount:n($("verifiedCash").value),bankBalance:n($("verifiedBank").value),stockValue:n($("verifiedStock").value),memberDues:n($("verifiedDues").value),memberAdvanceLiability:n($("verifiedLiability").value),messCutting:n($("verifiedCutting").value),surplus:n($("verifiedSurplus").value),fromDate:$("fromDate").value,toDate:$("toDate").value,notes:$("handoverNotes").value.trim(),createdAt:new Date().toISOString()};
- db.handovers.push(rec);if(!saveDB()){db.handovers.pop();return}
- $("handoverStatus").textContent="Handover snapshot saved. Member transactions were not changed.";
+ const rec={
+  id:"handover-"+Date.now(),date,outgoingCommanderId:outId,outgoingCommander:memberName(out),
+  incomingCommanderId:inId,incomingCommander:memberName(inc),
+  cash:num($("verifiedCash").value),cashAmount:num($("verifiedCash").value),
+  bankBalance:num($("verifiedBank").value),stockValue:num($("verifiedStock").value),
+  memberDues:num($("verifiedDues").value),memberAdvanceLiability:num($("verifiedLiability").value),
+  otherExpenses:num($("verifiedExpenses").value),surplus:num($("verifiedSurplus").value),
+  fromDate:$("fromDate").value,toDate:$("toDate").value,notes:$("handoverNotes").value.trim(),
+  createdAt:new Date().toISOString()
+ };
+ db.handovers.push(rec);
+ if(!saveDB()){db.handovers.pop();return}
+ $("handoverStatus").textContent="Handover snapshot saved successfully. Member ledger transactions were not changed.";
  renderHandovers();
 }
 function renderHandovers(){
- const body=$("handoverRows");body.replaceChildren();
- [...db.handovers].sort((a,b)=>dateOf(b).localeCompare(dateOf(a))).forEach(h=>{
+ const rows=[...db.handovers].sort((a,b)=>dateOf(b).localeCompare(dateOf(a))),body=$("handoverBody");body.replaceChildren();
+ rows.forEach(h=>{
   const tr=document.createElement("tr");
-  [dateOf(h),val(h,["outgoingCommander","commanderName"],"—"),val(h,["incomingCommander","newCommander"],"—"),money(val(h,["cash","cashAmount"],0)),money(val(h,["bankBalance"],0)),money(val(h,["stockValue"],0)),money(val(h,["memberAdvanceLiability"],0))].forEach(x=>{const td=document.createElement("td");td.textContent=txt(x);tr.appendChild(td)});
+  [dateOf(h),val(h,["outgoingCommander"],"—"),val(h,["incomingCommander"],"—"),
+   money(val(h,["cash","cashAmount"],0)),money(val(h,["bankBalance"],0)),
+   money(val(h,["stockValue"],0)),money(val(h,["otherExpenses"],0)),money(val(h,["surplus"],0))
+  ].forEach(v=>{const td=document.createElement("td");td.textContent=txt(v);tr.appendChild(td)});
   body.appendChild(tr);
  });
- if(!db.handovers.length){const tr=document.createElement("tr"),td=document.createElement("td");td.colSpan=7;td.textContent="No saved handovers yet.";tr.appendChild(td);body.appendChild(tr)}
+ $("handoverEmpty").style.display=rows.length?"none":"block";
 }
-function setTab(id){
- document.querySelectorAll(".panel").forEach(p=>p.classList.add("hidden"));
- $(id).classList.remove("hidden");
- document.querySelectorAll("[data-tab]").forEach(b=>{const yes=b.dataset.tab===id;b.classList.toggle("active",yes);b.classList.toggle("secondary",!yes)});
- if(id==="recordsPanel")renderHandovers();
- if(id==="expensePanel")renderExpenses();
+function csvEscape(v){let s=String(v??"");if(/^[=+\-@]/.test(s))s="'"+s;return '"'+s.replace(/"/g,'""')+'"'}
+function downloadCSV(rows,filename){
+ const blob=new Blob(["\uFEFF"+rows.map(r=>r.map(csvEscape).join(",")).join("\r\n")],{type:"text/csv;charset=utf-8"});
+ const url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download=filename;
+ document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
 }
-function currentMonth(){
- const d=new Date();$("fromDate").value=d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-01";$("toDate").value=today();calc();
+function expenseCSV(){
+ const rows=[["Date","Category","Details","Payment Method","Amount","Approved By","Bill Reference","Notes"]];
+ db.expenses.filter(e=>inPeriod(dateOf(e))).forEach(e=>rows.push([
+  dateOf(e),e.category||"",e.title||e.description||"",e.paymentMethod||e.method||"",
+  amountOf(e),e.approvedBy||"",e.reference||"",e.notes||""
+ ]));
+ downloadCSV(rows,"CRPF-Other-Expenses.csv");
 }
-function csv(){
- const rows=[["Date","Outgoing","Incoming","Cash","Bank","Stock","Dues","Advance Liability","Mess Cutting","Surplus","Notes"]];
- [...db.handovers].forEach(h=>rows.push([dateOf(h),h.outgoingCommander,h.incomingCommander,h.cash??h.cashAmount,h.bankBalance,h.stockValue,h.memberDues,h.memberAdvanceLiability,h.messCutting,h.surplus,h.notes]));
- const quote=x=>'"'+txt(x).replace(/"/g,'""')+'"';
- const blob=new Blob(["\uFEFF"+rows.map(r=>r.map(quote).join(",")).join("\r\n")],{type:"text/csv;charset=utf-8"});
- const url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download="CRPF-Handover.csv";a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+function handoverCSV(){
+ const rows=[["Date","Outgoing","Incoming","Cash","Bank","Stock","Member Dues","Advance Liability","Other Expenses","Surplus","Notes"]];
+ db.handovers.forEach(h=>rows.push([dateOf(h),h.outgoingCommander||"",h.incomingCommander||"",
+  h.cash??h.cashAmount??0,h.bankBalance??0,h.stockValue??0,h.memberDues??0,
+  h.memberAdvanceLiability??0,h.otherExpenses??0,h.surplus??0,h.notes||""]));
+ downloadCSV(rows,"CRPF-Commander-Handover.csv");
+}
+function setTab(name){
+ activeTab=name;document.querySelectorAll(".panel").forEach(p=>p.classList.add("hidden"));
+ $(name).classList.remove("hidden");
+ document.querySelectorAll("[data-tab]").forEach(b=>b.classList.toggle("active",b.dataset.tab===name));
+ if(name==="records")renderHandovers();if(name==="expenses")renderExpenses();
+}
+function setCurrentMonth(){
+ const d=new Date(),y=d.getFullYear(),m=String(d.getMonth()+1).padStart(2,"0");
+ $("fromDate").value=y+"-"+m+"-01";$("toDate").value=today();calculate();
 }
 document.querySelectorAll("[data-tab]").forEach(b=>b.addEventListener("click",()=>setTab(b.dataset.tab)));
-$("calculateBtn").onclick=()=>{loadDB();calc()};
-$("monthBtn").onclick=()=>{loadDB();currentMonth()};
-$("fromDate").onchange=()=>{loadDB();calc()};
-$("toDate").onchange=()=>{loadDB();calc()};
-$("saveExpenseBtn").onclick=()=>{loadDB();saveExpense()};
-$("clearExpenseBtn").onclick=()=>{["expenseTitle","expenseAmount","expenseApproved","expenseRef","expenseNotes"].forEach(id=>$(id).value="");$("expenseStatus").textContent="Form cleared."};
-$("fetchHandoverBtn").onclick=()=>{loadDB();fetchHandover()};
-$("saveHandoverBtn").onclick=()=>{loadDB();saveHandover()};
-$("printBtn").onclick=()=>window.print();
-$("csvBtn").onclick=csv;
+$("calculateBtn").addEventListener("click",calculate);
+$("currentMonthBtn").addEventListener("click",setCurrentMonth);
+$("saveExpenseBtn").addEventListener("click",saveExpense);
+$("clearExpenseBtn").addEventListener("click",clearExpense);
+$("fetchHandoverBtn").addEventListener("click",fetchHandover);
+$("saveHandoverBtn").addEventListener("click",saveHandover);
+$("printBtn").addEventListener("click",()=>window.print());
+$("printExpensesBtn").addEventListener("click",()=>window.print());
+$("expenseCsvBtn").addEventListener("click",expenseCSV);
+$("csvBtn").addEventListener("click",handoverCSV);
+$("fromDate").addEventListener("change",calculate);
+$("toDate").addEventListener("change",calculate);
 function init(){
- loadDB();$("fromDate").value=new Date().getFullYear()+"-"+String(new Date().getMonth()+1).padStart(2,"0")+"-01";$("toDate").value=today();
- $("expenseDate").value=today();$("handoverDate").value=today();
- calc();renderHandovers();
+ loadDB();$("fromDate").value=new Date().getFullYear()+"-"+String(new Date().getMonth()+1).padStart(2,"0")+"-01";
+ $("toDate").value=today();$("expenseDate").value=today();$("handoverDate").value=today();
+ calculate();renderHandovers();
 }
 init();
 </script>

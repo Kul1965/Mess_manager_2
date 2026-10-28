@@ -3,536 +3,558 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Mess Settlement & Handover</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CRPF Smart Mess Manager - Reports</title>
 <style>
-:root{--g:#176747;--deep:#10563e;--bg:#f2f6f3;--white:#fff;--text:#214d3b;--muted:#78857e;--border:#dce5df;--red:#bd3942;--amber:#94620a}
+:root{--g:#176747;--deep:#10563e;--bg:#f2f6f3;--text:#214d3b;--muted:#78857e;--border:#dce5df}
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);font-family:Arial,sans-serif;color:var(--text)}
-header{background:var(--g);color:white;padding:18px 15px}
-header h2{margin:0 0 5px;font-size:22px}
-header p{margin:0;font-size:13px}
-nav{display:flex;gap:7px;overflow-x:auto;background:white;padding:11px;border-bottom:1px solid var(--border)}
-nav a{white-space:nowrap;text-decoration:none;background:#eaf3ed;color:var(--g);padding:9px 11px;border-radius:8px;font-size:13px;font-weight:bold}
-main{max-width:1000px;margin:16px auto;padding:0 12px 30px}
+body{margin:0;background:var(--bg);color:var(--text);font-family:Arial,sans-serif;font-size:14px}
+header{background:linear-gradient(120deg,#10583e,#176747);color:white;padding:20px}
+header h1{margin:0 0 7px;font-size:23px}
+header p{margin:0;font-size:13px;line-height:1.5}
+nav{display:flex;gap:7px;overflow-x:auto;background:white;padding:10px;border-bottom:1px solid var(--border)}
+nav a{white-space:nowrap;text-decoration:none;color:var(--g);padding:10px 13px;border:1px solid var(--border);border-radius:8px;font-weight:bold}
+nav a.active{background:var(--g);color:white}
+main{max-width:1150px;margin:auto;padding:14px}
 .card{background:white;border:1px solid var(--border);border-radius:12px;padding:15px;margin-bottom:14px}
-h3{margin:0 0 12px;font-size:18px}
-label{display:block;font-size:13px;font-weight:bold;margin:12px 0 6px}
-input,select,textarea{width:100%;padding:11px;border:1px solid var(--border);border-radius:8px;font-size:15px;background:white;color:var(--text)}
-textarea{min-height:65px}
-.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:0 12px}
-button{border:0;border-radius:8px;padding:11px 13px;font-weight:bold;font-size:13px;cursor:pointer}
-.primary{background:var(--g);color:white}
-.secondary{background:#eaf3ed;color:var(--g)}
-.danger{background:#fff0f0;color:var(--red)}
-.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:13px}
-.help{font-size:12px;line-height:1.5;color:var(--muted)}
-.stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
-.stat{background:#f6faf7;border:1px solid var(--border);border-radius:10px;padding:12px}
-.stat strong{display:block;font-size:20px;color:var(--g);overflow-wrap:anywhere}
-.stat span{font-size:12px;color:var(--muted)}
-.tableWrap{overflow-x:auto}
-table{width:100%;border-collapse:collapse;font-size:13px;min-width:540px}
-th,td{padding:10px 8px;text-align:left;border-bottom:1px solid var(--border);vertical-align:top}
-th{background:#f3f8f4}
-.right{text-align:right;white-space:nowrap}
-.good{color:var(--g);font-weight:bold}
-.bad{color:var(--red);font-weight:bold}
-.warning{background:#fff4df;color:#77551c;border-radius:8px;padding:12px;font-size:13px;line-height:1.5}
-#message{font-size:13px;line-height:1.5;margin-top:10px}
-.empty{padding:18px;text-align:center;color:var(--muted);font-size:13px}
-.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:12px}
-.tabs button.active{background:var(--g);color:white}
-.hidden{display:none!important}
-@media(max-width:520px){.grid{grid-template-columns:1fr}.stats{grid-template-columns:repeat(2,minmax(0,1fr))}.stat strong{font-size:17px}}
-@media print{
-  header,nav,.noPrint,footer{display:none!important}
-  body{background:white;color:#111}
-  main{margin:0;padding:0}
-  .card{border:0}
-}
+h2{font-size:19px;margin:0 0 12px}
+h3{font-size:16px;margin:0 0 12px}
+.note{background:#fff8e8;border:1px solid #efdfb8;padding:12px;border-radius:9px;line-height:1.6;margin-bottom:14px}
+.stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+.stat{border:1px solid var(--border);border-radius:10px;padding:13px;min-width:0}
+.stat small{display:block;color:var(--muted);margin-bottom:8px}
+.stat strong{font-size:20px;color:var(--g);overflow-wrap:anywhere}
+.filters{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+input,select,button{width:100%;padding:11px;border:1px solid var(--border);border-radius:8px;background:white;color:var(--text);font:inherit}
+button{background:var(--g);color:white;border:0;font-weight:bold;cursor:pointer}
+button.secondary{background:white;color:var(--g);border:1px solid var(--g)}
+.actions{display:grid;grid-template-columns:1fr 1fr;gap:9px;margin-top:10px}
+.tablewrap{overflow-x:auto}
+table{border-collapse:collapse;width:100%;min-width:620px}
+th,td{padding:10px 9px;border-bottom:1px solid var(--border);text-align:left;vertical-align:top}
+th{background:#edf6ef;color:var(--deep)}
+.tag{display:inline-block;background:#e6f3eb;color:var(--g);padding:4px 7px;border-radius:5px;font-size:12px}
+.muted{color:var(--muted);line-height:1.5}
+.empty{text-align:center;color:var(--muted);padding:22px}
+.totalrow{font-weight:bold;background:#edf6ef}
+@media(min-width:650px){.stats{grid-template-columns:repeat(4,minmax(0,1fr))}.filters{grid-template-columns:repeat(4,minmax(0,1fr))}}
+@media print{body{background:white;font-size:10px}nav,.no-print,footer{display:none!important}main{padding:0}.card{break-inside:avoid;border:1px solid #bbb}table{min-width:0;font-size:9px}th,td{padding:5px}}
 </style>
 </head>
 <body>
 <header>
-  <h2>CRPF Smart Mess Manager</h2>
-  <p>Monthly Settlement · Surplus · Expenses · Handover</p>
+<h1>CRPF SMART MESS MANAGER</h1>
+<p>Reports & Registers · Store, Ration, Meals, Members and Accounts</p>
 </header>
 
-<nav class="noPrint">
-  <a href="index.html">Dashboard</a>
-  <a href="members.html">Members</a>
-  <a href="mess-staff.html">Mess staff</a>
-  <a href="store.html">Store</a>
-  <a href="recipes.html">Recipes</a>
-  <a href="meals.html">Meals</a>
-  <a href="accounts.html">Accounts</a>
-  <a href="settlement.html">Settlement</a>
-  <a href="settings.html">Settings</a>
+<nav class="no-print">
+<a href="index.html">Dashboard</a>
+<a href="members.html">Members</a>
+<a href="store.html">Store & Purchase</a>
+<a href="recipes.html">Recipes</a>
+<a href="meals.html">Meals</a>
+<a href="accounts.html">Accounts</a>
+<a href="settlement.html">Settlement</a>
+<a href="reports.html" class="active">Reports</a>
+<a href="settings.html">Settings</a>
 </nav>
 
 <main>
-  <section class="card">
-    <h3>Monthly Food Settlement</h3>
-    <div class="grid">
-      <div>
-        <label for="settleMonth">Settlement Month</label>
-        <input id="settleMonth" type="month">
-      </div>
-      <div>
-        <label for="budgetInput">Monthly Food Budget / Entitlement (Rs)</label>
-        <input id="budgetInput" type="number" min="0" step="0.01" placeholder="Enter approved budget">
-      </div>
-    </div>
-    <p class="help">Budget ko approved entitlement ke mutabik enter karein. Settings ka monthly budget sirf default value hai; yahan month-wise value badal sakte hain.</p>
-    <div class="actions noPrint">
-      <button class="primary" onclick="saveBudget()">Save Monthly Budget</button>
-      <button class="secondary" onclick="refreshSettlement()">Refresh Calculation</button>
-      <button class="secondary" onclick="window.print()">Print / Save PDF</button>
-    </div>
-    <div id="budgetMessage" class="help" aria-live="polite"></div>
-  </section>
+<div class="note">
+<strong>Report guide:</strong> Select one report or All Reports. For one day, use the same date in both date fields. For multiple days, select From Date and To Date. Purchase totals, stock value and ration expense are shown separately; unrelated amounts are never added into one financial total.
+</div>
 
-  <section class="card">
-    <h3>Settlement Summary</h3>
-    <div class="stats">
-      <div class="stat"><strong id="budgetTotal">Rs 0</strong><span>Approved food budget</span></div>
-      <div class="stat"><strong id="rationTotal">Rs 0</strong><span>Recorded ration / stock purchases</span></div>
-      <div class="stat"><strong id="otherTotal">Rs 0</strong><span>Other expenses paid from surplus</span></div>
-      <div class="stat"><strong id="surplusTotal">Rs 0</strong><span>Remaining surplus before other expenses</span></div>
-      <div class="stat"><strong id="remainingTotal">Rs 0</strong><span>Surplus remaining after other expenses</span></div>
-      <div class="stat"><strong id="budgetStatus">Not checked</strong><span>Budget position</span></div>
-    </div>
-    <p class="help">Calculation: budget − recorded ration purchases = surplus before other expenses. Other expenses are subtracted from surplus only. Negative surplus is shown as a warning, not deducted from member advance.</p>
-    <div id="settlementWarning" class="warning" style="margin-top:12px">Choose a month to calculate settlement.</div>
-  </section>
+<section class="stats">
+<div class="stat"><small>Total Members</small><strong id="memberCount">0</strong></div>
+<div class="stat"><small>Store Items</small><strong id="itemCount">0</strong></div>
+<div class="stat"><small>Meal Records</small><strong id="mealCount">0</strong></div>
+<div class="stat"><small>Account Entries</small><strong id="ledgerCount">0</strong></div>
+</section>
 
-  <section class="card noPrint">
-    <div class="tabs">
-      <button id="tabExpense" class="secondary active" onclick="showTab('expense')">Other Expenses</button>
-      <button id="tabHandover" class="secondary" onclick="showTab('handover')">Commander Handover</button>
-      <button id="tabHistory" class="secondary" onclick="showTab('history')">Records</button>
-    </div>
+<section class="card no-print" style="margin-top:14px">
+<h2>Report Filters</h2>
+<div class="filters">
+<select id="reportType">
+<option value="all">All Reports</option>
+<option value="member">Members Record</option>
+<option value="item">Store Stock Record</option>
+<option value="purchase">Purchase Record</option>
+<option value="recipe">Recipe Record</option>
+<option value="meal">Meals Record</option>
+<option value="ration">Daily Ration Summary</option>
+<option value="ledger">Advance & Accounts</option>
+<option value="expense">Other Expenses</option>
+<option value="handover">Commander Handover</option>
+</select>
+<input id="search" placeholder="Search name, item or details">
+<input id="fromDate" type="date" aria-label="From date">
+<input id="toDate" type="date" aria-label="To date">
+</div>
+<div class="actions">
+<button id="applyBtn" type="button">Show Report</button>
+<button id="resetBtn" type="button" class="secondary">Reset Filters</button>
+</div>
+</section>
 
-    <div id="expensePanel">
-      <h3>Record Other Expense</h3>
-      <p class="help">Sirf actual expense record karein. System check karega ki month mein available surplus kitna hai. Surplus se zyada expense enter karne par warning milegi; member advance se automatic deduction nahi hoga.</p>
-      <form id="expenseForm">
-        <input id="expenseEditId" type="hidden">
-        <div class="grid">
-          <div>
-            <label for="expenseDate">Date *</label>
-            <input id="expenseDate" type="date" required>
-          </div>
-          <div>
-            <label for="expenseCategory">Expense Category *</label>
-            <select id="expenseCategory" required>
-              <option>Cleaning</option>
-              <option>Kitchen Supplies</option>
-              <option>Repair / Maintenance</option>
-              <option>Gas / Fuel</option>
-              <option>Electricity / Water</option>
-              <option>Transport</option>
-              <option>Other</option>
-            </select>
-          </div>
-          <div>
-            <label for="expenseDescription">Description *</label>
-            <input id="expenseDescription" required placeholder="Expense details">
-          </div>
-          <div>
-            <label for="expenseAmount">Actual Amount (Rs) *</label>
-            <input id="expenseAmount" type="number" min="0.01" step="0.01" required>
-          </div>
-          <div>
-            <label for="expensePaidBy">Paid By</label>
-            <input id="expensePaidBy" placeholder="Name / staff">
-          </div>
-          <div>
-            <label for="expenseReference">Receipt / Bill No.</label>
-            <input id="expenseReference" placeholder="Optional">
-          </div>
-        </div>
-        <label for="expenseNotes">Notes</label>
-        <textarea id="expenseNotes" placeholder="Additional notes"></textarea>
-        <div class="actions">
-          <button class="primary" type="submit" id="expenseSaveBtn">Save Expense</button>
-          <button class="secondary" type="button" onclick="resetExpenseForm()">Clear</button>
-        </div>
-      </form>
-    </div>
+<section class="card">
+<h2 id="reportHeading">Complete Mess Report</h2>
+<p id="summary" class="muted">Loading saved records...</p>
 
-    <div id="handoverPanel" class="hidden">
-      <h3>Mess Commander Handover</h3>
-      <p class="help">Handover record mein actual verified amounts enter karein. System kisi member ka balance khud se change nahi karega aur payment/refund ki ledger entry bina actual transaction ke nahi banayega.</p>
-      <form id="handoverForm">
-        <input id="handoverEditId" type="hidden">
-        <div class="grid">
-          <div>
-            <label for="handoverDate">Handover Date *</label>
-            <input id="handoverDate" type="date" required>
-          </div>
-          <div>
-            <label for="oldCommander">Outgoing Commander *</label>
-            <input id="oldCommander" required placeholder="Purane commander ka naam">
-          </div>
-          <div>
-            <label for="newCommander">Incoming Commander *</label>
-            <input id="newCommander" required placeholder="Naye commander ka naam">
-          </div>
-          <div>
-            <label for="handoverCash">Verified Cash Handed Over (Rs)</label>
-            <input id="handoverCash" type="number" min="0" step="0.01" value="0">
-          </div>
-          <div>
-            <label for="handoverStockValue">Verified Stock Value (Rs)</label>
-            <input id="handoverStockValue" type="number" min="0" step="0.01" value="0">
-          </div>
-          <div>
-            <label for="handoverBank">Verified Bank Balance (Rs)</label>
-            <input id="handoverBank" type="number" min="0" step="0.01" value="0">
-          </div>
-          <div>
-            <label for="handoverMemberDue">Verified Member Dues (Rs)</label>
-            <input id="handoverMemberDue" type="number" min="0" step="0.01" value="0">
-          </div>
-          <div>
-            <label for="handoverMemberAdvance">Verified Member Advance Liability (Rs)</label>
-            <input id="handoverMemberAdvance" type="number" min="0" step="0.01" value="0">
-          </div>
-        </div>
-        <label for="handoverNotes">Notes / Discrepancies</label>
-        <textarea id="handoverNotes" placeholder="Count, verification, outstanding matters"></textarea>
-        <div class="actions">
-          <button class="primary" type="submit" id="handoverSaveBtn">Save Handover</button>
-          <button class="secondary" type="button" onclick="resetHandoverForm()">Clear</button>
-        </div>
-      </form>
-    </div>
+<div class="stats" style="margin:12px 0">
+<div class="stat"><small>Visible Entries</small><strong id="visibleCount">0</strong></div>
+<div class="stat"><small>Amount Total (Rs)</small><strong id="amountTotal">—</strong></div>
+<div class="stat"><small>First Date</small><strong id="firstDate" style="font-size:14px">—</strong></div>
+<div class="stat"><small>Last Date</small><strong id="lastDate" style="font-size:14px">—</strong></div>
+</div>
+<p id="amountNote" class="muted">All Reports: amounts are not combined because different record types represent different kinds of value.</p>
 
-    <div id="historyPanel" class="hidden">
-      <h3>Settlement Records</h3>
-      <p class="help">Expense aur commander handover history yahan dikhegi. Edit/delete karne se pehle supporting bills verify karein.</p>
-      <div class="tableWrap">
-        <table>
-          <thead><tr><th>Date</th><th>Record</th><th>Description</th><th class="right">Amount / Value</th><th>Action</th></tr></thead>
-          <tbody id="historyRows"></tbody>
-        </table>
-      </div>
-      <div id="historyEmpty" class="empty hidden">Abhi koi record nahi hai.</div>
-    </div>
-  </section>
+<div class="tablewrap">
+<table>
+<thead><tr><th>Date</th><th>Record Type</th><th>Name / Item</th><th>Details</th><th>Amount (Rs)</th></tr></thead>
+<tbody id="reportBody"></tbody>
+</table>
+</div>
+<div id="empty" class="empty" hidden>No matching records found.</div>
+<div class="actions no-print">
+<button id="printBtn" type="button">Print / Save PDF</button>
+<button id="csvBtn" type="button">Download CSV</button>
+</div>
+</section>
 
-  <section class="card">
-    <h3>Ration Purchase Source</h3>
-    <p class="help">Is page par ration purchase ki duplicate entry nahi hoti. Purchase total ko Store/Purchase records se read karne ki koshish hoti hai. Agar aapke current store page ka data format alag hai, total ko original purchase register se verify karein.</p>
-    <div id="sourceNote" class="help"></div>
-  </section>
-  <div id="message" aria-live="polite"></div>
+<section class="card" id="rationCard">
+<h2>Daily Ration Summary</h2>
+<p id="rationSummary" class="muted">Select dates and press Show Report.</p>
+<div class="tablewrap">
+<table>
+<thead><tr><th>Date</th><th>Ration Item</th><th>Quantity</th><th>Unit</th></tr></thead>
+<tbody id="rationBody"></tbody>
+</table>
+</div>
+<div id="rationEmpty" class="empty" hidden>No saved ration quantities found for this date range.</div>
+</section>
+
+<section class="card">
+<h2>Financial Register Summary</h2>
+<p class="muted">These figures are kept separate. Purchase spending, remaining stock value, member deposits and member charges are not the same type of amount.</p>
+<div class="stats" style="margin-bottom:12px">
+<div class="stat"><small>Purchase Total (Rs)</small><strong id="purchaseTotal">0.00</strong></div>
+<div class="stat"><small>Current Stock Value (Rs)</small><strong id="stockValue">0.00</strong></div>
+<div class="stat"><small>Member Deposits (Rs)</small><strong id="depositTotal">0.00</strong></div>
+<div class="stat"><small>Member Charges (Rs)</small><strong id="chargeTotal">0.00</strong></div>
+</div>
+<div class="tablewrap">
+<table>
+<thead><tr><th>Register</th><th>Recorded Total (Rs)</th><th>Record Count</th></tr></thead>
+<tbody>
+<tr><td>Purchases</td><td id="purchaseTotal2">0.00</td><td id="purchaseCount">0</td></tr>
+<tr><td>Member Payments / Deposits</td><td id="depositTotal2">0.00</td><td id="depositCount">0</td></tr>
+<tr><td>Member Charges</td><td id="chargeTotal2">0.00</td><td id="chargeCount">0</td></tr>
+<tr><td>Other Expenses</td><td id="expenseTotal">0.00</td><td id="expenseCount">0</td></tr>
+</tbody>
+</table>
+</div>
+</section>
+
+<section class="card no-print">
+<h3>Refresh Saved Records</h3>
+<p class="muted">Refresh after adding or editing a member, purchase, meal or account entry.</p>
+<button id="refreshBtn" type="button">Refresh Reports</button>
+</section>
 </main>
-<footer style="text-align:center;color:#78857e;font-size:12px;padding:10px">CRPF Smart Mess Manager · Local browser records</footer>
+
+<footer class="muted" style="text-align:center;padding:18px">CRPF Smart Mess Manager · Reports</footer>
 
 <script>
-(function(){
 "use strict";
+
 const KEYS=["crpfMessProfessionalV1","crpfMessPrototypeV2"];
 const $=id=>document.getElementById(id);
 const arr=x=>Array.isArray(x)?x:[];
-const str=x=>String(x??"");
-let data=loadData();
+const num=x=>x!==""&&x!==null&&x!==undefined&&Number.isFinite(Number(x))?Number(x):0;
+const str=x=>x===null||x===undefined?"":typeof x==="object"?"":String(x);
+const money=x=>num(x).toLocaleString("en-IN",{minimumFractionDigits:2,maximumFractionDigits:2});
 
-function parse(key){
+function val(o,keys,fallback=""){
+  for(const k of keys)if(o&&o[k]!==undefined&&o[k]!==null&&o[k]!=="")return o[k];
+  return fallback;
+}
+function read(key){
   try{
-    const x=JSON.parse(localStorage.getItem(key)||"null");
-    return x&&typeof x==="object"&&!Array.isArray(x)?x:null;
+    const raw=localStorage.getItem(key);
+    if(!raw)return null;
+    const d=JSON.parse(raw);
+    return d&&typeof d==="object"?d:null;
   }catch(e){return null}
 }
-function mergeById(a,b){
+function dataScore(d){
+  return ["members","items","purchases","recipes","meals","ledger","expenses","handovers"]
+    .reduce((s,k)=>s+arr(d[k]).length,0);
+}
+/* Select one main dataset. Do not merge both storage keys into one report. */
+function loadData(){
+  const found=KEYS.map(key=>({key,data:read(key)}))
+    .filter(x=>x.data&&typeof x.data==="object");
+  found.sort((a,b)=>dataScore(b.data)-dataScore(a.data));
+  if(!found.length)return {
+    key:"",members:[],items:[],purchases:[],recipes:[],meals:[],
+    ledger:[],expenses:[],handovers:[]
+  };
+  const source=found[0];
+  const d=source.data;
+  ["members","items","purchases","recipes","meals","ledger","expenses","handovers"]
+    .forEach(k=>{if(!Array.isArray(d[k]))d[k]=[]});
+  d._reportSourceKey=source.key;
+  return d;
+}
+function dateOf(o){
+  let s=str(val(o,["date","joiningDate","createdAt","confirmedAt","updatedAt","timestamp"],""));
+  if(s.includes("T"))s=s.split("T")[0];
+  return /^\d{4}-\d{2}-\d{2}$/.test(s)?s:"";
+}
+function baseUnit(unit){
+  unit=str(unit).toLowerCase();
+  if(["kg","g","gram","grams"].includes(unit))return "g";
+  if(["ltr","l","litre","liter","litres","liters","ml"].includes(unit))return "ml";
+  return "pcs";
+}
+function toBase(qty,unit){
+  unit=str(unit).toLowerCase();
+  qty=num(qty);
+  if(["kg","ltr","l","litre","liter","litres","liters"].includes(unit))return qty*1000;
+  return qty;
+}
+function displayQty(q){
+  return num(q).toLocaleString("en-IN",{maximumFractionDigits:3});
+}
+function memberName(o){
+  return str(val(o,["memberName","fullName","name","nameOfMember","serviceId","memberId"],""));
+}
+function purchaseTotal(p){
+  if(p.total!==undefined&&p.total!==null&&p.total!=="")return num(p.total);
+  if(p.totalCost!==undefined&&p.totalCost!==null&&p.totalCost!=="")return num(p.totalCost);
+  return num(val(p,["quantity","qty"],0))*num(val(p,["rate","unitRate"],0));
+}
+function purchaseEntries(){
   const out=[],seen=new Set();
-  [...arr(a),...arr(b)].forEach(x=>{
-    const k=x&&x.id!=null?"id:"+x.id:"obj:"+JSON.stringify(x);
-    if(!seen.has(k)){seen.add(k);out.push(x)}
+  /* Nested purchases are used by the Store page. */
+  data.items.forEach(i=>arr(i.purchases).forEach(p=>{
+    const sig=p.id!==undefined?"id:"+String(p.id):JSON.stringify([i.id,p.date,p.quantity,p.rate,p.total,p.invoice]);
+    if(seen.has(sig))return;
+    seen.add(sig);
+    out.push({p,item:i,itemName:val(i,["name","itemName"],"Purchase item")});
+  }));
+  /* Add top-level purchases only if they are not the same purchase. */
+  data.purchases.forEach(p=>{
+    const sig=p.id!==undefined?"id:"+String(p.id):JSON.stringify([p.itemId,p.itemName,p.date,p.quantity,p.rate,p.total,p.invoice]);
+    if(seen.has(sig))return;
+    seen.add(sig);
+    const item=data.items.find(i=>String(i.id)===String(p.itemId));
+    out.push({p,item:item||{unit:val(p,["purchaseUnit","unit"],"pcs")},
+      itemName:val(p,["itemName","name"],item?item.name:"Purchase item")});
   });
   return out;
 }
-function loadData(){
-  const old=parse(KEYS[1])||{},cur=parse(KEYS[0])||{};
-  const d={...old,...cur};
-  ["members","items","recipes","meals","ledger","expenses","handovers",
-   "limitHistory","movements","purchases","transactions","records","receipts","refunds"
-  ].forEach(k=>d[k]=mergeById(old[k],cur[k]));
-  d.settings={...(old.settings||{}),...(cur.settings||{})};
-  d.members=arr(d.members);d.items=arr(d.items);d.meals=arr(d.meals);
-  d.expenses=arr(d.expenses);d.handovers=arr(d.handovers);d.ledger=arr(d.ledger);
-  return d;
+function baseQuantity(p,item){
+  if(p.quantityBase!==undefined&&p.quantityBase!==null&&p.quantityBase!=="")return num(p.quantityBase);
+  const q=val(p,["quantity","qty"],"");
+  const unit=str(val(p,["purchaseUnit","unit"],item.unit||""));
+  if(q==="")return 0;
+  if(baseUnit(unit)!==baseUnit(item.unit||unit))return 0;
+  return toBase(q,unit);
 }
-function saveData(){
-  const old=localStorage.getItem(KEYS[0]);
-  if(old){try{localStorage.setItem("crpfMessSettlementSafetyCopy",old)}catch(e){}}
-  localStorage.setItem(KEYS[0],JSON.stringify(data));
-}
-function makeId(prefix){
-  return prefix+"_"+Date.now().toString(36)+"_"+Math.random().toString(36).slice(2,7);
-}
-function today(){
-  const d=new Date();
-  return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
-}
-function monthNow(){return today().slice(0,7)}
-function monthOf(v){return str(v).slice(0,7)}
-function money(v){return "Rs "+Number(v||0).toLocaleString("en-IN",{minimumFractionDigits:2,maximumFractionDigits:2})}
-function num(v){const n=Number(v);return Number.isFinite(n)&&n>=0?n:0}
-function esc(v){return str(v).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]))}
-function showMessage(msg,error){
-  $("message").textContent=msg;
-  $("message").style.color=error?"#bd3942":"#176747";
-}
-function showBudgetMessage(msg,error){
-  $("budgetMessage").textContent=msg;
-  $("budgetMessage").style.color=error?"#bd3942":"#176747";
-}
-function getMonthlyBudget(month){
-  const hist=arr(data.limitHistory).find(x=>x.month===month||x.date===month);
-  if(hist&&hist.monthlyBudget!=null)return num(hist.monthlyBudget);
-  const s=data.settings||{};
-  const byMonth=s.monthlyBudgets||{};
-  if(byMonth[month]!=null)return num(byMonth[month]);
-  return num(s.monthlyBudget||0);
-}
-function isCancelled(m){return ["cancelled","canceled","void"].includes(str(m.status).toLowerCase())}
-function purchaseDate(p){return str(p.date||p.purchaseDate||p.createdAt||"").slice(0,10)}
-function purchaseAmount(p){
-  const direct=p.total??p.totalCost??p.amount??p.cost;
-  if(direct!=null&&Number.isFinite(Number(direct)))return num(direct);
-  return num(p.quantity)*num(p.rate);
-}
-function monthRationPurchases(month){
-  let total=0,count=0,seen=new Set();
-  // Preferred: nested purchase arrays stored inside each store item.
-  data.items.forEach(item=>{
-    arr(item.purchases||item.purchaseHistory||item.entries).forEach(p=>{
-      if(monthOf(purchaseDate(p))!==month)return;
-      const id=p.id!=null?"nested:"+p.id:null;
-      if(id&&seen.has(id))return;
-      if(id)seen.add(id);
-      total+=purchaseAmount(p);count++;
+function mealConsumption(item){
+  let used=0;
+  data.meals.forEach(m=>{
+    if(m.cancelled===true||String(m.status||"").toLowerCase()==="cancelled")return;
+    arr(m.ration).forEach(r=>{
+      if(String(r.itemId)!==String(item.id))return;
+      if(r.quantityBase!==undefined&&r.quantityBase!==null&&r.quantityBase!==""){
+        used+=num(r.quantityBase);
+      }else{
+        const q=val(r,["quantity","qty"],"");
+        const unit=str(val(r,["unit","purchaseUnit"],item.unit||""));
+        if(q!==""&&baseUnit(unit)===baseUnit(item.unit||unit))used+=toBase(q,unit);
+      }
     });
   });
-  // Alternative: top-level purchases collection.
-  arr(data.purchases).forEach(p=>{
-    if(monthOf(purchaseDate(p))!==month)return;
-    const id=p.id!=null?"top:"+p.id:null;
-    if(id&&seen.has(id))return;
-    if(id)seen.add(id);
-    total+=purchaseAmount(p);count++;
+  return used;
+}
+function storeStock(item){
+  const ps=arr(item.purchases);
+  const purchased=ps.reduce((s,p)=>s+baseQuantity(p,item),0);
+  const value=ps.reduce((s,p)=>s+purchaseTotal(p),0);
+  const average=purchased>0?value/purchased:0;
+  const used=mealConsumption(item);
+  const stock=Math.max(0,purchased-used);
+  return {purchased,average,used,stock,value:stock*average,unit:baseUnit(item.unit||"pcs")};
+}
+
+let data={},records=[],visible=[],rationRows=[];
+
+function add(type,label,o,details,amount){
+  records.push({date:dateOf(o),type,label:str(label)||type,details:str(details),
+    amount:amount===null||amount===undefined||amount===""?"":num(amount)});
+}
+function collect(){
+  data=loadData();
+  records=[];
+
+  data.members.forEach(m=>{
+    add("member",memberName(m)||"Member",m,
+      [val(m,["serviceId","memberId"]),val(m,["rank"]),val(m,["duty"]),val(m,["status"])]
+      .filter(Boolean).join(" · "),"");
   });
-  // Alternative ledger purchase entries, only if no purchases were found.
-  if(count===0){
-    arr(data.ledger).forEach(e=>{
-      const t=str(e.transactionType||e.type||"").toLowerCase();
-      if(monthOf(e.date)!==month||!(t.includes("purchase")||t.includes("ration")))return;
-      total+=num(e.amount);count++;
+
+  data.items.forEach(i=>{
+    const s=storeStock(i);
+    add("item",val(i,["name","itemName"],"Store item"),i,
+      "Current Stock: "+displayQty(s.stock)+" "+s.unit+
+      " · Average Rate: Rs "+s.average.toFixed(4)+"/"+s.unit+
+      " · Stock Value: Rs "+money(s.value),s.value);
+  });
+
+  const ps=purchaseEntries();
+  ps.forEach(({p,itemName,item})=>{
+    const q=val(p,["quantity","qty"],"");
+    const unit=val(p,["purchaseUnit","unit"],item.unit||"");
+    add("purchase",itemName,p,
+      "Quantity: "+str(q)+" "+str(unit)+
+      " · Rate: Rs "+money(val(p,["rate","unitRate"],0))+
+      (p.supplier?" · Supplier: "+str(p.supplier):"")+
+      (p.invoice?" · Bill: "+str(p.invoice):""),
+      purchaseTotal(p));
+  });
+
+  data.recipes.forEach(r=>{
+    add("recipe",val(r,["name","recipeName"],"Recipe"),r,
+      "Ingredients: "+arr(r.ingredients).length,"");
+  });
+
+  data.meals.forEach(m=>{
+    add("meal",val(m,["recipeName","type"],"Meal"),m,
+      "Meal: "+str(val(m,["type"],""))+
+      " · Servings: "+str(val(m,["servings"],""))+
+      " · Ration items: "+arr(m.ration).length+
+      " · Status: "+str(val(m,["status"],"")),
+      val(m,["totalCost","cost","amount"],""));
+  });
+
+  data.ledger.forEach(l=>{
+    add("ledger",memberName(l)||val(l,["description","transactionType","type"],"Account entry"),l,
+      str(val(l,["description","transactionType","type"],"Account entry")),
+      val(l,["amount","total"],""));
+  });
+
+  data.expenses.forEach(e=>{
+    add("expense",val(e,["name","title","description"],"Other expense"),e,
+      str(val(e,["category","notes"],"")),
+      val(e,["amount","total"],""));
+  });
+
+  data.handovers.forEach(h=>{
+    add("handover",val(h,["commanderName","name","title"],"Commander handover"),h,
+      str(val(h,["notes","remarks","fromCommander"],"Handover record")),
+      val(h,["amount","cash","cashAmount"],""));
+  });
+
+  $("memberCount").textContent=data.members.length;
+  $("itemCount").textContent=data.items.length;
+  $("mealCount").textContent=data.meals.length;
+  $("ledgerCount").textContent=data.ledger.length;
+
+  financialSummary(ps);
+  render();
+}
+function financialSummary(ps){
+  const purchaseSum=ps.reduce((s,x)=>s+purchaseTotal(x.p),0);
+  let stockSum=0;
+  data.items.forEach(i=>stockSum+=storeStock(i).value);
+
+  const deposits=data.ledger.filter(l=>{
+    const t=str(val(l,["transactionType","type"],"")).toLowerCase();
+    return ["deposit","payment","advance"].includes(t);
+  });
+  const charges=data.ledger.filter(l=>{
+    const t=str(val(l,["transactionType","type"],"")).toLowerCase();
+    return t.includes("charge")||t==="meal";
+  });
+
+  const depositSum=deposits.reduce((s,x)=>s+num(val(x,["amount","total"],0)),0);
+  const chargeSum=charges.reduce((s,x)=>s+num(val(x,["amount","total"],0)),0);
+
+  $("purchaseTotal").textContent=money(purchaseSum);
+  $("purchaseTotal2").textContent=money(purchaseSum);
+  $("purchaseCount").textContent=ps.length;
+  $("stockValue").textContent=money(stockSum);
+  $("depositTotal").textContent=money(depositSum);
+  $("depositTotal2").textContent=money(depositSum);
+  $("depositCount").textContent=deposits.length;
+  $("chargeTotal").textContent=money(chargeSum);
+  $("chargeTotal2").textContent=money(chargeSum);
+  $("chargeCount").textContent=charges.length;
+  $("expenseTotal").textContent=money(data.expenses.reduce((s,x)=>s+num(val(x,["amount","total"],0)),0));
+  $("expenseCount").textContent=data.expenses.length;
+}
+function selectedRange(){
+  return {from:$("fromDate").value,to:$("toDate").value};
+}
+function withinDate(date,from,to){
+  if(from&&(!date||date<from))return false;
+  if(to&&(!date||date>to))return false;
+  return true;
+}
+function rationName(r){
+  const item=data.items.find(i=>String(i.id)===String(r.itemId));
+  return str(val(r,["itemName","name"],item?val(item,["name","itemName"],"Ration item"):"Ration item"));
+}
+function rationQuantity(r){
+  if(r.quantityBase!==undefined&&r.quantityBase!==null&&r.quantityBase!==""){
+    const item=data.items.find(i=>String(i.id)===String(r.itemId));
+    return {qty:num(r.quantityBase),unit:baseUnit(item?item.unit:val(r,["unit"],"pcs"))};
+  }
+  const q=val(r,["quantity","qty","requiredQuantity"],"");
+  const unit=str(val(r,["unit","purchaseUnit"],"pcs"));
+  if(q==="")return {qty:0,unit:baseUnit(unit)};
+  return {qty:toBase(q,unit),unit:baseUnit(unit)};
+}
+function buildRation(){
+  const {from,to}=selectedRange();
+  const q=$("search").value.trim().toLowerCase();
+  const perDay=new Map(),totals=new Map();
+
+  data.meals.forEach(m=>{
+    const date=dateOf(m);
+    if(!withinDate(date,from,to))return;
+    if(m.cancelled===true||String(m.status||"").toLowerCase()==="cancelled")return;
+
+    arr(m.ration).forEach(r=>{
+      const name=rationName(r);
+      if(q&&!name.toLowerCase().includes(q))return;
+      const info=rationQuantity(r);
+      if(!info.qty)return;
+
+      const key=name+"|"+info.unit;
+      const dayKey=date+"|"+key;
+      if(!perDay.has(dayKey))perDay.set(dayKey,{date,name,unit:info.unit,qty:0});
+      perDay.get(dayKey).qty+=info.qty;
+      if(!totals.has(key))totals.set(key,{name,unit:info.unit,qty:0});
+      totals.get(key).qty+=info.qty;
     });
-  }
-  return {total,count};
-}
-function expensesForMonth(month){
-  return data.expenses.filter(e=>monthOf(e.date||e.createdAt)===month);
-}
-function expenseTotal(month){
-  return expensesForMonth(month).reduce((s,e)=>s+num(e.amount??e.total),0);
-}
-function calculate(month){
-  const budget=getMonthlyBudget(month);
-  const ration=monthRationPurchases(month);
-  const other=expenseTotal(month);
-  const before=budget-ration.total;
-  const after=before-other;
-  return {month,budget,ration:ration.total,rationCount:ration.count,other,before,after};
-}
-function renderSettlement(){
-  const month=$("settleMonth").value||monthNow();
-  const c=calculate(month);
-  $("budgetInput").value=c.budget;
-  $("budgetTotal").textContent=money(c.budget);
-  $("rationTotal").textContent=money(c.ration);
-  $("otherTotal").textContent=money(c.other);
-  $("surplusTotal").textContent=money(c.before);
-  $("remainingTotal").textContent=money(c.after);
-  $("budgetStatus").textContent=c.before<0?"Over budget":c.before===0?"Balanced":"Within budget";
-  $("budgetStatus").className=c.before<0?"bad":"good";
-  if(c.after<0){
-    $("settlementWarning").textContent="Warning: expenses plus ration purchases exceed the recorded food budget by "+money(Math.abs(c.after))+". Member advance has not been deducted. Verify purchases, approved budget and expenses.";
-    $("settlementWarning").style.background="#fff0f0";
-    $("settlementWarning").style.color="#bd3942";
-  }else if(c.before<0){
-    $("settlementWarning").textContent="Warning: ration purchases alone exceed the food budget by "+money(Math.abs(c.before))+". Other expenses cannot be covered from surplus.";
-    $("settlementWarning").style.background="#fff0f0";
-    $("settlementWarning").style.color="#bd3942";
-  }else{
-    $("settlementWarning").textContent="Surplus before other expenses: "+money(c.before)+". Remaining after recorded other expenses: "+money(c.after)+". This is a calculation from available records, not a cash verification.";
-    $("settlementWarning").style.background="#fff4df";
-    $("settlementWarning").style.color="#77551c";
-  }
-  $("sourceNote").textContent=c.rationCount
-    ? "Ration purchase source: "+c.rationCount+" purchase record(s) found for "+month+". Total must be verified against store invoices."
-    : "No matching ration purchase records were found for "+month+". Check the Store/Purchase page data format before treating the displayed surplus as final.";
-  renderHistory();
-}
-window.saveBudget=function(){
-  const month=$("settleMonth").value;
-  if(!month){showBudgetMessage("Pehle month select karein.",true);return}
-  const amount=num($("budgetInput").value);
-  data.settings=data.settings||{};
-  data.settings.monthlyBudgets=data.settings.monthlyBudgets||{};
-  data.settings.monthlyBudgets[month]=amount;
-  data.settings.monthlyBudget=amount;
-  const idx=arr(data.limitHistory).findIndex(x=>x.month===month);
-  const entry={id:idx>=0?data.limitHistory[idx].id:makeId("budget"),month,monthlyBudget:amount,updatedAt:new Date().toISOString()};
-  if(idx>=0)data.limitHistory[idx]={...data.limitHistory[idx],...entry};
-  else data.limitHistory.push(entry);
-  try{
-    saveData();renderSettlement();
-    showBudgetMessage("Monthly budget save ho gaya: "+month+". Purane members ke payments/advance nahi badle.");
-  }catch(e){showBudgetMessage("Save nahi hua. Storage full ho sakta hai; backup lein.",true)}
-};
-window.refreshSettlement=function(){renderSettlement();showBudgetMessage("Calculation refresh ho gaya. Purchase totals original store register se verify karein.")};
-window.showTab=function(tab){
-  ["expense","handover","history"].forEach(k=>{
-    $(k+"Panel").classList.toggle("hidden",k!==tab);
-    $("tab"+k.charAt(0).toUpperCase()+k.slice(1)).classList.toggle("active",k===tab);
   });
-  if(tab==="history")renderHistory();
-};
-window.resetExpenseForm=function(){
-  $("expenseForm").reset();$("expenseEditId").value="";
-  $("expenseDate").value=today();$("expenseSaveBtn").textContent="Save Expense";
-};
-window.resetHandoverForm=function(){
-  $("handoverForm").reset();$("handoverEditId").value="";
-  $("handoverDate").value=today();$("handoverSaveBtn").textContent="Save Handover";
-};
-$("expenseForm").addEventListener("submit",function(e){
-  e.preventDefault();
-  const id=$("expenseEditId").value;
-  const date=$("expenseDate").value;
-  const category=$("expenseCategory").value;
-  const description=$("expenseDescription").value.trim();
-  const amount=num($("expenseAmount").value);
-  if(!date||!description||amount<=0){showMessage("Date, description aur amount sahi enter karein.",true);return}
-  const old=id?data.expenses.find(x=>str(x.id)===str(id)):null;
-  const currentMonthExpenses=expenseTotal(monthOf(date));
-  const current=calculate(monthOf(date));
-  const totalAfterEdit=currentMonthExpenses-(old&&monthOf(old.date)===monthOf(date)?num(old.amount):0)+amount;
-  const surplusBefore=current.budget-current.ration;
-  const projected=surplusBefore-totalAfterEdit;
-  const item={
-    ...(old||{}),
-    id:old?old.id:makeId("expense"),
-    date,category,description,amount,
-    paidBy:$("expensePaidBy").value.trim(),
-    reference:$("expenseReference").value.trim(),
-    notes:$("expenseNotes").value.trim(),
-    updatedAt:new Date().toISOString()
-  };
-  if(projected<0&&!confirm("Warning: is expense ke baad surplus "+money(projected)+" ho jayega. Member advance se automatic deduction nahi hoga. Kya actual expense record karna hai?"))return;
-  try{
-    if(old){const i=data.expenses.findIndex(x=>str(x.id)===str(old.id));data.expenses[i]=item}
-    else data.expenses.push(item);
-    saveData();resetExpenseForm();renderSettlement();
-    showMessage("Expense record save ho gaya. Surplus se adjustment calculation mein dikhaya gaya; member ledger se paisa nahi kata.");
-  }catch(err){showMessage("Save fail hua. Backup lein aur storage space check karein.",true)}
-});
-$("handoverForm").addEventListener("submit",function(e){
-  e.preventDefault();
-  const id=$("handoverEditId").value;
-  const date=$("handoverDate").value;
-  const oldCommander=$("oldCommander").value.trim();
-  const newCommander=$("newCommander").value.trim();
-  if(!date||!oldCommander||!newCommander){showMessage("Handover date aur dono commander ke naam zaroori hain.",true);return}
-  const old=id?data.handovers.find(x=>str(x.id)===str(id)):null;
-  const item={
-    ...(old||{}),
-    id:old?old.id:makeId("handover"),
-    date,
-    oldStaff:oldCommander,
-    newStaff:newCommander,
-    oldCommander,
-    newCommander,
-    cashHandedOver:num($("handoverCash").value),
-    stockValue:num($("handoverStockValue").value),
-    bankBalance:num($("handoverBank").value),
-    memberDues:num($("handoverMemberDue").value),
-    memberAdvanceLiability:num($("handoverMemberAdvance").value),
-    notes:$("handoverNotes").value.trim(),
-    updatedAt:new Date().toISOString()
-  };
-  if(!confirm("Handover values verify kar liye? Yeh record cash, stock ya member ledger ko automatically change nahi karega."))return;
-  try{
-    if(old){const i=data.handovers.findIndex(x=>str(x.id)===str(old.id));data.handovers[i]=item}
-    else data.handovers.push(item);
-    saveData();resetHandoverForm();renderHistory();
-    showMessage("Commander handover record save ho gaya. Actual payment/refund ko Accounts mein separately record karein.");
-  }catch(err){showMessage("Handover save nahi hua. Backup lein.",true)}
-});
-function renderHistory(){
-  const month=$("settleMonth").value||monthNow();
-  const rows=[];
-  data.expenses.filter(e=>monthOf(e.date||e.createdAt)===month).forEach(e=>rows.push({
-    id:e.id,date:e.date,type:"Expense",description:(e.category||"Other")+" — "+(e.description||""),amount:num(e.amount),editType:"expense"
-  }));
-  data.handovers.filter(h=>monthOf(h.date||h.createdAt)===month).forEach(h=>rows.push({
-    id:h.id,date:h.date,type:"Handover",description:(h.oldCommander||h.oldStaff||"")+" → "+(h.newCommander||h.newStaff||""),amount:num(h.cashHandedOver)+num(h.stockValue)+num(h.bankBalance),editType:"handover"
-  }));
-  rows.sort((a,b)=>str(b.date).localeCompare(str(a.date)));
-  $("historyRows").innerHTML=rows.map(r=>'<tr><td>'+esc(r.date||"-")+'</td><td>'+esc(r.type)+'</td><td>'+esc(r.description)+'</td><td class="right">'+money(r.amount)+'</td><td><button class="secondary" onclick="editRecord(\''+esc(r.editType)+'\',\''+esc(r.id)+'\')">Edit</button> <button class="danger" onclick="deleteRecord(\''+esc(r.editType)+'\',\''+esc(r.id)+'\')">Delete</button></td></tr>').join("");
-  $("historyEmpty").classList.toggle("hidden",rows.length>0);
+
+  const rows=Array.from(perDay.values()).sort((a,b)=>a.date.localeCompare(b.date)||a.name.localeCompare(b.name));
+  const totalRows=Array.from(totals.values()).sort((a,b)=>a.name.localeCompare(b.name));
+  rationRows=rows;
+
+  const body=$("rationBody");body.replaceChildren();
+  rows.forEach(r=>{
+    const tr=document.createElement("tr");
+    [r.date,r.name,displayQty(r.qty),r.unit].forEach(v=>{
+      const td=document.createElement("td");td.textContent=v;tr.appendChild(td);
+    });
+    body.appendChild(tr);
+  });
+
+  totalRows.forEach(r=>{
+    const tr=document.createElement("tr");tr.className="totalrow";
+    const td1=document.createElement("td");td1.textContent="RANGE TOTAL";
+    const td2=document.createElement("td");td2.textContent=r.name;
+    const td3=document.createElement("td");td3.textContent=displayQty(r.qty);
+    const td4=document.createElement("td");td4.textContent=r.unit;
+    [td1,td2,td3,td4].forEach(td=>tr.appendChild(td));
+    body.appendChild(tr);
+  });
+
+  $("rationEmpty").hidden=rows.length!==0;
+  const period=from||to?(from||"Beginning")+" to "+(to||"Latest"):"All saved dates";
+  $("rationSummary").textContent=period+" · "+rows.length+
+    " daily item entries · "+totalRows.length+" different ration items. Range totals are shown in the green rows.";
 }
-window.editRecord=function(type,id){
-  if(type==="expense"){
-    const e=data.expenses.find(x=>str(x.id)===str(id));if(!e)return;
-    showTab("expense");
-    $("expenseEditId").value=e.id;$("expenseDate").value=e.date||today();
-    $("expenseCategory").value=e.category||"Other";
-    $("expenseDescription").value=e.description||"";
-    $("expenseAmount").value=e.amount||0;$("expensePaidBy").value=e.paidBy||"";
-    $("expenseReference").value=e.reference||"";$("expenseNotes").value=e.notes||"";
-    $("expenseSaveBtn").textContent="Update Expense";
-    window.scrollTo({top:0,behavior:"smooth"});
+function render(){
+  const q=$("search").value.trim().toLowerCase();
+  const type=$("reportType").value;
+  const {from,to}=selectedRange();
+
+  const headings={
+    all:"Complete Mess Report",member:"Members Record",item:"Store Stock Record",
+    purchase:"Purchase Record",recipe:"Recipe Record",meal:"Meals Record",
+    ration:"Daily Ration Summary",ledger:"Advance & Accounts Record",
+    expense:"Other Expenses Record",handover:"Commander Handover Record"
+  };
+
+  visible=records.filter(r=>{
+    if(type!=="all"&&type!=="ration"&&r.type!==type)return false;
+    if(type==="ration")return false;
+    if(!withinDate(r.date,from,to))return false;
+    return !q||[r.date,r.type,r.label,r.details,r.amount].join(" ").toLowerCase().includes(q);
+  }).sort((a,b)=>b.date.localeCompare(a.date)||a.type.localeCompare(b.type)||a.label.localeCompare(b.label));
+
+  $("reportHeading").textContent=headings[type]||"Mess Report";
+  $("summary").textContent="Showing "+visible.length+" matching entries from "+records.length+
+    " entries in the selected saved dataset.";
+
+  $("visibleCount").textContent=visible.length;
+  const amountTypes=["purchase","ledger","expense","handover"];
+  if(type==="all"||type==="item"||type==="member"||type==="recipe"||type==="meal"||type==="ration"){
+    $("amountTotal").textContent="—";
+    $("amountNote").textContent="No combined financial total is shown for this report because the visible records may represent different kinds of value.";
   }else{
-    const h=data.handovers.find(x=>str(x.id)===str(id));if(!h)return;
-    showTab("handover");
-    $("handoverEditId").value=h.id;$("handoverDate").value=h.date||today();
-    $("oldCommander").value=h.oldCommander||h.oldStaff||"";
-    $("newCommander").value=h.newCommander||h.newStaff||"";
-    $("handoverCash").value=h.cashHandedOver||0;
-    $("handoverStockValue").value=h.stockValue||0;
-    $("handoverBank").value=h.bankBalance||0;
-    $("handoverMemberDue").value=h.memberDues||0;
-    $("handoverMemberAdvance").value=h.memberAdvanceLiability||0;
-    $("handoverNotes").value=h.notes||"";
-    $("handoverSaveBtn").textContent="Update Handover";
-    window.scrollTo({top:0,behavior:"smooth"});
+    const amount=visible.filter(r=>r.amount!=="").reduce((s,r)=>s+num(r.amount),0);
+    $("amountTotal").textContent=money(amount);
+    $("amountNote").textContent="Total for the selected record type only. This is not a combined total across different registers.";
   }
-};
-window.deleteRecord=function(type,id){
-  if(!confirm("Kya aap is record ko delete karna chahte hain? Pehle bill/record verify karein."))return;
-  if(type==="expense")data.expenses=data.expenses.filter(x=>str(x.id)!==str(id));
-  else data.handovers=data.handovers.filter(x=>str(x.id)!==str(id));
-  try{saveData();renderSettlement();showMessage("Record delete ho gaya. Agar yeh pehle se final settlement mein use hua tha to dobara verify karein.")}
-  catch(e){showMessage("Delete save nahi hua.",true)}
-};
-$("settleMonth").addEventListener("change",renderSettlement);
-function init(){
-  $("settleMonth").value=monthNow();
-  $("expenseDate").value=today();
-  $("handoverDate").value=today();
-  renderSettlement();
+
+  const dates=visible.map(r=>r.date).filter(Boolean).sort();
+  $("firstDate").textContent=dates[0]||"—";
+  $("lastDate").textContent=dates[dates.length-1]||"—";
+
+  const body=$("reportBody");body.replaceChildren();
+  visible.forEach(r=>{
+    const tr=document.createElement("tr");
+    [r.date||"—",r.type,r.label,r.details||"—",r.amount===""?"—":money(r.amount)].forEach((v,i)=>{
+      const td=document.createElement("td");
+      if(i===1){
+        const tag=document.createElement("span");tag.className="tag";tag.textContent=v;td.appendChild(tag);
+      }else td.textContent=v;
+      tr.appendChild(td);
+    });
+    body.appendChild(tr);
+  });
+  $("empty").hidden=visible.length!==0;
+  buildRation();
 }
-try{init()}catch(e){
-  showMessage("Settlement load nahi hua. Browser ka original data delete na karein.",true);
+function csvEscape(v){
+  let s=String(v??"");
+  if(/^[=+\-@]/.test(s))s="'"+s;
+  return '"'+s.replace(/"/g,'""')+'"';
 }
-})();
+
+$("applyBtn").addEventListener("click",render);
+$("resetBtn").addEventListener("click",()=>{
+  $("reportType").value="all";
+  $("search").value="";
+  $("fromDate").value="";
+  $("toDate").value="";
+  render();
+});
+["reportType","search","fromDate","toDate"].forEach(id=>{
+  $(id).addEventListener("change",render);
+});
+$("printBtn").addEventListener("click",()=>window.print());
+$("csvBtn").addEventListener("click",()=>{
+  const rows=[["Date","Record Type","Name / Item","Details","Amount (Rs)"]];
+  visible.forEach(r=>rows.push([r.date,r.type,r.label,r.details,r.amount]));
+  const {from,to}=selectedRange();
+  const blob=new Blob(["\uFEFF"+rows.map(r=>r.map(csvEscape).join(",")).join("\r\n")],{type:"text/csv;charset=utf-8"});
+  const url=URL.createObjectURL(blob),a=document.createElement("a");
+  a.href=url;
+  a.download="CRPF-Mess-Report-"+(from||"start")+"-to-"+(to||"latest")+".csv";
+  document.body.appendChild(a);a.click();a.remove();
+  setTimeout(()=>URL.revokeObjectURL(url),1000);
+});
+$("refreshBtn").addEventListener("click",collect);
+
+collect();
 </script>
 </body>
 </html>

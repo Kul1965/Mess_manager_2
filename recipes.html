@@ -1,5 +1,4 @@
 
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -103,6 +102,7 @@ dialog::backdrop{background:#10291dcc}
           <tr>
             <th>Recipe</th>
             <th>Ingredients</th>
+            <th>Batch Servings</th>
             <th>Cost / Serving</th>
             <th>Actions</th>
           </tr>
@@ -116,7 +116,7 @@ dialog::backdrop{background:#10291dcc}
       <button onclick="openNew()">＋ Create First Recipe</button>
     </div>
   </section>
-  <p class="muted">Recipe ingredients are entered for one serving. Costs use the store's weighted-average purchase rates.</p>
+  <p class="muted">Recipe ka batch 20, 100 ya apni pasand ki servings ke liye banayein. Software ek member aur chune gaye members ka ration aur estimated cost calculate karega.</p>
 </main>
 
 <dialog id="editDialog">
@@ -133,19 +133,19 @@ dialog::backdrop{background:#10291dcc}
           <label for="recipeName">Recipe Name *</label>
           <input id="recipeName" required maxlength="100" placeholder="e.g. Dal, Rice, Chicken Curry">
         </div>
-        <div class="field">
-          <label for="recipeCategory">Category</label>
-          <select id="recipeCategory">
-            <option>Breakfast</option><option>Lunch</option>
-            <option>Dinner</option><option>Snacks</option><option>Other</option>
-          </select>
-        </div>
       </div>
 
-      <div class="field">
-        <label>Serving size</label>
-        <input value="1 serving" disabled>
-        <small>Enter ingredient quantities required to prepare one serving.</small>
+      <div class="form-grid">
+        <div class="field">
+          <label for="recipeServings">Yeh recipe kitne members ke liye hai? *</label>
+          <input id="recipeServings" type="number" min="1" step="1" value="100" required>
+          <small>Jaise 100. Ingredients ki quantity poore 100 members ke batch ki bharein.</small>
+        </div>
+        <div class="field">
+          <label>Automatic calculation</label>
+          <div class="muted" style="padding:10px 0">Per-member ration = ingredient quantity ÷ servings</div>
+          <div class="muted">Per-member cost = batch cost ÷ servings</div>
+        </div>
       </div>
 
       <div style="display:flex;justify-content:space-between;align-items:center;margin:18px 0 10px;gap:8px">
@@ -154,11 +154,14 @@ dialog::backdrop{background:#10291dcc}
       </div>
 
       <div id="ingredientRows"></div>
-
-      <div id="ingredientHint" class="muted">Choose ingredients from Store Items. Add purchase records in Store & Purchase to calculate costs.</div>
+      <div id="ingredientHint" class="muted">Store Items select karein. Cost ke liye Store & Purchase mein purchase rate hona chahiye.</div>
 
       <div class="total-box">
-        <div><b>Cost per serving</b><div class="muted">Calculated automatically</div></div>
+        <div><b>Total batch cost</b><div class="muted">Poore batch ka kharcha</div></div>
+        <strong id="liveBatchCost">Rs 0.00</strong>
+      </div>
+      <div class="total-box">
+        <div><b>Cost per member</b><div class="muted">Batch cost ÷ servings</div></div>
         <strong id="liveCost">Rs 0.00</strong>
       </div>
 
@@ -248,11 +251,6 @@ function toBase(quantity, unit){
   return quantity;
 }
 
-function unitLabel(unit){
-  const u = baseUnit(unit);
-  return u || unit || "";
-}
-
 function itemName(item){
   return item.name || item.itemName || item.title || "Unnamed item";
 }
@@ -277,8 +275,6 @@ function itemAverageRate(item){
   });
 
   if(totalQty > 0) return totalCost / totalQty;
-
-  // Compatibility with older store data formats
   if(Number(item.averageRateBase) > 0) return Number(item.averageRateBase);
   if(Number(item.avgRate) > 0) {
     return Number(item.avgRate) / (baseUnit(item.unit) === "g" || baseUnit(item.unit) === "ml" ? 1000 : 1);
@@ -297,8 +293,17 @@ function ingredientCost(ingredient){
   return qty * itemAverageRate(item);
 }
 
-function recipeCost(recipe){
+function recipeBatchCost(recipe){
   return (recipe.ingredients || []).reduce((sum, ing) => sum + ingredientCost(ing), 0);
+}
+
+function recipeServings(recipe){
+  const n = Number(recipe.servings ?? 1);
+  return Number.isFinite(n) && n >= 1 ? n : 1;
+}
+
+function recipeCost(recipe){
+  return recipeBatchCost(recipe) / recipeServings(recipe);
 }
 
 function render(){
@@ -322,28 +327,27 @@ function render(){
     else empty.innerHTML = '<div style="font-size:32px">🍲</div><p>No recipes added yet.</p><button onclick="openNew()">＋ Create First Recipe</button>';
     return;
   }
-  empty.hidden = true;
 
-  tbody.innerHTML = recipes.map(r => {
-    const count = (r.ingredients || []).length;
-    const category = r.category || "Other";
-    return `<tr>
-      <td><b>${esc(r.name)}</b><br><span class="pill">${esc(category)}</span></td>
-      <td>${count} item${count === 1 ? "" : "s"}</td>
-      <td><b>${money(recipeCost(r))}</b></td>
+  empty.hidden = true;
+  tbody.innerHTML = recipes.map(r => `
+    <tr>
+      <td><b>${esc(r.name)}</b></td>
+      <td>${(r.ingredients || []).length} items</td>
+      <td>${recipeServings(r)} members</td>
+      <td><b>${money(recipeCost(r))}</b><div class="muted">Batch: ${money(recipeBatchCost(r))}</div></td>
       <td><div class="actions">
         <button class="secondary" onclick="viewRecipe('${esc(r.id)}')">View</button>
         <button onclick="editRecipe('${esc(r.id)}')">Edit</button>
         <button class="danger" onclick="deleteRecipe('${esc(r.id)}')">Delete</button>
       </div></td>
-    </tr>`;
-  }).join("");
+    </tr>`).join("");
 }
 
 function openNew(){
   loadData();
   document.getElementById("recipeForm").reset();
   document.getElementById("recipeId").value = "";
+  document.getElementById("recipeServings").value = "100";
   document.getElementById("formTitle").textContent = "Add Recipe";
   document.getElementById("ingredientRows").innerHTML = "";
   addIngredient();
@@ -354,12 +358,12 @@ function openNew(){
 function editRecipe(recipeId){
   loadData();
   const recipe = data.recipes.find(r => String(r.id) === String(recipeId));
-  if(!recipe) return alert("Recipe nahi mila.");
+  if(!recipe) return alert("Recipe nahi mili.");
 
   document.getElementById("recipeForm").reset();
   document.getElementById("recipeId").value = recipe.id;
   document.getElementById("recipeName").value = recipe.name || "";
-  document.getElementById("recipeCategory").value = recipe.category || "Other";
+  document.getElementById("recipeServings").value = String(recipeServings(recipe));
   document.getElementById("recipeNotes").value = recipe.notes || "";
   document.getElementById("formTitle").textContent = "Edit Recipe";
   document.getElementById("ingredientRows").innerHTML = "";
@@ -369,6 +373,7 @@ function editRecipe(recipeId){
   } else {
     addIngredient();
   }
+
   updateCost();
   closeDialog("viewDialog");
   document.getElementById("editDialog").showModal();
@@ -381,14 +386,13 @@ function addIngredient(existing = null){
   row.className = "ingredient-row";
 
   const options = data.items.map(item => {
-    const compatible = existing ? baseUnit(item.unit) === baseUnit(existing.unit) : true;
     const selected = existing && String(existing.itemId) === String(item.id) ? "selected" : "";
-    return `<option value="${esc(item.id)}" ${selected}>${esc(itemName(item))} (${esc(item.unit || baseUnit(item.unit))})${compatible ? "" : " — unit mismatch"}</option>`;
+    return `<option value="${esc(item.id)}" ${selected}>${esc(itemName(item))} (${esc(item.unit || "")})</option>`;
   }).join("");
 
   const chosenItem = existing ? findItem(existing.itemId) : null;
   let initialUnit = existing?.unit || (chosenItem ? baseUnit(chosenItem.unit) : "g");
-  if(!["g","ml","pcs"].includes(initialUnit)) initialUnit = baseUnit(initialUnit) || "g";
+  if(!["g","ml","pcs"].includes(initialUnit)) initialUnit = "g";
 
   row.innerHTML = `
     <div class="ingredient-grid">
@@ -461,13 +465,12 @@ function collectIngredients(){
       throw new Error(itemName(item) + " ki store unit aur recipe unit match nahi karti.");
     }
 
-    const quantityBase = toBase(quantity, unit);
     ingredients.push({
-      itemId: item.id,
-      itemName: itemName(item),
+      itemId:item.id,
+      itemName:itemName(item),
       quantity,
       unit,
-      quantityBase
+      quantityBase:toBase(quantity,unit)
     });
   }
 
@@ -478,57 +481,60 @@ function collectIngredients(){
 function updateCost(){
   loadData();
   let total = 0;
-  const rows = [...document.querySelectorAll("#ingredientRows .ingredient-row")];
 
-  rows.forEach(row => {
+  document.querySelectorAll("#ingredientRows .ingredient-row").forEach(row => {
     const item = findItem(row.querySelector(".ing-item").value);
     const qty = Number(row.querySelector(".ing-qty").value) || 0;
     const unit = row.querySelector(".ing-unit").value;
     let cost = 0;
 
     if(item && qty > 0 && baseUnit(item.unit) === baseUnit(unit)){
-      cost = toBase(qty, unit) * itemAverageRate(item);
+      cost = toBase(qty,unit) * itemAverageRate(item);
     }
+
     total += cost;
     row.querySelector(".ing-cost").textContent = "Cost: " + money(cost);
   });
 
-  document.getElementById("liveCost").textContent = money(total);
+  const servings = Math.max(1,Math.floor(Number(document.getElementById("recipeServings").value)||1));
+  document.getElementById("liveBatchCost").textContent = money(total);
+  document.getElementById("liveCost").textContent = money(total/servings);
+
   document.getElementById("ingredientHint").textContent = data.items.length
-    ? "Rates are calculated from recorded purchases. Items without purchase rates show Rs 0.00."
-    : "Pehle Store & Purchase page par store items aur purchase rates add karein.";
+    ? "Purchase rate se cost calculate hota hai. Rate na hone par cost Rs 0.00 dikh sakta hai."
+    : "Pehle Store & Purchase page par items aur purchase rates add karein.";
 }
 
-document.getElementById("recipeForm").addEventListener("submit", function(event){
+document.getElementById("recipeForm").addEventListener("submit",function(event){
   event.preventDefault();
   loadData();
 
   const name = document.getElementById("recipeName").value.trim();
   if(!name) return alert("Recipe ka naam likhein.");
 
+  const servings = Number(document.getElementById("recipeServings").value);
+  if(!Number.isInteger(servings)||servings<1) return alert("Servings 1 ya usse zyada honi chahiye.");
+
   let ingredients;
-  try {
-    ingredients = collectIngredients();
-  } catch(error) {
-    return alert(error.message);
-  }
+  try{ingredients=collectIngredients();}
+  catch(error){return alert(error.message);}
 
   const recipeId = document.getElementById("recipeId").value;
   const recipe = {
-    id: recipeId || id(),
+    id:recipeId||id(),
     name,
-    category: document.getElementById("recipeCategory").value,
-    servingLabel: "1 serving",
+    servings,
+    servingLabel:servings+" servings",
     ingredients,
-    notes: document.getElementById("recipeNotes").value.trim(),
-    updatedAt: new Date().toISOString()
+    notes:document.getElementById("recipeNotes").value.trim(),
+    updatedAt:new Date().toISOString()
   };
 
   if(recipeId){
-    const index = data.recipes.findIndex(r => String(r.id) === String(recipeId));
-    if(index < 0) return alert("Recipe nahi mila. Page refresh karke dobara koshish karein.");
-    data.recipes[index] = {...data.recipes[index], ...recipe};
-  } else {
+    const index=data.recipes.findIndex(r=>String(r.id)===String(recipeId));
+    if(index<0) return alert("Recipe nahi mili. Page refresh karke dobara try karein.");
+    data.recipes[index]={...data.recipes[index],...recipe};
+  }else{
     data.recipes.push(recipe);
   }
 
@@ -540,69 +546,107 @@ document.getElementById("recipeForm").addEventListener("submit", function(event)
 
 function viewRecipe(recipeId){
   loadData();
-  const recipe = data.recipes.find(r => String(r.id) === String(recipeId));
-  if(!recipe) return alert("Recipe nahi mila.");
+  const recipe=data.recipes.find(r=>String(r.id)===String(recipeId));
+  if(!recipe) return alert("Recipe nahi mili.");
 
-  currentViewId = recipe.id;
-  const ingredients = recipe.ingredients || [];
-  const lines = ingredients.map(ing => {
-    const item = findItem(ing.itemId);
-    const name = item ? itemName(item) : (ing.itemName || "Unknown item");
-    const qty = Number(ing.quantity) || 0;
-    const unit = ing.unit || "";
-    return `<div class="view-line">
-      <b>${esc(name)}</b>
-      <span style="float:right">${esc(qty)} ${esc(unit)}</span>
-      <div class="muted">Cost: ${money(ingredientCost(ing))}</div>
-    </div>`;
-  }).join("");
-
-  document.getElementById("viewBody").innerHTML = `
+  currentViewId=recipe.id;
+  document.getElementById("viewBody").innerHTML=`
     <h3>${esc(recipe.name)}</h3>
-    <span class="pill">${esc(recipe.category || "Other")}</span>
-    <p class="muted">Cost for 1 serving</p>
-    ${lines || "<p>No ingredients recorded.</p>"}
-    <div class="total-box"><b>Total cost / serving</b><strong>${money(recipeCost(recipe))}</strong></div>
-    ${recipe.notes ? `<p><b>Notes:</b><br>${esc(recipe.notes)}</p>` : ""}
-    <p class="muted">Costs change when the store's weighted-average purchase rates change.</p>`;
+    <p class="muted">Recipe batch: ${recipeServings(recipe)} members · Batch cost: ${money(recipeBatchCost(recipe))}</p>
 
-  document.getElementById("viewEditBtn").onclick = () => editRecipe(currentViewId);
+    <div class="card" style="padding:12px;margin:12px 0;background:#f8fcf9">
+      <div class="field">
+        <label for="useServings">Aaj kitne members ke liye banana hai?</label>
+        <input id="useServings" type="number" min="1" step="1" value="2" oninput="calculateRecipeForMembers('${esc(recipe.id)}')">
+        <small>Jaise 2 likhne par ingredients aur cost 2 members ke hisaab se niklenge.</small>
+      </div>
+      <div class="total-box"><b>Required ration ka estimated cost</b><strong id="scaledCost">Rs 0.00</strong></div>
+      <div id="scaledIngredients"></div>
+    </div>
+
+    <h4>Saved recipe details</h4>
+    ${(recipe.ingredients||[]).map(ing=>{
+      const item=findItem(ing.itemId);
+      const name=item?itemName(item):(ing.itemName||"Unknown item");
+      return `<div class="view-line">
+        <b>${esc(name)}</b>
+        <div>Full batch: ${esc(ing.quantity)} ${esc(ing.unit)}</div>
+        <div class="muted">Per member: ${esc(Number((Number(ing.quantity)/recipeServings(recipe)).toFixed(4)))} ${esc(ing.unit)} · Full-batch ingredient cost: ${money(ingredientCost(ing))}</div>
+      </div>`;
+    }).join("")}
+
+    <div class="total-box"><b>Full batch cost (${recipeServings(recipe)} members)</b><strong>${money(recipeBatchCost(recipe))}</strong></div>
+    ${recipe.notes?`<p><b>Notes:</b> ${esc(recipe.notes)}</p>`:""}
+    <p class="muted">Yeh calculator ration aur estimated cost batata hai. Yeh akela Store stock nahi ghataata. Automatic stock deduction ke liye Daily Meal aur Store code ko connect karna hoga.</p>`;
+
+  calculateRecipeForMembers(recipe.id);
+  document.getElementById("viewEditBtn").onclick=()=>editRecipe(currentViewId);
   document.getElementById("viewDialog").showModal();
+}
+
+function calculateRecipeForMembers(recipeId){
+  loadData();
+  const recipe=data.recipes.find(r=>String(r.id)===String(recipeId));
+  const input=document.getElementById("useServings");
+  const output=document.getElementById("scaledIngredients");
+  const costOutput=document.getElementById("scaledCost");
+  if(!recipe||!input||!output||!costOutput)return;
+
+  const members=Number(input.value);
+  if(!Number.isInteger(members)||members<1){
+    output.innerHTML='<p class="muted">Member count 1 ya usse zyada rakhein.</p>';
+    costOutput.textContent=money(0);
+    return;
+  }
+
+  const ratio=members/recipeServings(recipe);
+  costOutput.textContent=money(recipeBatchCost(recipe)*ratio);
+
+  output.innerHTML=`<h4>${members} members ke liye required ingredients</h4>`+
+    (recipe.ingredients||[]).map(ing=>{
+      const item=findItem(ing.itemId);
+      const name=item?itemName(item):(ing.itemName||"Unknown item");
+      const qty=(Number(ing.quantity)||0)*ratio;
+      return `<div class="view-line">
+        <b>${esc(name)}</b>
+        <div>${esc(Number(qty.toFixed(4)))} ${esc(ing.unit||"")}</div>
+        <div class="muted">Estimated cost: ${money(ingredientCost(ing)*ratio)}</div>
+      </div>`;
+    }).join("");
 }
 
 function deleteRecipe(recipeId){
   loadData();
-  const recipe = data.recipes.find(r => String(r.id) === String(recipeId));
-  if(!recipe) return alert("Recipe nahi mila.");
+  const recipe=data.recipes.find(r=>String(r.id)===String(recipeId));
+  if(!recipe) return alert("Recipe nahi mili.");
 
-  const used = data.meals.some(meal =>
-    String(meal.recipeId) === String(recipeId) ||
-    String(meal.recipe) === String(recipe.name) ||
-    (Array.isArray(meal.recipes) && meal.recipes.some(r =>
-      String(r.recipeId) === String(recipeId) || String(r.name) === String(recipe.name)
+  const used=data.meals.some(meal=>
+    String(meal.recipeId)===String(recipeId)||
+    String(meal.recipe)===String(recipe.name)||
+    (Array.isArray(meal.recipes)&&meal.recipes.some(r=>
+      String(r.recipeId)===String(recipeId)||String(r.name)===String(recipe.name)
     ))
   );
 
-  if(used){
-    return alert("Ye recipe purane meal record mein use hui hai. Meal history bachane ke liye delete nahi ki gayi.");
-  }
+  if(used) return alert("Yeh recipe purane meal record mein use hui hai. History bachane ke liye delete nahi ki gayi.");
+  if(!confirm('"'+recipe.name+'" recipe delete karni hai?')) return;
 
-  if(!confirm('"' + recipe.name + '" recipe delete karni hai?')) return;
-  data.recipes = data.recipes.filter(r => String(r.id) !== String(recipeId));
-  if(saveData()) render();
+  data.recipes=data.recipes.filter(r=>String(r.id)!==String(recipeId));
+  if(saveData())render();
 }
 
 function closeDialog(dialogId){
-  const dialog = document.getElementById(dialogId);
-  if(dialog && dialog.open) dialog.close();
+  const dialog=document.getElementById(dialogId);
+  if(dialog&&dialog.open)dialog.close();
 }
 
-document.querySelectorAll("dialog").forEach(dialog => {
-  dialog.addEventListener("click", event => {
-    if(event.target === dialog) dialog.close();
+document.querySelectorAll("dialog").forEach(dialog=>{
+  dialog.addEventListener("click",event=>{
+    if(event.target===dialog)dialog.close();
   });
 });
 
+document.getElementById("recipeServings").addEventListener("input",updateCost);
 render();
 </script>
 </body>

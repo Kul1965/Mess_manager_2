@@ -61,6 +61,8 @@ tr:hover td{background:#fbfdfb}
 .section-blue{border-left:5px solid var(--blue)}
 .section-gold{border-left:5px solid #bd8b24}
 .footer{text-align:center;padding:20px;color:var(--muted);font-size:12px}
+.negative{color:var(--red)!important}
+.positive{color:var(--g)!important}
 @media(min-width:650px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.stats{grid-template-columns:repeat(4,minmax(0,1fr))}}
 @media(max-width:420px){main{padding:9px}.card{padding:13px}.stat{padding:10px}.stat strong{font-size:17px}.actions{grid-template-columns:1fr}.tabs button{min-width:100px}}
 @media print{body{background:white;font-size:10px}nav,.no-print,.tabs,button,footer{display:none!important}main{padding:0;max-width:none}.card{box-shadow:none;break-inside:avoid}.hidden{display:none!important}table{min-width:0}th,td{padding:5px}.stats{grid-template-columns:repeat(4,minmax(0,1fr))}}
@@ -86,7 +88,7 @@ tr:hover td{background:#fbfdfb}
 
 <main>
 <div class="note">
-<strong>Important:</strong> Cash aur Bank alag hisaab hain. Cash mein payment mile to Cash badhega; Bank Transfer ho to Bank badhega. Other Expenses mein kharcha record karte waqt payment method chunein. Surplus estimate hai; actual cash, bank statement aur stock verify karke hi handover approve karein.
+<strong>Important:</strong> Cash aur Bank alag hisaab hain. Cash mein payment mile to Cash badhega; Bank Transfer ho to Bank badhega. Bill Payments Received aur Mess Advance Received alag calculate hote hain. Other Expenses mein payment method chunein. Surplus estimate hai; actual cash, bank statement aur stock verify karke hi handover approve karein.
 </div>
 
 <div class="tabs no-print">
@@ -119,6 +121,7 @@ tr:hover td{background:#fbfdfb}
 <div class="stat"><small>Recorded Ration Expense</small><strong id="foodExpense">Rs 0.00</strong></div>
 <div class="stat"><small>Surplus Before Other Expenses</small><strong id="surplus">Rs 0.00</strong></div>
 <div class="stat gold"><small>Other Expenses</small><strong id="extraTotal">Rs 0.00</strong></div>
+
 <div class="stat blue"><small>Bill Payments Received</small><strong id="billPaymentsReceived">Rs 0.00</strong></div>
 <div class="stat gold"><small>Mess Advance Received</small><strong id="messAdvanceReceived">Rs 0.00</strong></div>
 </div>
@@ -160,12 +163,14 @@ tr:hover td{background:#fbfdfb}
 <div class="card section-green">
 <h2>🧾 Other Expenses Entry</h2>
 <p class="muted">Approved surplus ko zaroori mess kharchon mein use karne ke liye entry karein. Cash/Bank select karna zaroori hai. Expense record hone par us method ka balance ghatega.</p>
+
 <div class="stats" style="margin-bottom:15px">
 <div class="stat"><small>Available Before Extras</small><strong id="expenseAvailable">Rs 0.00</strong></div>
 <div class="stat"><small>Already Spent</small><strong id="expenseSpent">Rs 0.00</strong></div>
 <div class="stat"><small>Remaining Surplus</small><strong id="expenseRemaining">Rs 0.00</strong></div>
 <div class="stat"><small>Expenses in Period</small><strong id="expenseNumber">0</strong></div>
 </div>
+
 <div class="grid">
 <div class="field"><label for="expenseDate">Expense Date *</label><input id="expenseDate" type="date" required></div>
 <div class="field"><label for="expenseCategory">Category *</label>
@@ -251,369 +256,966 @@ tr:hover td{background:#fbfdfb}
 
 <script>
 "use strict";
+
 const KEYS=["crpfMessProfessionalV1","crpfMessPrototypeV2"];
 const $=id=>document.getElementById(id);
 const arr=x=>Array.isArray(x)?x:[];
 const num=x=>x!==""&&x!==null&&x!==undefined&&Number.isFinite(Number(x))?Number(x):0;
 const txt=x=>x===null||x===undefined?"":String(x);
 const money=x=>"Rs "+num(x).toLocaleString("en-IN",{minimumFractionDigits:2,maximumFractionDigits:2});
-const val=(o,keys,def="")=>{for(const k of keys)if(o&&o[k]!==undefined&&o[k]!==null&&o[k]!=="")return o[k];return def};
-const today=()=>{const d=new Date();return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0")};
+const val=(o,keys,def="")=>{
+ for(const k of keys){
+  if(o&&o[k]!==undefined&&o[k]!==null&&o[k]!=="")return o[k];
+ }
+ return def;
+};
+const today=()=>{
+ const d=new Date();
+ return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
+};
+
 let db={},dbKey="",summary={},activeTab="overview",editingExpenseId=null;
 
-function readDB(key){try{const d=JSON.parse(localStorage.getItem(key)||"null");return d&&typeof d==="object"?d:null}catch(e){return null}}
-function score(d){return ["members","items","purchases","recipes","meals","ledger","expenses","handovers"].reduce((s,k)=>s+arr(d[k]).length,0)}
+function readDB(key){
+ try{
+  const d=JSON.parse(localStorage.getItem(key)||"null");
+  return d&&typeof d==="object"?d:null;
+ }catch(e){
+  return null;
+ }
+}
+
+function score(d){
+ return ["members","items","purchases","recipes","meals","ledger","expenses","handovers"]
+  .reduce((s,k)=>s+arr(d[k]).length,0);
+}
+
 function loadDB(){
- const found=KEYS.map(key=>({key,data:readDB(key)})).filter(x=>x.data);
+ const found=KEYS
+  .map(key=>({key,data:readDB(key)}))
+  .filter(x=>x.data);
+
  found.sort((a,b)=>score(b.data)-score(a.data));
- if(found.length){dbKey=found[0].key;db=found[0].data}
- else{dbKey=KEYS[0];db={members:[],items:[],purchases:[],recipes:[],meals:[],ledger:[],expenses:[],handovers:[],settings:{}}}
- ["members","items","purchases","recipes","meals","ledger","expenses","handovers"].forEach(k=>{if(!Array.isArray(db[k]))db[k]=[]});
+
+ if(found.length){
+  dbKey=found[0].key;
+  db=found[0].data;
+ }else{
+  dbKey=KEYS[0];
+  db={
+   members:[],items:[],purchases:[],recipes:[],
+   meals:[],ledger:[],expenses:[],handovers:[],settings:{}
+  };
+ }
+
+ ["members","items","purchases","recipes","meals","ledger","expenses","handovers"]
+  .forEach(k=>{
+   if(!Array.isArray(db[k]))db[k]=[];
+  });
+
  if(!db.settings||typeof db.settings!=="object")db.settings={};
 }
-function saveDB(){try{localStorage.setItem(dbKey,JSON.stringify(db));return true}catch(e){alert("Save failed. Please make a backup and check browser storage.");return false}}
-function dateOf(o){let d=txt(val(o,["date","mealDate","createdAt","confirmedAt","timestamp"],""));if(d.includes("T"))d=d.split("T")[0];return /^\d{4}-\d{2}-\d{2}$/.test(d)?d:""}
-function inPeriod(d){return !!d&&(!$("fromDate").value||d>=$("fromDate").value)&&(!$("toDate").value||d<=$("toDate").value)}
-function memberId(m){return txt(val(m,["id","memberId","serviceId","serviceNo"],""))}
-function memberName(m){return txt(val(m,["fullName","name","memberName"],"Unknown member"))}
-function memberRate(m){const x=val(m,["monthlyLimit","monthlyAdvance","commonMessAdvance","messAdvance","monthlyFoodBudget"],"");return x!==""?num(x):commonRate()}
-function setting(keys){for(const c of [db.settings,db.config,db.preferences,db])for(const k of keys)if(c&&c[k]!==undefined&&c[k]!==null&&c[k]!=="")return c[k];return ""}
-function commonRate(){return num(setting(["commonMessAdvance","commonMessAdvanceAmount","commonAdvance","monthlyMessAdvance","monthlyFoodBudget","monthlyLimit","messAdvance","monthlyAdvance","defaultMonthlyLimit"]))||4000}
-function monthDays(){return num(setting(["monthDays","monthlyDays","commonMessDays","daysInMonth"]))||30}
-function typeOf(o){return txt(val(o,["transactionType","type","category","kind"],"")).toLowerCase()}
-function amountOf(o){return Math.abs(num(val(o,["amount","totalAmount","amountReceived","paidAmount","depositAmount","total","value"],0)))}
-function methodOf(o){return txt(val(o,["paymentMethod","paymentMode","method","accountType","mode"],"")).toLowerCase()}
 
-function ledgerText(o){
- return ["transactionType","type","category","kind","description","title","name","particulars","remarks"].map(k=>txt(o&&o[k])).filter(Boolean).join(" ").toLowerCase().replace(/[_-]+/g," ").replace(/\s+/g," ").trim();
+function saveDB(){
+ try{
+  localStorage.setItem(dbKey,JSON.stringify(db));
+  return true;
+ }catch(e){
+  alert("Save failed. Please make a backup and check browser storage.");
+  return false;
+ }
 }
 
-function directionOf(o){
- const t=ledgerText(o)||typeOf(o);
- if(/expense|purchase|withdraw|debit|payment made|paid out|supplier payment|stock purchase|cash out|bank out/.test(t))return "out";
- if(/meal charge|ration expense|food charge|mess charge|consumption|deduct/.test(t))return "";
- if(/bill payment|mess advance|advance received|payment received|receipt|deposit|credit|income|cutting deposit|payment/.test(t))return "in";
- const d=txt(val(o,["direction","drCr"],"")).toLowerCase().trim();
- if(["in","credit","cr","received"].includes(d))return "in";
- if(["out","debit","dr","paid","expense"].includes(d))return "out";
+function dateOf(o){
+ let d=txt(val(o,["date","mealDate","createdAt","confirmedAt","timestamp"],""));
+ if(d.includes("T"))d=d.split("T")[0];
+ return /^\d{4}-\d{2}-\d{2}$/.test(d)?d:"";
+}
+
+function inPeriod(d){
+ return !!d&&
+  (!$("fromDate").value||d>=$("fromDate").value)&&
+  (!$("toDate").value||d<=$("toDate").value);
+}
+
+function memberId(m){
+ return txt(val(m,["id","memberId","serviceId","serviceNo"],""));
+}
+
+function memberName(m){
+ return txt(val(m,["fullName","name","memberName"],"Unknown member"));
+}
+
+function memberRate(m){
+ const x=val(m,["monthlyLimit","monthlyAdvance","commonMessAdvance","messAdvance","monthlyFoodBudget"],"");
+ return x!==""?num(x):commonRate();
+}
+
+function setting(keys){
+ for(const c of [db.settings,db.config,db.preferences,db]){
+  for(const k of keys){
+   if(c&&c[k]!==undefined&&c[k]!==null&&c[k]!=="")return c[k];
+  }
+ }
  return "";
 }
 
+function commonRate(){
+ return num(setting([
+  "commonMessAdvance","commonMessAdvanceAmount","commonAdvance",
+  "monthlyMessAdvance","monthlyFoodBudget","monthlyLimit",
+  "messAdvance","monthlyAdvance","defaultMonthlyLimit"
+ ]))||4000;
+}
+
+function monthDays(){
+ return num(setting(["monthDays","monthlyDays","commonMessDays","daysInMonth"]))||30;
+}
+
+function typeOf(o){
+ return txt(val(o,["transactionType","type","category","kind"],"")).toLowerCase();
+}
+
+function amountOf(o){
+ return Math.abs(num(val(o,["amount","totalAmount","value"],0)));
+}
+
+function methodOf(o){
+ return txt(val(o,["paymentMethod","paymentMode","method","accountType","mode"],"")).toLowerCase();
+}
+
+/*
+ * Detect whether a ledger entry represents money received or paid out.
+ * Mess advances are incoming receipts, but are separated from bill payments
+ * by receiptTypeOf() below.
+ */
+function directionOf(o){
+ const t=typeOf(o);
+
+ if(/expense|purchase|withdraw|debit|payment made|paid out|bill paid/.test(t))return "out";
+ if(/deposit|payment received|receipt|advance received|credit|income|money received|bill payment received/.test(t))return "in";
+
+ const d=txt(val(o,["direction","drCr"],"")).toLowerCase();
+
+ if(["in","credit","cr","received"].includes(d))return "in";
+ if(["out","debit","dr","paid"].includes(d))return "out";
+
+ return "";
+}
+
+/*
+ * Classify each incoming ledger transaction into exactly one receipt group.
+ * Any incoming transaction mentioning "advance" is treated as a mess advance,
+ * so it cannot also be counted as a bill payment.
+ */
+function receiptTypeOf(t){
+ const fields=[
+  "transactionType","type","category","kind","description",
+  "title","details","note","notes","remarks","purpose",
+  "paymentFor","particulars","narration","transactionName"
+ ];
+
+ const description=fields
+  .map(k=>txt(t&&t[k]))
+  .filter(Boolean)
+  .join(" ")
+  .toLowerCase();
+
+ if(/advance/.test(description))return "advance";
+
+ if(
+  /bill payment|mess bill|monthly bill|bill received|payment received|member payment|payment against bill/.test(description)
+ ){
+  return "bill";
+ }
+
+ return "bill";
+}
+
+/*
+ * Only count incoming ledger entries inside the selected settlement period.
+ * Each transaction is assigned to one category only.
+ */
 function receiptTotals(){
- let billPayments=0,advanceReceived=0;
+ let billPayments=0;
+ let messAdvances=0;
+ let billCount=0;
+ let advanceCount=0;
+
  db.ledger.forEach(t=>{
-  if(!inPeriod(dateOf(t))||directionOf(t)!=="in")return;
-  const label=ledgerText(t),amount=amountOf(t);
-  if(/bill payment/.test(label))billPayments+=amount;
-  else if(/mess advance|advance received/.test(label))advanceReceived+=amount;
+  if(!inPeriod(dateOf(t)))return;
+
+  const direction=directionOf(t);
+  const category=receiptTypeOf(t);
+
+  if(direction!=="in")return;
+
+  if(category==="advance"){
+   messAdvances+=amountOf(t);
+   advanceCount++;
+  }else{
+   billPayments+=amountOf(t);
+   billCount++;
+  }
  });
- return {billPayments,advanceReceived};
+
+ return {billPayments,messAdvances,billCount,advanceCount};
 }
 
 function attendees(m){
  const a=val(m,["attendees","attendance","members","memberIds","participants"],[]);
  if(!Array.isArray(a))return [];
- return a.map(x=>x&&typeof x==="object"?txt(val(x,["memberId","id","serviceId"],"")):txt(x)).filter(Boolean);
+
+ return a
+  .map(x=>x&&typeof x==="object"
+   ?txt(val(x,["memberId","id","serviceId"],""))
+   :txt(x))
+  .filter(Boolean);
 }
+
 function mealCost(m){
- for(const k of ["totalCost","consumptionCost","mealCost","cost","amount"])if(m[k]!==undefined&&m[k]!==null&&m[k]!=="")return num(m[k]);
+ for(const k of ["totalCost","consumptionCost","mealCost","cost","amount"]){
+  if(m[k]!==undefined&&m[k]!==null&&m[k]!=="")return num(m[k]);
+ }
  return num(val(m,["servings"],0))*num(val(m,["perServing","costPerServing","recipeCost"],0));
 }
-function rationRows(m){return arr(val(m,["ration","needs","ingredientsUsed"],[]))}
+
+function rationRows(m){
+ return arr(val(m,["ration","needs","ingredientsUsed"],[]));
+}
+
 function purchases(){
  const out=[],seen=new Set();
- db.items.forEach(item=>arr(item.purchases).forEach(p=>{
-  const sig=p.id!==undefined?"id:"+p.id:JSON.stringify([item.id,p.date,p.quantity,p.rate,p.total]);
-  if(!seen.has(sig)){seen.add(sig);out.push({p,item})}
- }));
- db.purchases.forEach(p=>{
-  const sig=p.id!==undefined?"id:"+p.id:JSON.stringify([p.itemId,p.itemName,p.date,p.quantity,p.rate,p.total]);
-  if(!seen.has(sig)){seen.add(sig);out.push({p,item:db.items.find(i=>String(i.id)===String(p.itemId))||{unit:p.unit||"pcs"}})}
+
+ db.items.forEach(item=>{
+  arr(item.purchases).forEach(p=>{
+   const sig=p.id!==undefined
+    ?"id:"+p.id
+    :JSON.stringify([item.id,p.date,p.quantity,p.rate,p.total]);
+
+   if(!seen.has(sig)){
+    seen.add(sig);
+    out.push({p,item});
+   }
+  });
  });
+
+ db.purchases.forEach(p=>{
+  const sig=p.id!==undefined
+   ?"id:"+p.id
+   :JSON.stringify([p.itemId,p.itemName,p.date,p.quantity,p.rate,p.total]);
+
+  if(!seen.has(sig)){
+   seen.add(sig);
+   out.push({
+    p,
+    item:db.items.find(i=>String(i.id)===String(p.itemId))||{unit:p.unit||"pcs"}
+   });
+  }
+ });
+
  return out;
 }
-function purchaseCost(p){if(p.total!==undefined&&p.total!=="")return num(p.total);if(p.totalCost!==undefined&&p.totalCost!=="")return num(p.totalCost);return num(val(p,["quantity","qty"],0))*num(val(p,["rate","unitRate"],0))}
-function baseUnit(u){u=txt(u).toLowerCase();if(["kg","g","gram","grams"].includes(u))return "g";if(["l","ltr","litre","liter","litres","liters","ml"].includes(u))return "ml";return "pcs"}
+
+function purchaseCost(p){
+ if(p.total!==undefined&&p.total!=="")return num(p.total);
+ if(p.totalCost!==undefined&&p.totalCost!=="")return num(p.totalCost);
+ return num(val(p,["quantity","qty"],0))*num(val(p,["rate","unitRate"],0));
+}
+
+function baseUnit(u){
+ u=txt(u).toLowerCase();
+ if(["kg","g","gram","grams"].includes(u))return "g";
+ if(["l","ltr","litre","liter","litres","liters","ml"].includes(u))return "ml";
+ return "pcs";
+}
+
 function baseQty(p,item){
  if(p.quantityBase!==undefined&&p.quantityBase!=="")return num(p.quantityBase);
- const q=val(p,["quantity","qty"],"");const u=txt(val(p,["purchaseUnit","unit"],item.unit||""));
+
+ const q=val(p,["quantity","qty"],"");
+ const u=txt(val(p,["purchaseUnit","unit"],item.unit||""));
+
  if(q===""||baseUnit(u)!==baseUnit(item.unit||u))return 0;
- return ["kg","l","ltr","litre","liter","litres","liters"].includes(u.toLowerCase())?num(q)*1000:num(q)
+
+ return ["kg","l","ltr","litre","liter","litres","liters"].includes(u.toLowerCase())
+  ?num(q)*1000
+  :num(q);
 }
+
 function itemStock(item){
  const ps=arr(item.purchases);
  const qty=ps.reduce((s,p)=>s+baseQty(p,item),0);
  const value=ps.reduce((s,p)=>s+purchaseCost(p),0);
  let used=0;
+
  db.meals.forEach(m=>{
   if(m.cancelled===true||String(m.status||"").toLowerCase()==="cancelled")return;
+
   rationRows(m).forEach(r=>{
    if(String(val(r,["itemId","item_id"],""))!==String(item.id))return;
-   if(r.quantityBase!==undefined&&r.quantityBase!==""){used+=num(r.quantityBase);return}
-   const q=val(r,["quantity","qty"],"");const u=txt(val(r,["unit","purchaseUnit"],item.unit||""));
-   if(q!==""&&baseUnit(u)===baseUnit(item.unit||u))used+=["kg","l","ltr","litre","liter","litres","liters"].includes(u.toLowerCase())?num(q)*1000:num(q)
-  })
+
+   if(r.quantityBase!==undefined&&r.quantityBase!==""){
+    used+=num(r.quantityBase);
+    return;
+   }
+
+   const q=val(r,["quantity","qty"],"");
+   const u=txt(val(r,["unit","purchaseUnit"],item.unit||""));
+
+   if(q!==""&&baseUnit(u)===baseUnit(item.unit||u)){
+    used+=["kg","l","ltr","litre","liter","litres","liters"].includes(u.toLowerCase())
+     ?num(q)*1000
+     :num(q);
+   }
+  });
  });
- const avg=qty>0?value/qty:0;return {stock:Math.max(0,qty-used),value:Math.max(0,qty-used)*avg}
+
+ const avg=qty>0?value/qty:0;
+ return {stock:Math.max(0,qty-used),value:Math.max(0,qty-used)*avg};
 }
-function stockValue(){return db.items.reduce((s,i)=>s+itemStock(i).value,0)}
+
+function stockValue(){
+ return db.items.reduce((s,i)=>s+itemStock(i).value,0);
+}
+
 function mealDayMap(){
  const map=new Map();
+
  db.meals.forEach(m=>{
-  const d=dateOf(m);if(!inPeriod(d)||m.cancelled===true||String(m.status||"").toLowerCase()==="cancelled")return;
-  attendees(m).forEach(id=>{if(!map.has(id))map.set(id,new Set());map.get(id).add(d)})
+  const d=dateOf(m);
+
+  if(!inPeriod(d)||m.cancelled===true||String(m.status||"").toLowerCase()==="cancelled")return;
+
+  attendees(m).forEach(id=>{
+   if(!map.has(id))map.set(id,new Set());
+   map.get(id).add(d);
+  });
  });
+
  return map;
 }
+
 function memberBalance(m){
- const id=memberId(m),name=memberName(m).toLowerCase();let balance=0;
+ const id=memberId(m),name=memberName(m).toLowerCase();
+ let balance=0;
+
  db.ledger.forEach(t=>{
-  const tid=txt(val(t,["memberId","member_id","memberID","serviceId","serviceNo","jawanId"],""));
+  const tid=txt(val(t,["memberId","memberID","serviceId","serviceNo","jawanId"],""));
   const tn=txt(val(t,["memberName","fullName","name"],"")).toLowerCase();
+
   if(!((id&&tid===id)||(!tid&&tn===name)))return;
+
   const typ=typeOf(t),a=amountOf(t);
-  if(/charge|meal|deduct|consumption/.test(typ))balance-=a;
-  else if(/deposit|advance|payment received|credit|refund received|payment/.test(typ))balance+=a;
-  else {const dir=directionOf(t);if(dir==="in")balance+=a;if(dir==="out")balance-=a}
+
+  if(/charge|meal|deduct|consumption/.test(typ)){
+   balance-=a;
+  }else if(/deposit|advance|payment received|credit|refund received|payment/.test(typ)){
+   balance+=a;
+  }else{
+   const dir=directionOf(t);
+   if(dir==="in")balance+=a;
+   if(dir==="out")balance-=a;
+  }
  });
+
  return balance;
 }
+
 function cashBankBalances(){
  let cash=0,bank=0,cashFound=false,bankFound=false;
+
  db.ledger.forEach(t=>{
   const method=methodOf(t),dir=directionOf(t);
   if(!dir)return;
+
   const a=amountOf(t);
-  if(method.includes("cash")){cashFound=true;cash+=(dir==="in"?a:-a)}
-  else if(method.includes("bank")||method.includes("digital")||method.includes("online")){bankFound=true;bank+=(dir==="in"?a:-a)}
+
+  if(method.includes("cash")){
+   cashFound=true;
+   cash+=(dir==="in"?a:-a);
+  }else if(method.includes("bank")||method.includes("digital")||method.includes("online")){
+   bankFound=true;
+   bank+=(dir==="in"?a:-a);
+  }
  });
+
+ /*
+  * Expenses without a linked ledger movement are counted here.
+  * If the expense already has a ledgerEntryId, don't deduct it twice.
+  */
  db.expenses.forEach(e=>{
   if(e.ledgerEntryId)return;
+
   const m=methodOf(e),a=amountOf(e);
-  if(m.includes("cash")){cashFound=true;cash-=a}
-  else if(m.includes("bank")||m.includes("digital")||m.includes("online")){bankFound=true;bank-=a}
+
+  if(m.includes("cash")){
+   cashFound=true;
+   cash-=a;
+  }else if(m.includes("bank")||m.includes("digital")||m.includes("online")){
+   bankFound=true;
+   bank-=a;
+  }
  });
- return {cash,bank,cashFound,bankFound}
+
+ return {cash,bank,cashFound,bankFound};
 }
 
 function calculate(){
- const days=monthDays(),map=mealDayMap();let budget=0,memberDays=0,memberRows=[];
- const body=$("memberBody");body.replaceChildren();
+ const days=monthDays(),map=mealDayMap();
+ let budget=0,memberDays=0,memberRows=[];
+ const body=$("memberBody");
+
+ body.replaceChildren();
+
  db.members.forEach(m=>{
   const eaten=(map.get(memberId(m))||new Set()).size;
   if(!eaten)return;
+
   const rate=memberRate(m),daily=rate/days,b=eaten*daily;
-  budget+=b;memberDays+=eaten;memberRows.push({name:memberName(m),eaten,rate,daily,b});
+
+  budget+=b;
+  memberDays+=eaten;
+  memberRows.push({name:memberName(m),eaten,rate,daily,b});
  });
+
  memberRows.forEach(r=>{
   const tr=document.createElement("tr");
-  [r.name,r.eaten,money(r.rate),money(r.daily),money(r.b)].forEach(v=>{const td=document.createElement("td");td.textContent=v;tr.appendChild(td)});
+
+  [r.name,r.eaten,money(r.rate),money(r.daily),money(r.b)].forEach(v=>{
+   const td=document.createElement("td");
+   td.textContent=v;
+   tr.appendChild(td);
+  });
+
   body.appendChild(tr);
  });
+
  $("memberEmpty").style.display=memberRows.length?"none":"block";
+
  let food=0,mealCount=0,missing=0;
+
  db.meals.forEach(m=>{
   if(!inPeriod(dateOf(m))||m.cancelled===true||String(m.status||"").toLowerCase()==="cancelled")return;
-  mealCount++;food+=mealCost(m);if(mealCost(m)===0&&rationRows(m).length)missing++;
+
+  mealCount++;
+  food+=mealCost(m);
+
+  if(mealCost(m)===0&&rationRows(m).length)missing++;
  });
- const purchaseTotal=purchases().filter(x=>inPeriod(dateOf(x.p))).reduce((s,x)=>s+purchaseCost(x.p),0);
- const extra=db.expenses.filter(e=>inPeriod(dateOf(e))).reduce((s,e)=>s+amountOf(e),0);
- const surplus=budget-food,surplusAfter=surplus-extra;
+
+ const purchaseTotal=purchases()
+  .filter(x=>inPeriod(dateOf(x.p)))
+  .reduce((s,x)=>s+purchaseCost(x.p),0);
+
+ const extra=db.expenses
+  .filter(e=>inPeriod(dateOf(e)))
+  .reduce((s,e)=>s+amountOf(e),0);
+
+ const surplus=budget-food;
+ const surplusAfter=surplus-extra;
+
  let dues=0,liability=0;
- db.members.forEach(m=>{const b=memberBalance(m);if(b<0)dues+=Math.abs(b);if(b>0)liability+=b});
- const cb=cashBankBalances(),stock=stockValue(),receipts=receiptTotals();
+
+ db.members.forEach(m=>{
+  const b=memberBalance(m);
+  if(b<0)dues+=Math.abs(b);
+  if(b>0)liability+=b;
+ });
+
+ const cb=cashBankBalances();
+ const stock=stockValue();
+ const receipts=receiptTotals();
+
  const set=(id,v)=>$(id).textContent=v;
- set("monthlyRate",money(commonRate()));set("dailyRate",money(commonRate()/days));
- set("memberCount",memberRows.length);set("memberDays",memberDays);
- set("budgetTotal",money(budget));set("foodExpense",money(food));set("surplus",money(surplus));
- set("extraTotal",money(extra));set("purchaseTotal",money(purchaseTotal));set("stockValue",money(stock));
+
+ set("monthlyRate",money(commonRate()));
+ set("dailyRate",money(commonRate()/days));
+ set("memberCount",memberRows.length);
+ set("memberDays",memberDays);
+ set("budgetTotal",money(budget));
+ set("foodExpense",money(food));
+ set("surplus",money(surplus));
+ set("extraTotal",money(extra));
+ set("purchaseTotal",money(purchaseTotal));
+ set("stockValue",money(stock));
+ set("memberDues",money(dues));
+ set("advanceLiability",money(liability));
+ set("surplusAfter",money(surplusAfter));
+ set("expenseCount",db.expenses.filter(e=>inPeriod(dateOf(e))).length);
+
+ /*
+  * These totals are separate: incoming advance entries are excluded
+  * from Bill Payments Received and appear only under Mess Advance Received.
+  */
  set("billPaymentsReceived",money(receipts.billPayments));
- set("messAdvanceReceived",money(receipts.advanceReceived));
- set("memberDues",money(dues));set("advanceLiability",money(liability));
- set("surplusAfter",money(surplusAfter));set("expenseCount",db.expenses.filter(e=>inPeriod(dateOf(e))).length);
+ set("messAdvanceReceived",money(receipts.messAdvances));
+
  set("cashBalance",cb.cashFound?money(cb.cash):"Not recorded");
  set("bankBalance",cb.bankFound?money(cb.bank):"Not recorded");
- set("lineBudget",money(budget));set("lineFood",money(food));set("lineSurplus",money(surplus));
- set("lineExtra",money(extra));set("lineRemaining",money(surplusAfter));
- set("expenseAvailable",money(surplus));set("expenseSpent",money(extra));set("expenseRemaining",money(surplusAfter));
- set("expenseNumber",db.expenses.filter(e=>inPeriod(dateOf(e)).length);
+
+ set("lineBudget",money(budget));
+ set("lineFood",money(food));
+ set("lineSurplus",money(surplus));
+ set("lineExtra",money(extra));
+ set("lineRemaining",money(surplusAfter));
+
+ set("expenseAvailable",money(surplus));
+ set("expenseSpent",money(extra));
+ set("expenseRemaining",money(surplusAfter));
+ set("expenseNumber",db.expenses.filter(e=>inPeriod(dateOf(e))).length);
+
  $("surplus").className=surplus<0?"negative":"positive";
  $("surplusAfter").className=surplusAfter<0?"negative":"positive";
  $("lineRemaining").className=surplusAfter<0?"negative":"positive";
- $("sourceInfo").textContent="Data source: "+dbKey+" · Period: "+($("fromDate").value||"Start")+" to "+($("toDate").value||"Latest")+" · Meals: "+mealCount;
- $("financialNote").textContent="Food budget = recorded member meal-days × monthly rate ÷ "+days+". Bill Payments Received and Mess Advance Received are shown separately from saved ledger entries; advance is not added to bill payments. Missing meal costs: "+missing+". Cash and bank figures are calculated from identified ledger transactions and saved expenses; if the opening balance was never recorded, the shown balance is not a complete verified balance. Current stock is not cash.";
- summary={budget,food,surplus,extra,surplusAfter,dues,liability,stock,purchaseTotal,cb};
- renderExpenses();fillNames();
- $("handoverPeriod").value=($("fromDate").value||"Start")+" to "+($("toDate").value||"Latest");
+
+ $("sourceInfo").textContent=
+  "Data source: "+dbKey+
+  " · Period: "+($("fromDate").value||"Start")+
+  " to "+($("toDate").value||"Latest")+
+  " · Meals: "+mealCount+
+  " · Bill receipts: "+receipts.billCount+
+  " · Advance receipts: "+receipts.advanceCount;
+
+ $("financialNote").textContent=
+  "Food budget = recorded member meal-days × monthly rate ÷ "+days+
+  ". Missing meal costs: "+missing+
+  ". Bill Payments Received and Mess Advance Received are separate ledger totals for the selected period. Cash and bank figures are calculated from identified ledger transactions and saved expenses; if the opening balance was never recorded, the shown balance is not a complete verified balance. Current stock is not cash.";
+
+ summary={
+  budget,food,surplus,extra,surplusAfter,dues,liability,stock,
+  purchaseTotal,cb,receipts
+ };
+
+ renderExpenses();
+ fillNames();
+
+ $("handoverPeriod").value=
+  ($("fromDate").value||"Start")+" to "+($("toDate").value||"Latest");
 }
 
 function renderExpenses(){
- const body=$("expenseBody");body.replaceChildren();
- const rows=db.expenses.filter(e=>inPeriod(dateOf(e))).sort((a,b)=>dateOf(b).localeCompare(dateOf(a)));
+ const body=$("expenseBody");
+ body.replaceChildren();
+
+ const rows=db.expenses
+  .filter(e=>inPeriod(dateOf(e)))
+  .sort((a,b)=>dateOf(b).localeCompare(dateOf(a)));
+
  let total=0;
+
  rows.forEach(e=>{
-  total+=amountOf(e);const tr=document.createElement("tr");
+  total+=amountOf(e);
+
+  const tr=document.createElement("tr");
   const details=txt(val(e,["title","description","name"],"Expense"));
   const approved=txt(val(e,["approvedBy"],"—"));
   const ref=txt(val(e,["reference","bill"],"—"));
   const method=txt(val(e,["paymentMethod","paymentMode","method"],"Not specified"));
-  const cells=[dateOf(e),txt(val(e,["category"],"Other"))+" — "+details,method,money(amountOf(e)),approved+" / "+ref];
-  cells.forEach(v=>{const td=document.createElement("td");td.textContent=v;tr.appendChild(td)});
-  const td=document.createElement("td");td.className="no-print";
-  const edit=document.createElement("button");edit.textContent="Edit";edit.className="secondary";edit.style.width="auto";edit.style.marginRight="5px";edit.onclick=()=>editExpense(e.id);
-  const del=document.createElement("button");del.textContent="Delete";del.className="danger";del.style.width="auto";del.onclick=()=>deleteExpense(e.id);
-  td.append(edit,del);tr.appendChild(td);body.appendChild(tr);
+
+  const cells=[
+   dateOf(e),
+   txt(val(e,["category"],"Other"))+" — "+details,
+   method,
+   money(amountOf(e)),
+   approved+" / "+ref
+  ];
+
+  cells.forEach(v=>{
+   const td=document.createElement("td");
+   td.textContent=v;
+   tr.appendChild(td);
+  });
+
+  const td=document.createElement("td");
+  td.className="no-print";
+
+  const edit=document.createElement("button");
+  edit.textContent="Edit";
+  edit.className="secondary";
+  edit.style.width="auto";
+  edit.style.marginRight="5px";
+  edit.onclick=()=>editExpense(e.id);
+
+  const del=document.createElement("button");
+  del.textContent="Delete";
+  del.className="danger";
+  del.style.width="auto";
+  del.onclick=()=>deleteExpense(e.id);
+
+  td.append(edit,del);
+  tr.appendChild(td);
+  body.appendChild(tr);
  });
- if(!rows.length){const tr=document.createElement("tr"),td=document.createElement("td");td.colSpan=6;td.className="empty";td.textContent="No expenses recorded for this period.";tr.appendChild(td);body.appendChild(tr)}
+
+ if(!rows.length){
+  const tr=document.createElement("tr");
+  const td=document.createElement("td");
+  td.colSpan=6;
+  td.className="empty";
+  td.textContent="No expenses recorded for this period.";
+  tr.appendChild(td);
+  body.appendChild(tr);
+ }
+
  $("expenseGrandTotal").textContent=money(total);
 }
 
 function clearExpense(){
  editingExpenseId=null;
- ["expenseTitle","expenseAmount","expenseApprovedBy","expenseRef","expenseNotes"].forEach(id=>$(id).value="");
- $("expenseDate").value=today();$("expenseCategory").value="Maintenance";$("expenseMethod").value="Cash";
+
+ ["expenseTitle","expenseAmount","expenseApprovedBy","expenseRef","expenseNotes"]
+  .forEach(id=>$(id).value="");
+
+ $("expenseDate").value=today();
+ $("expenseCategory").value="Maintenance";
+ $("expenseMethod").value="Cash";
  $("saveExpenseBtn").textContent="Save Expense";
 }
 
 function saveExpense(){
- const date=$("expenseDate").value,title=$("expenseTitle").value.trim(),amount=$("expenseAmount").value;
- if(!date||!title||amount===""||num(amount)<=0){$("expenseStatus").textContent="Date, details aur positive amount zaroor enter karein.";return}
- const method=$("expenseMethod").value;
- const old=editingExpenseId?db.expenses.find(e=>String(e.id)===String(editingExpenseId)):null;
- const record={
-  ...(old||{}),id:old?old.id:"expense-"+Date.now(),date,
-  category:$("expenseCategory").value,title,description:title,amount:num(amount),
-  paymentMethod:method,method,approvedBy:$("expenseApprovedBy").value.trim(),
-  reference:$("expenseRef").value.trim(),notes:$("expenseNotes").value.trim(),
-  createdAt:old?.createdAt||new Date().toISOString(),updatedAt:new Date().toISOString()
- };
- if(old){const index=db.expenses.indexOf(old);db.expenses[index]=record}
- else db.expenses.push(record);
- if(!saveDB()){
-  if(old){const i=db.expenses.findIndex(e=>String(e.id)===String(old.id));if(i>=0)db.expenses[i]=old}
-  else db.expenses.pop();
+ const date=$("expenseDate").value;
+ const title=$("expenseTitle").value.trim();
+ const amount=$("expenseAmount").value;
+
+ if(!date||!title||amount===""||num(amount)<=0){
+  $("expenseStatus").textContent="Date, details aur positive amount zaroor enter karein.";
   return;
  }
- $("expenseStatus").textContent=(old?"Expense updated.":"Expense saved.")+" Payment method: "+method+". Surplus aur balances dobara calculate hue.";
- clearExpense();calculate();
+
+ const method=$("expenseMethod").value;
+ const old=editingExpenseId
+  ?db.expenses.find(e=>String(e.id)===String(editingExpenseId))
+  :null;
+
+ const record={
+  ...(old||{}),
+  id:old?old.id:"expense-"+Date.now(),
+  date,
+  category:$("expenseCategory").value,
+  title,
+  description:title,
+  amount:num(amount),
+  paymentMethod:method,
+  method,
+  approvedBy:$("expenseApprovedBy").value.trim(),
+  reference:$("expenseRef").value.trim(),
+  notes:$("expenseNotes").value.trim(),
+  createdAt:old?.createdAt||new Date().toISOString(),
+  updatedAt:new Date().toISOString()
+ };
+
+ if(old){
+  const index=db.expenses.indexOf(old);
+  db.expenses[index]=record;
+ }else{
+  db.expenses.push(record);
+ }
+
+ if(!saveDB()){
+  if(old){
+   const i=db.expenses.findIndex(e=>String(e.id)===String(old.id));
+   if(i>=0)db.expenses[i]=old;
+  }else{
+   db.expenses.pop();
+  }
+  return;
+ }
+
+ $("expenseStatus").textContent=
+  (old?"Expense updated.":"Expense saved.")+
+  " Payment method: "+method+". Surplus aur balances dobara calculate hue.";
+
+ clearExpense();
+ calculate();
 }
 
 function editExpense(id){
- const e=db.expenses.find(x=>String(x.id)===String(id));if(!e)return;
+ const e=db.expenses.find(x=>String(x.id)===String(id));
+ if(!e)return;
+
  editingExpenseId=e.id;
- $("expenseDate").value=dateOf(e)||today();$("expenseCategory").value=e.category||"Other";
+
+ $("expenseDate").value=dateOf(e)||today();
+ $("expenseCategory").value=e.category||"Other";
  $("expenseTitle").value=e.title||e.description||e.name||"";
  $("expenseAmount").value=amountOf(e);
  $("expenseMethod").value=e.paymentMethod||e.paymentMode||e.method||"Cash";
- $("expenseApprovedBy").value=e.approvedBy||"";$("expenseRef").value=e.reference||e.bill||"";
- $("expenseNotes").value=e.notes||"";$("saveExpenseBtn").textContent="Update Expense";
+ $("expenseApprovedBy").value=e.approvedBy||"";
+ $("expenseRef").value=e.reference||e.bill||"";
+ $("expenseNotes").value=e.notes||"";
+ $("saveExpenseBtn").textContent="Update Expense";
  $("expenseStatus").textContent="Editing saved expense. Save changes to update it.";
+
  window.scrollTo({top:0,behavior:"smooth"});
 }
 
 function deleteExpense(id){
- const e=db.expenses.find(x=>String(x.id)===String(id));if(!e)return;
+ const e=db.expenses.find(x=>String(x.id)===String(id));
+ if(!e)return;
+
  if(!confirm("Is expense ko delete karein? Balance aur surplus dobara calculate honge."))return;
- const i=db.expenses.indexOf(e);db.expenses.splice(i,1);
- if(!saveDB()){db.expenses.splice(i,0,e);return}
- $("expenseStatus").textContent="Expense deleted. Figures recalculated.";calculate();
+
+ const i=db.expenses.indexOf(e);
+ db.expenses.splice(i,1);
+
+ if(!saveDB()){
+  db.expenses.splice(i,0,e);
+  return;
+ }
+
+ $("expenseStatus").textContent="Expense deleted. Figures recalculated.";
+ calculate();
 }
 
 function fillNames(){
- const out=$("outgoing"),inc=$("incoming"),oldO=out.value,oldI=inc.value;
- out.replaceChildren();inc.replaceChildren();
- const add=(s,v,t)=>{const o=document.createElement("option");o.value=v;o.textContent=t;s.appendChild(o)};
- add(out,"","Select outgoing commander");add(inc,"","Select incoming commander / Mess NCO");
+ const out=$("outgoing"),inc=$("incoming");
+ const oldO=out.value,oldI=inc.value;
+
+ out.replaceChildren();
+ inc.replaceChildren();
+
+ const add=(s,v,t)=>{
+  const o=document.createElement("option");
+  o.value=v;
+  o.textContent=t;
+  s.appendChild(o);
+ };
+
+ add(out,"","Select outgoing commander");
+ add(inc,"","Select incoming commander / Mess NCO");
+
  db.members.forEach(m=>{
-  const label=memberName(m)+(m.rank?" · "+m.rank:"")+(m.duty?" · "+m.duty:"");
-  add(out,memberId(m),label);add(inc,memberId(m),label);
+  const label=memberName(m)+
+   (m.rank?" · "+m.rank:"")+
+   (m.duty?" · "+m.duty:"");
+
+  add(out,memberId(m),label);
+  add(inc,memberId(m),label);
  });
+
  if([...out.options].some(o=>o.value===oldO))out.value=oldO;
  if([...inc.options].some(o=>o.value===oldI))inc.value=oldI;
- const prev=[...db.handovers].sort((a,b)=>dateOf(b).localeCompare(dateOf(a)))[0];
- if(!out.value&&prev){const id=txt(val(prev,["incomingCommanderId","incomingId"],""));if([...out.options].some(o=>o.value===id))out.value=id}
- if(!inc.value){const m=db.members.find(m=>/mess\s*nco|mess commander/i.test(txt(val(m,["duty","role","position"],""))));if(m)inc.value=memberId(m)}
+
+ const prev=[...db.handovers]
+  .sort((a,b)=>dateOf(b).localeCompare(dateOf(a)))[0];
+
+ if(!out.value&&prev){
+  const id=txt(val(prev,["incomingCommanderId","incomingId"],""));
+  if([...out.options].some(o=>o.value===id))out.value=id;
+ }
+
+ if(!inc.value){
+  const m=db.members.find(m=>/mess\s*nco|mess commander/i.test(
+   txt(val(m,["duty","role","position"],""))
+  ));
+
+  if(m)inc.value=memberId(m);
+ }
 }
 
 function fetchHandover(){
- calculate();const s=summary;
- $("verifiedStock").value=s.stock.toFixed(2);$("verifiedDues").value=s.dues.toFixed(2);
- $("verifiedLiability").value=s.liability.toFixed(2);$("verifiedExpenses").value=s.extra.toFixed(2);
+ calculate();
+
+ const s=summary;
+
+ $("verifiedStock").value=s.stock.toFixed(2);
+ $("verifiedDues").value=s.dues.toFixed(2);
+ $("verifiedLiability").value=s.liability.toFixed(2);
+ $("verifiedExpenses").value=s.extra.toFixed(2);
  $("verifiedSurplus").value=s.surplusAfter.toFixed(2);
+
  if(s.cb.cashFound)$("verifiedCash").value=s.cb.cash.toFixed(2);
  if(s.cb.bankFound)$("verifiedBank").value=s.cb.bank.toFixed(2);
- $("handoverStatus").textContent="Latest saved figures fetched. Cash and bank are only as complete as the recorded transactions. Physically verify cash, bank statement, stock and outstanding bills before signing.";
+
+ $("handoverStatus").textContent=
+  "Latest saved figures fetched. Cash and bank are only as complete as the recorded transactions. Physically verify cash, bank statement, stock and outstanding bills before signing.";
 }
 
 function saveHandover(){
- const date=$("handoverDate").value,outId=$("outgoing").value,inId=$("incoming").value;
- if(!date||!outId||!inId){$("handoverStatus").textContent="Date, outgoing aur incoming commander select karein.";return}
- if(outId===inId){$("handoverStatus").textContent="Outgoing aur incoming commander same nahi ho sakte.";return}
- const out=db.members.find(m=>memberId(m)===outId),inc=db.members.find(m=>memberId(m)===inId);
+ const date=$("handoverDate").value;
+ const outId=$("outgoing").value;
+ const inId=$("incoming").value;
+
+ if(!date||!outId||!inId){
+  $("handoverStatus").textContent="Date, outgoing aur incoming commander select karein.";
+  return;
+ }
+
+ if(outId===inId){
+  $("handoverStatus").textContent="Outgoing aur incoming commander same nahi ho sakte.";
+  return;
+ }
+
+ const out=db.members.find(m=>memberId(m)===outId);
+ const inc=db.members.find(m=>memberId(m)===inId);
+
  const rec={
-  id:"handover-"+Date.now(),date,outgoingCommanderId:outId,outgoingCommander:memberName(out),
-  incomingCommanderId:inId,incomingCommander:memberName(inc),
-  cash:num($("verifiedCash").value),cashAmount:num($("verifiedCash").value),
-  bankBalance:num($("verifiedBank").value),stockValue:num($("verifiedStock").value),
-  memberDues:num($("verifiedDues").value),memberAdvanceLiability:num($("verifiedLiability").value),
-  otherExpenses:num($("verifiedExpenses").value),surplus:num($("verifiedSurplus").value),
-  fromDate:$("fromDate").value,toDate:$("toDate").value,notes:$("handoverNotes").value.trim(),
+  id:"handover-"+Date.now(),
+  date,
+  outgoingCommanderId:outId,
+  outgoingCommander:memberName(out),
+  incomingCommanderId:inId,
+  incomingCommander:memberName(inc),
+  cash:num($("verifiedCash").value),
+  cashAmount:num($("verifiedCash").value),
+  bankBalance:num($("verifiedBank").value),
+  stockValue:num($("verifiedStock").value),
+  memberDues:num($("verifiedDues").value),
+  memberAdvanceLiability:num($("verifiedLiability").value),
+  otherExpenses:num($("verifiedExpenses").value),
+  surplus:num($("verifiedSurplus").value),
+  fromDate:$("fromDate").value,
+  toDate:$("toDate").value,
+  notes:$("handoverNotes").value.trim(),
   createdAt:new Date().toISOString()
  };
+
  db.handovers.push(rec);
- if(!saveDB()){db.handovers.pop();return}
- $("handoverStatus").textContent="Handover snapshot saved successfully. Member ledger transactions were not changed.";
+
+ if(!saveDB()){
+  db.handovers.pop();
+  return;
+ }
+
+ $("handoverStatus").textContent=
+  "Handover snapshot saved successfully. Member ledger transactions were not changed.";
+
  renderHandovers();
 }
 
 function renderHandovers(){
- const rows=[...db.handovers].sort((a,b)=>dateOf(b).localeCompare(dateOf(a))),body=$("handoverBody");body.replaceChildren();
+ const rows=[...db.handovers]
+  .sort((a,b)=>dateOf(b).localeCompare(dateOf(a)));
+
+ const body=$("handoverBody");
+ body.replaceChildren();
+
  rows.forEach(h=>{
   const tr=document.createElement("tr");
-  [dateOf(h),val(h,["outgoingCommander"],"—"),val(h,["incomingCommander"],"—"),
-   money(val(h,["cash","cashAmount"],0)),money(val(h,["bankBalance"],0)),
-   money(val(h,["stockValue"],0)),money(val(h,["otherExpenses"],0)),money(val(h,["surplus"],0))
-  ].forEach(v=>{const td=document.createElement("td");td.textContent=txt(v);tr.appendChild(td)});
+
+  [
+   dateOf(h),
+   val(h,["outgoingCommander"],"—"),
+   val(h,["incomingCommander"],"—"),
+   money(val(h,["cash","cashAmount"],0)),
+   money(val(h,["bankBalance"],0)),
+   money(val(h,["stockValue"],0)),
+   money(val(h,["otherExpenses"],0)),
+   money(val(h,["surplus"],0))
+  ].forEach(v=>{
+   const td=document.createElement("td");
+   td.textContent=txt(v);
+   tr.appendChild(td);
+  });
+
   body.appendChild(tr);
  });
+
  $("handoverEmpty").style.display=rows.length?"none":"block";
 }
 
-function csvEscape(v){let s=String(v??"");if(/^[=+\-@]/.test(s))s="'"+s;return '"'+s.replace(/"/g,'""')+'"'}
-function downloadCSV(rows,filename){
- const blob=new Blob(["\uFEFF"+rows.map(r=>r.map(csvEscape).join(",")).join("\r\n")],{type:"text/csv;charset=utf-8"});
- const url=URL.createObjectURL(blob),a=document.createElement("a");a.href=url;a.download=filename;
- document.body.appendChild(a);a.click();a.remove();setTimeout(()=>URL.revokeObjectURL(url),1000);
+function csvEscape(v){
+ let s=String(v??"");
+ if(/^[=+\-@]/.test(s))s="'"+s;
+ return '"'+s.replace(/"/g,'""')+'"';
 }
+
+function downloadCSV(rows,filename){
+ const blob=new Blob(
+  ["\uFEFF"+rows.map(r=>r.map(csvEscape).join(",")).join("\r\n")],
+  {type:"text/csv;charset=utf-8"}
+ );
+
+ const url=URL.createObjectURL(blob);
+ const a=document.createElement("a");
+
+ a.href=url;
+ a.download=filename;
+
+ document.body.appendChild(a);
+ a.click();
+ a.remove();
+
+ setTimeout(()=>URL.revokeObjectURL(url),1000);
+}
+
 function expenseCSV(){
- const rows=[["Date","Category","Details","Payment Method","Amount","Approved By","Bill Reference","Notes"]];
- db.expenses.filter(e=>inPeriod(dateOf(e))).forEach(e=>rows.push([
-  dateOf(e),e.category||"",e.title||e.description||"",e.paymentMethod||e.method||"",
-  amountOf(e),e.approvedBy||"",e.reference||"",e.notes||""
- ]));
+ const rows=[[
+  "Date","Category","Details","Payment Method","Amount",
+  "Approved By","Bill Reference","Notes"
+ ]];
+
+ db.expenses.filter(e=>inPeriod(dateOf(e))).forEach(e=>{
+  rows.push([
+   dateOf(e),
+   e.category||"",
+   e.title||e.description||"",
+   e.paymentMethod||e.method||"",
+   amountOf(e),
+   e.approvedBy||"",
+   e.reference||"",
+   e.notes||""
+  ]);
+ });
+
  downloadCSV(rows,"CRPF-Other-Expenses.csv");
 }
+
 function handoverCSV(){
- const rows=[["Date","Outgoing","Incoming","Cash","Bank","Stock","Member Dues","Advance Liability","Other Expenses","Surplus","Notes"]];
- db.handovers.forEach(h=>rows.push([dateOf(h),h.outgoingCommander||"",h.incomingCommander||"",
-  h.cash??h.cashAmount??0,h.bankBalance??0,h.stockValue??0,h.memberDues??0,
-  h.memberAdvanceLiability??0,h.otherExpenses??0,h.surplus??0,h.notes||""]));
+ const rows=[[
+  "Date","Outgoing","Incoming","Cash","Bank","Stock",
+  "Member Dues","Advance Liability","Other Expenses","Surplus","Notes"
+ ]];
+
+ db.handovers.forEach(h=>{
+  rows.push([
+   dateOf(h),
+   h.outgoingCommander||"",
+   h.incomingCommander||"",
+   h.cash??h.cashAmount??0,
+   h.bankBalance??0,
+   h.stockValue??0,
+   h.memberDues??0,
+   h.memberAdvanceLiability??0,
+   h.otherExpenses??0,
+   h.surplus??0,
+   h.notes||""
+  ]);
+ });
+
  downloadCSV(rows,"CRPF-Commander-Handover.csv");
 }
 
 function setTab(name){
- activeTab=name;document.querySelectorAll(".panel").forEach(p=>p.classList.add("hidden"));
+ activeTab=name;
+
+ document.querySelectorAll(".panel")
+  .forEach(p=>p.classList.add("hidden"));
+
  $(name).classList.remove("hidden");
- document.querySelectorAll("[data-tab]").forEach(b=>b.classList.toggle("active",b.dataset.tab===name));
- if(name==="records")renderHandovers();if(name==="expenses")renderExpenses();
+
+ document.querySelectorAll("[data-tab]")
+  .forEach(b=>b.classList.toggle("active",b.dataset.tab===name));
+
+ if(name==="records")renderHandovers();
+ if(name==="expenses")renderExpenses();
 }
 
 function setCurrentMonth(){
- const d=new Date(),y=d.getFullYear(),m=String(d.getMonth()+1).padStart(2,"0");
- $("fromDate").value=y+"-"+m+"-01";$("toDate").value=today();calculate();
+ const d=new Date();
+ const y=d.getFullYear();
+ const m=String(d.getMonth()+1).padStart(2,"0");
+
+ $("fromDate").value=y+"-"+m+"-01";
+ $("toDate").value=today();
+
+ calculate();
 }
 
-document.querySelectorAll("[data-tab]").forEach(b=>b.addEventListener("click",()=>setTab(b.dataset.tab)));
+document.querySelectorAll("[data-tab]")
+ .forEach(b=>b.addEventListener("click",()=>setTab(b.dataset.tab)));
+
 $("calculateBtn").addEventListener("click",calculate);
 $("currentMonthBtn").addEventListener("click",setCurrentMonth);
 $("saveExpenseBtn").addEventListener("click",saveExpense);
@@ -629,12 +1231,19 @@ $("toDate").addEventListener("change",calculate);
 
 function init(){
  loadDB();
- $("fromDate").value=new Date().getFullYear()+"-"+String(new Date().getMonth()+1).padStart(2,"0")+"-01";
+
+ const d=new Date();
+ $("fromDate").value=
+  d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-01";
+
  $("toDate").value=today();
  $("expenseDate").value=today();
  $("handoverDate").value=today();
- calculate();renderHandovers();
+
+ calculate();
+ renderHandovers();
 }
+
 init();
 </script>
 </body>

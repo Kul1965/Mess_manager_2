@@ -116,7 +116,7 @@ dialog::backdrop{background:#10291dcc}
       <button onclick="openNew()">＋ Create First Recipe</button>
     </div>
   </section>
-  <p class="muted">Recipe ka batch 20, 100 ya apni pasand ki servings ke liye banayein. Software ek member aur chune gaye members ka ration aur estimated cost calculate karega.</p>
+<p class="muted">Recipe ka batch 1 ya apni pasand ki servings ke liye banayein. Software ek member aur chune gaye members ka ration aur estimated cost calculate karega.</p>
 </main>
 
 <dialog id="editDialog">
@@ -131,7 +131,7 @@ dialog::backdrop{background:#10291dcc}
       <div class="form-grid">
         <div class="field">
           <label for="recipeName">Recipe Name *</label>
-          <input id="recipeName" required maxlength="100" placeholder="e.g. Dal, Rice, Chicken Curry">
+          <input id="recipeName" required maxlength="1" placeholder="e.g. Dal, Rice, Chicken Curry">
         </div>
       </div>
 
@@ -139,7 +139,7 @@ dialog::backdrop{background:#10291dcc}
         <div class="field">
           <label for="recipeServings">Yeh recipe kitne members ke liye hai? *</label>
           <input id="recipeServings" type="number" min="1" step="1" value="1" required>
-          <small>Jaise 100. Ingredients ki quantity poore 100 members ke batch ki bharein.</small>
+          <small>Jaise 1. Ingredients ki quantity poore 1 members ke batch ki bharein.</small>
         </div>
         <div class="field">
           <label>Automatic calculation</label>
@@ -347,7 +347,7 @@ function openNew(){
   loadData();
   document.getElementById("recipeForm").reset();
   document.getElementById("recipeId").value = "";
-  document.getElementById("recipeServings").value = "100";
+  document.getElementById("recipeServings").value = "1";
   document.getElementById("formTitle").textContent = "Add Recipe";
   document.getElementById("ingredientRows").innerHTML = "";
   addIngredient();
@@ -404,7 +404,7 @@ function addIngredient(existing = null){
       </div>
       <div>
         <label class="muted">Quantity</label>
-        <input class="ing-qty" type="number" min="0.001" step="any" required placeholder="e.g. 100" value="${existing ? esc(existing.quantity) : ""}">
+        <input class="ing-qty" type="number" min="0.001" step="any" required placeholder="e.g. 1" value="${existing ? esc(existing.quantity) : ""}">
       </div>
       <div>
         <label class="muted">Unit</label>

@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>CRPF Smart Mess Manager - Members</title>
 <link rel="manifest" href="manifest.webmanifest">
-<link rel="icon" type="image/svg+xml" href="assets/crpf-app-icon.svg?v=3">
+<link rel="icon" type="image/svg+xml" href="assets/crpf-app-icon.svg?v=4">
 <style>
 :root{--g:#176747;--deep:#10563e;--bg:#f2f6f3;--white:#fff;--text:#214d3b;--muted:#78857e;--border:#dce5df;--red:#bd3942}
 *{box-sizing:border-box}
@@ -149,7 +149,7 @@ button.danger{background:linear-gradient(180deg,#fff4f4,#ffe3e3);border:1px soli
 </section>
 
 <section class="card" id="memberLeaveCard" style="border:2px solid #d8bd58;background:linear-gradient(135deg,#fffdf3,#edf7f0);">
-<div class="sectionHead"><h2 class="page-title">Jawans On Leave</h2><span class="pill" id="memberLeaveCount">0 On Leave</span></div>
+<div class="sectionHead"><h2 class="section-title">🛌 Jawans On Leave</h2><span class="pill" id="memberLeaveCount">0 On Leave</span></div>
 <div id="memberLeaveList" class="help">Leave entry Accounts section se hogi. Yahan current leave par gaye jawan dikhेंगे.</div>
 </section>
 
@@ -162,7 +162,7 @@ button.danger{background:linear-gradient(180deg,#fff4f4,#ffe3e3);border:1px soli
 <section class="card">
 <div class="toolbar">
 <div>
-<h2 class="page-title">Members Management</h2>
+<h2 class="page-title">👥 Members Management</h2>
 <div class="help">Register, manage and view all mess members</div>
 </div>
 <button type="button" class="primary" id="openAdd">＋ Add New</button>
@@ -265,7 +265,8 @@ function makeId(){
 }
 function memberName(m){return m.name||m.fullName||m.memberName||"Unnamed member"}
 function memberId(m){return txt(m.serviceId||m.memberId||m.idNumber)}
-function memberStatus(m){return m.status||"Active"}
+function memberStatus(m){return txt(m.status||"Active").trim()||"Active"}
+function statusKey(v){return txt(v||"Active").trim().toLowerCase().replace(/[ _-]+/g," ")}
 function esc(s){
   return txt(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
 }
@@ -304,8 +305,8 @@ function renderLeaveCard(){
 }
 function updateStats(){
   $("totalCount").textContent=data.members.length;
-  $("activeCount").textContent=data.members.filter(m=>memberStatus(m)==="Active").length;
-  $("inactiveCount").textContent=data.members.filter(m=>memberStatus(m)!=="Active").length;
+  $("activeCount").textContent=data.members.filter(m=>statusKey(memberStatus(m))==="active").length;
+  $("inactiveCount").textContent=data.members.filter(m=>["inactive","transferred","on leave"].includes(statusKey(memberStatus(m)))).length;
 }
 function getPhoto(m){return m&&(m.photo||m.photoData||m.image)||""}
 function renderMembers(){
@@ -319,7 +320,7 @@ function renderMembers(){
   const list=data.members.filter(m=>{
     const leave=onLeave(m);
     const hay=[memberName(m),memberId(m),m.rank,m.mobile,m.unit,leave?"leave on leave":"",memberStatus(m)].join(" ").toLowerCase();
-    const statusMatch=f==="All"||(f==="On Leave"?leave:memberStatus(m)===f);
+    const statusMatch=f==="All"||(f==="On Leave"?leave:statusKey(memberStatus(m))===statusKey(f));
     return (!q||hay.includes(q))&&statusMatch;
   });
   const box=$("memberList");box.replaceChildren();

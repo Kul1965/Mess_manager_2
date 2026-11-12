@@ -395,3 +395,75 @@ main{
 @media(max-width:390px){
  .shared-crpf-header{column-gap:4px!important;row-gap:7px!important}
 }
+
+
+/* Reliable four-chip header: Mess, NCO, SO, Time + Date */
+.shared-crpf-header{
+ display:block!important;
+}
+.shared-crpf-header>.crpf-brand{width:100%!important}
+.shared-crpf-header>.office-cards{
+ display:grid!important;
+ width:100%!important;
+ grid-template-columns:repeat(4,minmax(0,1fr))!important;
+ gap:5px!important;
+ margin:9px auto 0!important;
+}
+.shared-crpf-header>.office-cards>article{
+ display:flex!important;
+ flex-direction:column!important;
+ justify-content:center!important;
+ align-items:flex-start!important;
+ gap:3px!important;
+ min-width:0!important;
+ width:100%!important;
+ min-height:48px!important;
+ padding:6px 7px!important;
+ border-radius:13px!important;
+ background:#276c51!important;
+ border:1px solid #75ad8e!important;
+ color:#fff!important;
+}
+.shared-crpf-header>.office-cards>article small{
+ display:block!important;
+ color:#d9eee2!important;
+ font-size:8px!important;
+ line-height:1.1!important;
+ white-space:nowrap!important;
+}
+.shared-crpf-header>.office-cards>article strong{
+ display:block!important;
+ width:100%!important;
+ color:#fff!important;
+ font-size:9px!important;
+ line-height:1.2!important;
+ white-space:nowrap!important;
+ overflow:hidden!important;
+ text-overflow:ellipsis!important;
+}
+.shared-crpf-header>.office-cards>.office-time{
+ gap:4px!important;
+}
+.shared-crpf-header>.office-cards>.office-time>div{
+ display:flex!important;
+ align-items:center!important;
+ gap:3px!important;
+ min-width:0!important;
+ width:100%!important;
+}
+.shared-crpf-header>.office-cards>.office-time small{
+ font-size:8px!important;
+ flex:0 0 auto!important;
+}
+.shared-crpf-header>.office-cards>.office-time strong{
+ font-size:8px!important;
+}
+@media(max-width:390px){
+ .shared-crpf-header>.office-cards{gap:4px!important}
+ .shared-crpf-header>.office-cards>article{padding:5px 4px!important;min-height:46px!important}
+ .shared-crpf-header>.office-cards>article small{font-size:7px!important}
+ .shared-crpf-header>.office-cards>article strong{font-size:8px!important}
+ .shared-crpf-header>.office-cards>.office-time>div{gap:2px!important}
+ .shared-crpf-header>.office-cards>.office-time small,
+ .shared-crpf-header>.office-cards>.office-time strong{font-size:7px!important}
+}

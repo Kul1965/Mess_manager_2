@@ -145,6 +145,11 @@ button.danger{background:linear-gradient(180deg,#fff4f4,#ffe3e3);border:1px soli
 </div>
 </section>
 
+<section class="card" id="memberLeaveCard" style="border:2px solid #d8bd58;background:linear-gradient(135deg,#fffdf3,#edf7f0);">
+<div class="sectionHead"><h2>Jawans On Leave</h2><span class="pill" id="memberLeaveCount">0 On Leave</span></div>
+<div id="memberLeaveList" class="help">Leave entry Accounts section se hogi. Yahan current leave par gaye jawan dikhेंगे.</div>
+</section>
+
 <section class="stats">
 <div class="stat"><strong id="totalCount">0</strong><span>Total Members</span></div>
 <div class="stat"><strong id="activeCount">0</strong><span>Active Members</span></div>
@@ -272,6 +277,25 @@ function today(){
 function showMessage(msg,isError){
   $("message").textContent=msg;
   $("message").style.color=isError?"#bd3942":"#176747";
+}
+function renderLeaveCard(){
+  const records=arr(data.leaves).concat(arr(data.leaveRecords));
+  const current=records.filter(x=>{
+    const s=txt(x.status||x.state||"on_leave").toLowerCase().replace(/[ -]/g,"_");
+    return !["returned","joined_back","closed","cancelled","completed"].includes(s);
+  });
+  $("memberLeaveCount").textContent=current.length+" On Leave";
+  const box=$("memberLeaveList");box.replaceChildren();
+  if(!current.length){box.textContent="Abhi koi jawan leave par record nahi hai. Leave entry Accounts section se add hogi.";return;}
+  current.forEach(x=>{
+    const m=getMember(x.memberId??x.member_id??x.jawanId??x.serviceId??"");
+    const row=document.createElement("div");row.className="member";
+    const info=document.createElement("div");info.className="memberInfo";
+    const nm=document.createElement("h4");nm.textContent=m?memberName(m):txt(x.memberName||x.name||"Jawan");info.appendChild(nm);
+    const meta=document.createElement("div");meta.className="meta";
+    meta.textContent="Leave From: "+txt(x.leaveFrom||x.fromDate||x.startDate||"—")+" · Joining Back: "+txt(x.joiningBackDate||x.returnDate||x.leaveTo||"—");info.appendChild(meta);
+    row.appendChild(info);box.appendChild(row);
+  });
 }
 function updateStats(){
   $("totalCount").textContent=data.members.length;
@@ -500,6 +524,7 @@ try{
   $("commonAdvance").value=getCommonAdvance();
   $("joiningDate").value=today();
   renderMembers();
+  renderLeaveCard();
 }catch(e){
   alert("Member data read karne mein dikkat hui. Browser data delete na karein.");
 }

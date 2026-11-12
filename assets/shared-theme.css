@@ -364,3 +364,34 @@ main{
  .shared-crpf-header>.office-clock .clock-symbol,
  .shared-crpf-header>.office-clock .calendar-symbol{font-size:10px!important}
 }
+
+
+/* Four aligned information chips on one row */
+.shared-crpf-header{
+ display:grid!important;
+ grid-template-columns:repeat(4,minmax(0,1fr))!important;
+ column-gap:5px!important;
+ row-gap:8px!important;
+}
+.shared-crpf-header>.crpf-brand{
+ grid-column:1/-1!important;
+}
+.shared-crpf-header>.office-cards{
+ display:contents!important;
+}
+.shared-crpf-header>.office-cards article{
+ min-width:0!important;
+ width:100%!important;
+ margin:0!important;
+}
+.shared-crpf-header>.office-clock{
+ grid-column:auto!important;
+ grid-row:auto!important;
+ width:100%!important;
+ min-width:0!important;
+ max-width:none!important;
+ margin:0!important;
+}
+@media(max-width:390px){
+ .shared-crpf-header{column-gap:4px!important;row-gap:7px!important}
+}

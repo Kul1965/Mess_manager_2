@@ -248,7 +248,9 @@ function loadData(){
    "limitHistory","movements","purchases","transactions","records","receipts","refunds"
   ].forEach(k=>d[k]=mergeById(old[k],current[k]));
   d.settings={...(old.settings||{}),...(current.settings||{})};
-  d.members=arr(d.members);
+  d.members=arr(d.members).filter(x=>x&&typeof x==="object");
+  d.leaves=arr(d.leaves).filter(x=>x&&typeof x==="object");
+  d.leaveRecords=arr(d.leaveRecords).filter(x=>x&&typeof x==="object");
   return d;
 }
 function saveData(){
@@ -282,7 +284,7 @@ function showMessage(msg,isError){
   $("message").style.color=isError?"#bd3942":"#176747";
 }
 function renderLeaveCard(){
-  const records=arr(data.leaves).concat(arr(data.leaveRecords));
+  const records=arr(data.leaves).concat(arr(data.leaveRecords)).filter(x=>x&&typeof x==="object");
   const current=records.filter(x=>{
     const s=txt(x.status||x.state||"on_leave").toLowerCase().replace(/[ -]/g,"_");
     return !["returned","joined_back","closed","cancelled","completed"].includes(s);
@@ -308,7 +310,7 @@ function updateStats(){
 function getPhoto(m){return m&&(m.photo||m.photoData||m.image)||""}
 function renderMembers(){
   const q=$("search").value.toLowerCase().trim(),f=$("statusFilter").value;
-  const leaveRecords=arr(data.leaves).concat(arr(data.leaveRecords));
+  const leaveRecords=arr(data.leaves).concat(arr(data.leaveRecords)).filter(x=>x&&typeof x==="object");
   const onLeave=m=>leaveRecords.some(x=>{
     const ref=String(x.memberId??x.member_id??x.jawanId??x.serviceId??"");
     const s=txt(x.status||x.state||"on_leave").toLowerCase().replace(/[ -]/g,"_");
@@ -382,9 +384,7 @@ function showDetails(id,shouldScroll=true){
     item.append(small,strong);grid.appendChild(item);
   });
   box.appendChild(grid);
-  const leave=document.createElement("div");leave.className="leave-card";
-  leave.innerHTML="<h3>Leave Card</h3><div class=\"leave-dates\"><div><small>Leave From</small><strong>"+esc(m.leaveFrom||"—")+"</strong></div><div><small>Leave To</small><strong>"+esc(m.leaveTo||"—")+"</strong></div><div><small>Joining Back</small><strong>"+esc(m.joiningBackDate||"—")+"</strong></div></div>";
-  box.appendChild(leave);
+  
   const order=document.createElement("div");order.className="detailNotes";
   if(m.movementOrderData){const a=document.createElement("a");a.href=m.movementOrderData;a.download=m.movementOrderName||"movement-order";a.textContent="Open / Download Movement Order: "+(m.movementOrderName||"File");order.appendChild(a)}else order.textContent="Movement Order: Not uploaded";
   box.appendChild(order);

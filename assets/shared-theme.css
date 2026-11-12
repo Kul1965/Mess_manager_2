@@ -83,3 +83,12 @@ header:not(:has(img))::before,.hero::before{background-image:url("crpf-monogram.
  .shared-crpf-header>.office-cards{grid-template-columns:repeat(3,minmax(0,1fr))!important}
  .shared-crpf-header>.office-clock{justify-content:center!important}
 }
+
+/* Consistent page title banner */
+.page-title{display:flex!important;align-items:center;gap:10px;width:100%;margin:14px 0 16px!important;padding:13px 16px!important;border:1px solid #d7bd58!important;border-left:5px solid #f0d56b!important;border-radius:13px!important;background:linear-gradient(110deg,#0b4e37,#176747 65%,#0c5b40)!important;color:#fff!important;font-size:clamp(20px,4.8vw,27px)!important;font-weight:900!important;line-height:1.2!important;letter-spacing:.2px!important;text-shadow:0 2px 3px #002719!important;box-shadow:0 4px 12px #0c3b2829,inset 0 1px #ffffff25!important}
+.page-title:before{content:"";display:block;width:5px;height:25px;border-radius:5px;background:linear-gradient(#f8e49a,#c69d32);flex:0 0 5px}
+.page-title-sub{margin:-8px 0 16px 2px!important;color:#6e8177!important;font-size:14px!important}
+.page-banner{margin:12px 14px 16px!important;padding:12px 15px!important;border:1px solid #d7bd58!important;border-left:5px solid #f0d56b!important;border-radius:13px!important;background:linear-gradient(110deg,#0b4e37,#176747 65%,#0c5b40)!important;color:#fff!important;box-shadow:0 4px 12px #0c3b2829,inset 0 1px #ffffff25!important}
+.page-banner h2{margin:0!important;color:#fff!important;font-size:clamp(20px,4.8vw,27px)!important;font-weight:900!important;text-shadow:0 2px 3px #002719!important}
+.page-banner p{margin:5px 0 0!important;color:#dcefe5!important;font-size:13px!important}
+@media(max-width:390px){.page-banner{margin:10px 10px 14px!important;padding:11px 12px!important}.page-banner h2{font-size:20px!important}}

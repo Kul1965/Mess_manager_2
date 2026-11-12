@@ -62,7 +62,7 @@ dialog::backdrop{background:#10291dcc}
  .ingredient-grid .food-select{grid-column:1/-1}
 }
 </style>
-<link rel="stylesheet" href="assets/shared-theme.css?v=8">
+<link rel="stylesheet" href="assets/shared-theme.css?v=9">
 <link rel="icon" type="image/svg+xml" href="assets/crpf-app-icon.svg?v=4">
 <link rel="manifest" href="manifest.webmanifest">
 </head>
@@ -91,7 +91,7 @@ dialog::backdrop{background:#10291dcc}
 
   <div class="toolbar">
     <input id="search" class="search" placeholder="🔎 Search recipe name..." oninput="render()">
-    <button onclick="openNew()">＋ Add Recipe</button>
+    <button type="button" class="secondary" onclick="openPreRecipes()">＋ Pre Recipes</button><button onclick="openNew()">＋ My Recipe</button>
   </div>
 
   <section class="card">
@@ -117,6 +117,15 @@ dialog::backdrop{background:#10291dcc}
   </section>
 <p class="muted">Recipe ka batch 1 ya apni pasand ki servings ke liye banayein. Software ek member aur chune gaye members ka ration aur estimated cost calculate karega.</p>
 </main>
+
+<dialog id="preRecipesDialog">
+  <div class="modal-head"><h3>Predefined Recipe Library</h3><button type="button" class="secondary" onclick="closeDialog('preRecipesDialog')">✕</button></div>
+  <div class="modal-body">
+    <p class="muted">Yeh starter recipes GitHub code mein saved hain. Select karke add karein. Missing store items bhi zero stock ke saath add ho jayenge; purchase aapko alag se record karni hogi.</p>
+    <div id="preRecipesList" class="form-grid"></div>
+  </div>
+  <div class="modal-foot"><button type="button" class="secondary" onclick="closeDialog('preRecipesDialog')">Cancel</button><button type="button" id="addSelectedRecipes">Add Selected Recipes</button></div>
+</dialog>
 
 <dialog id="editDialog">
   <div class="modal-head">
@@ -304,6 +313,52 @@ function recipeServings(recipe){
 function recipeCost(recipe){
   return recipeBatchCost(recipe) / recipeServings(recipe);
 }
+
+
+/* GitHub-hosted editable recipe starter library. Quantities are per one member. */
+const PRE_RECIPES=[
+ {name:"Plain Rice",servings:1,ingredients:[["Rice","kg",100,"g"]],notes:"Wash rice and cook until soft."},
+ {name:"Dal",servings:1,ingredients:[["Lentils / Dal","kg",50,"g"],["Onion","kg",15,"g"],["Cooking Oil","ltr",5,"ml"],["Salt","kg",2,"g"],["Turmeric Powder","kg",1,"g"],["Cumin Seeds","kg",1,"g"]],notes:"Cook dal; prepare a light tadka."},
+ {name:"Roti (2 pieces)",servings:1,ingredients:[["Wheat Flour / Atta","kg",100,"g"]],notes:"Knead dough and prepare two rotis."},
+ {name:"Aloo Sabji",servings:1,ingredients:[["Potato","kg",150,"g"],["Onion","kg",25,"g"],["Tomato","kg",30,"g"],["Cooking Oil","ltr",8,"ml"],["Salt","kg",2,"g"],["Turmeric Powder","kg",1,"g"],["Red Chilli Powder","kg",1,"g"]],notes:"Cook potato with onion, tomato and spices."},
+ {name:"Egg Curry",servings:1,ingredients:[["Egg","pcs",1,"pcs"],["Onion","kg",30,"g"],["Tomato","kg",30,"g"],["Cooking Oil","ltr",10,"ml"],["Salt","kg",2,"g"],["Turmeric Powder","kg",1,"g"],["Red Chilli Powder","kg",1,"g"]],notes:"Boil egg and simmer in prepared masala."},
+ {name:"Milk Tea",servings:1,ingredients:[["Milk","ltr",100,"ml"],["Tea Leaves","kg",2,"g"],["Sugar","kg",10,"g"]],notes:"Boil tea, milk and sugar to taste."}
+];
+function openPreRecipes(){
+ loadData();
+ $("preRecipesList").innerHTML=PRE_RECIPES.map((r,i)=>{
+  const exists=data.recipes.some(x=>String(x.name||"").trim().toLowerCase()===r.name.toLowerCase());
+  return `<label class="field" style="display:flex;align-items:center;gap:8px;padding:9px;border:1px solid var(--border);border-radius:9px;background:#fff">
+   <input type="checkbox" class="pre-recipe-check" value="${i}" ${exists?"disabled":""} style="width:auto">
+   <span><b>${esc(r.name)}</b><small class="muted" style="display:block">${r.ingredients.length} ingredients · ${exists?"Already added":"Available to add"}</small></span>
+  </label>`;
+ }).join("");
+ $("preRecipesDialog").showModal();
+}
+$("addSelectedRecipes").addEventListener("click",()=>{
+ loadData();
+ const selected=[...document.querySelectorAll(".pre-recipe-check:checked")];
+ if(!selected.length)return alert("Pehle recipes select karein.");
+ let added=0,itemsAdded=0;
+ selected.forEach(box=>{
+  const template=PRE_RECIPES[Number(box.value)];
+  if(data.recipes.some(x=>String(x.name||"").trim().toLowerCase()===template.name.toLowerCase()))return;
+  const ingredients=template.ingredients.map(([name,storeUnit,quantity,unit])=>{
+   let item=data.items.find(x=>String(itemName(x)).trim().toLowerCase()===name.toLowerCase());
+   if(!item){
+    item={id:"i"+Date.now().toString(36)+Math.random().toString(36).slice(2,6),name,unit:storeUnit,note:"Added by GitHub predefined recipe",source:"github-predefined",purchases:[]};
+    data.items.push(item);itemsAdded++;
+   }
+   return {itemId:item.id,itemName:itemName(item),quantity,unit,quantityBase:toBase(quantity,unit)};
+  });
+  data.recipes.push({id:id(),name:template.name,servings:template.servings,servingLabel:"1 serving",ingredients,notes:template.notes,source:"github-predefined",updatedAt:new Date().toISOString()});
+  added++;
+ });
+ if(saveData()){
+  closeDialog("preRecipesDialog");render();
+  alert(added+" pre recipes add ho gayi. "+itemsAdded+" missing store items bhi add hue (zero stock). Ab recipes Edit karke apni quantity/masala badal sakte hain.");
+ }
+});
 
 function render(){
   loadData();

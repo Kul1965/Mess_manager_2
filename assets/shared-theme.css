@@ -15,3 +15,11 @@ header:not(:has(img))::before,.hero::before{content:"";display:block;width:76px;
 header:not(:has(img)),.hero{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
 header:not(:has(img)) h1,header:not(:has(img)) h2,.hero h1{flex:1 1 220px}
 @media(max-width:420px){header:not(:has(img))::before,.hero::before{width:62px;height:62px;flex-basis:62px}}
+
+/* Monogram and highlighted page titles across the full app */
+.nav{display:flex!important;gap:7px!important;overflow-x:auto!important;background:linear-gradient(180deg,#176747,#0c4e37)!important;padding:9px 10px!important;border-bottom:3px solid #176747!important;box-shadow:0 5px 12px #163c2828!important}
+.nav a{white-space:nowrap!important;color:#f4fff8!important;padding:9px 12px!important;border-radius:9px!important;font-size:12px!important;font-weight:bold!important;background:linear-gradient(180deg,#25845f,#10563e)!important;border:1px solid #64a987!important;box-shadow:0 3px 0 #073c2b,0 1px 0 #ffffff30 inset!important}
+.nav a.active{background:linear-gradient(180deg,#e3c85f,#b18b22)!important;color:#183e2d!important}
+main h2,main h3{color:#10563e}
+main>section>h3,main>.card>h3,main>.panel>h3{padding:10px 12px;border-radius:9px;background:linear-gradient(100deg,#e5f3e9,#f8fcf9);border-left:4px solid #176747;box-shadow:0 2px 6px #16462b12}
+header:not(:has(img))::before,.hero::before{background-image:url("crpf-monogram.svg")!important}

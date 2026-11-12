@@ -227,7 +227,10 @@ function saveData(data){
 function getData(){
   const d=readData();
   if(!Array.isArray(d.items))d.items=[];
+  d.items=d.items.filter(x=>x&&typeof x==="object");
   if(!Array.isArray(d.meals))d.meals=[];
+  d.meals=d.meals.filter(x=>x&&typeof x==="object");
+  d.items.forEach(x=>{if(!Array.isArray(x.purchases))x.purchases=[];x.purchases=x.purchases.filter(p=>p&&typeof p==="object")});
   return d;
 }
 function baseUnit(unit){

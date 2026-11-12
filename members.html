@@ -9,12 +9,16 @@
 :root{--g:#176747;--deep:#10563e;--bg:#f2f6f3;--white:#fff;--text:#214d3b;--muted:#78857e;--border:#dce5df;--red:#bd3942}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);font-family:Arial,sans-serif;color:var(--text);font-size:14px}
-header{background:linear-gradient(120deg,#10583e,#21805a);color:white;padding:17px 15px}
-header h1{margin:0 0 5px;font-size:22px}
-header p{margin:0;font-size:13px;opacity:.9}
-nav{display:flex;gap:6px;overflow-x:auto;background:white;padding:9px;border-bottom:1px solid var(--border)}
-nav a{white-space:nowrap;text-decoration:none;background:#eaf3ed;color:var(--g);padding:9px 11px;border-radius:8px;font-size:12px;font-weight:bold}
-nav a.active{background:var(--g);color:white}
+header{position:relative;display:flex;align-items:center;gap:12px;background:linear-gradient(135deg,#073c2b 0%,#176747 55%,#0b4d36 100%);color:white;padding:13px 15px;border-bottom:3px solid #d6b53c;box-shadow:0 5px 14px #102f202b}
+.brand-mark{width:46px;height:46px;flex:0 0 46px;display:grid;place-items:center;border:2px solid #e4c45a;border-radius:12px;background:linear-gradient(145deg,#f5e5a0,#b58b25 48%,#f4df8b);box-shadow:0 3px 0 #765b19,0 5px 9px #001c12;color:#123f2d;font-weight:900;font-size:11px;letter-spacing:.5px;text-shadow:0 1px #fff8}
+.brand-copy{min-width:0}
+header h1{margin:0 0 5px;font-size:clamp(17px,4vw,22px);letter-spacing:.2px;text-shadow:0 2px 3px #001c12}
+header p{margin:0;font-size:12px;opacity:.92}
+nav{display:flex;gap:7px;overflow-x:auto;background:linear-gradient(180deg,#176747,#0c4e37);padding:9px 10px;border-bottom:3px solid #d6b53c;box-shadow:0 5px 12px #163c2828;scrollbar-width:thin}
+nav a{white-space:nowrap;text-decoration:none;color:#f4fff8;padding:9px 12px;border-radius:9px;font-size:12px;font-weight:bold;background:linear-gradient(180deg,#25845f,#10563e);border:1px solid #64a987;box-shadow:0 3px 0 #073c2b,0 1px 0 #ffffff30 inset;transition:transform .15s,filter .15s}
+nav a:active{transform:translateY(2px);box-shadow:0 1px 0 #073c2b}
+nav a.active{background:linear-gradient(180deg,#e3c85f,#b18b22);border-color:#f7e7a0;color:#183e2d;box-shadow:0 3px 0 #765b19,0 1px 0 #ffffff88 inset}
+@media(max-width:420px){header{padding:11px 10px;gap:10px}.brand-mark{width:42px;height:42px;flex-basis:42px;border-radius:10px}nav{gap:6px;padding:8px}nav a{padding:8px 10px;font-size:11px}}
 main{max-width:1100px;margin:13px auto;padding:0 11px 28px}
 .card{background:white;border:1px solid var(--border);border-radius:12px;padding:13px;margin-bottom:12px;box-shadow:0 2px 8px #183d2910}
 h2{font-size:18px;margin:0 0 11px}
@@ -86,8 +90,9 @@ button{border:0;border-radius:8px;padding:9px 11px;font-weight:bold;cursor:point
 </head>
 <body>
 <header>
-<h1>CRPF Smart Mess Manager</h1>
-<p>Jawan Member Register · View, Add and Edit</p>
+<div class="brand-mark" aria-label="CRPF emblem">CRPF</div>
+<div class="brand-copy"><h1>CRPF Smart Mess Manager</h1>
+<p>Jawan Member Register · View, Add and Edit</p></div>
 </header>
 
 <nav>

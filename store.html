@@ -591,6 +591,9 @@ function deleteItem(id){
   if(d.meals.some(m=>arr(m.ration).some(r=>String(r.itemId)===String(id)))){
     return alert("Is item ka meal record hai. Audit record bachane ke liye item delete nahi kiya.");
   }
+  if(arr(d.recipes).some(recipe=>arr(recipe.ingredients).some(ing=>String(ing.itemId)===String(id)))){
+    return alert("Yeh item saved recipe mein use ho raha hai. Pehle recipe edit/delete karein; recipe history safe rahegi.");
+  }
   if(!confirm("Kya "+item.name+" ko delete karna hai?"))return;
   d.items=d.items.filter(i=>String(i.id)!==String(id));
   if(saveData(d)){render();alert("Item delete ho gaya.");}

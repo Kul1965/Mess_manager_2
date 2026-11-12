@@ -101,6 +101,40 @@ td:last-child,th:last-child{text-align:right}
 .crpf-top .office-cards strong{font-size:11px;color:#fff;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 @media(max-width:390px){.crpf-top{padding:12px 9px 9px!important}.crpf-brand{gap:8px}.crpf-brand .brandLogo{width:70px;height:70px;flex-basis:70px}.india-flag{width:45px;height:30px;flex-basis:45px}.crpf-top .office-cards{gap:4px;margin-top:9px}.crpf-top .office-cards article{padding:6px 6px}.crpf-top .office-cards small{font-size:9px}.crpf-top .office-cards strong{font-size:10px}.brand-clock{font-size:10px;gap:5px}}
 
+
+/* Exact compact top arrangement: brand, office chips, clock/date */
+.crpf-top{padding:14px 14px 10px!important}
+.crpf-brand{min-height:92px}
+.crpf-brand .brandLogo{width:92px;height:92px;flex-basis:92px}
+.crpf-brand .brandText h1{font-size:clamp(16px,3.8vw,21px);margin:5px 0 8px}
+.tricolor-line{display:flex;width:min(230px,100%);height:5px;transform:skewX(-24deg);overflow:hidden;gap:0}
+.tricolor-line i{display:block;flex:1}
+.tricolor-line i:nth-child(1){background:#ff9933}
+.tricolor-line i:nth-child(2){background:#fff}
+.tricolor-line i:nth-child(3){background:#138808}
+.crpf-top .office-cards{margin:10px auto 0}
+.crpf-top .office-cards article{display:flex;align-items:center;gap:5px;padding:7px 9px;min-height:38px}
+.crpf-top .office-cards small{font-size:10px;margin:0}
+.crpf-top .office-cards strong{font-size:11px}
+.office-clock{display:flex;justify-content:center;align-items:center;gap:9px;padding:8px 2px 2px;margin:0 auto;max-width:560px;color:#f8e8a4;font-size:13px;white-space:nowrap}
+.office-clock strong{font-size:14px;color:#fff;font-weight:800}
+.office-clock b{color:#e6c95a;font-size:18px}
+.clock-symbol,.calendar-symbol{font-size:17px;color:#f6dc75}
+@media(max-width:390px){
+ .crpf-top{padding:10px 8px 8px!important}
+ .crpf-brand{min-height:74px;gap:7px}
+ .crpf-brand .brandLogo{width:72px;height:72px;flex-basis:72px}
+ .crpf-word{font-size:27px}
+ .crpf-brand .brandText h1{font-size:15px;margin:3px 0 6px}
+ .india-flag{width:42px;height:28px;flex-basis:42px}
+ .crpf-top .office-cards{gap:4px;margin-top:8px}
+ .crpf-top .office-cards article{padding:6px 5px;gap:3px;min-height:34px}
+ .crpf-top .office-cards small{font-size:8px}
+ .crpf-top .office-cards strong{font-size:9px}
+ .office-clock{gap:6px;padding-top:7px;font-size:11px}
+ .office-clock strong{font-size:12px}
+}
+
 </style>
 <link rel="stylesheet" href="assets/shared-theme.css">
 </head>
@@ -109,9 +143,7 @@ td:last-child,th:last-child{text-align:right}
 <header class="crpf-top">
  <div class="crpf-brand">
   <img class="brandLogo" src="assets/crpf-monogram.svg" alt="CRPF Monogram">
-  <div class="brandText"><div class="crpf-word">CRPF</div><h1>Cooking House System</h1>
-   <div class="brand-clock"><span id="liveClock">--:--:--</span><i>|</i><span id="liveDate"></span></div>
-  </div>
+  <div class="brandText"><div class="crpf-word">CRPF</div><h1>Cooking House System</h1><div class="tricolor-line"><i></i><i></i><i></i></div></div>
   <div class="india-flag" aria-label="Indian flag"><span></span><span><b>☸</b></span><span></span></div>
  </div>
  <div class="office-cards" aria-label="Mess information">
@@ -119,6 +151,7 @@ td:last-child,th:last-child{text-align:right}
   <article><small>👤 NCO</small><strong id="dashMessNco">Not set</strong></article>
   <article><small>📋 SO</small><strong id="dashMessSo">Not set</strong></article>
  </div>
+ <div class="office-clock"><span class="clock-symbol">◷</span><strong id="liveClock">--:--:--</strong><b>|</b><span class="calendar-symbol">▦</span><strong id="liveDate"></strong></div>
 </header>
 
 

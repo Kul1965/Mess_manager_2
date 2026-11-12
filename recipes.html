@@ -204,6 +204,7 @@ const KEYS = ["crpfMessProfessionalV1", "crpfMessPrototypeV2"];
 let storageKey = KEYS.find(k => localStorage.getItem(k)) || KEYS[0];
 let data = {};
 let currentViewId = null;
+const $=id=>document.getElementById(id);
 
 function loadData(){
   storageKey = KEYS.find(k => localStorage.getItem(k)) || KEYS[0];

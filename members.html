@@ -110,6 +110,7 @@ button.danger{background:linear-gradient(180deg,#fff4f4,#ffe3e3);border:1px soli
 .detailItem strong{color:#14583d}
 @media(max-width:420px){.card{padding:11px}.formCard .sectionHead{margin:-11px -11px 12px;padding:11px}}
 
+.leave-fields{margin:14px 0;padding:12px;border:1px solid #8fbea2;border-radius:12px;background:linear-gradient(140deg,#f2faf4,#e2f2e8)}.leave-fields h3,.leave-card h3{color:#10563e;margin:0 0 9px}.leave-card{margin-top:12px;padding:12px;border:1px solid #8fbea2;border-radius:12px;background:linear-gradient(140deg,#f5fbf6,#e4f3e9)}.leave-dates{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}.leave-dates>div{padding:9px;border-radius:8px;background:#fff;border:1px solid #c7dfcf;min-width:0}.leave-dates small{display:block;color:#647b6b;font-size:10px;margin-bottom:5px}.leave-dates strong{font-size:12px;color:#10563e;overflow-wrap:anywhere}@media(max-width:420px){.leave-dates{grid-template-columns:1fr 1fr}}
 </style>
 </head>
 <body>
@@ -187,18 +188,15 @@ button.danger{background:linear-gradient(180deg,#fff4f4,#ffe3e3);border:1px soli
 <select id="rank">
 <option>Constable</option><option>Head Constable</option><option>ASI</option><option>SI</option><option>Inspector</option><option>Other</option>
 </select></div>
-<div><label for="duty">Duty</label>
-<select id="duty">
-<option>Member</option><option>Mess Commander</option><option>Mess NCO</option><option>Cook</option><option>Assistant Cook</option><option>Storekeeper</option><option>Mess Staff</option>
-</select></div>
-<div><label for="unit">Company / Unit</label><input id="unit" placeholder="Company / Platoon"></div>
+<div><label for="unit">Unit *</label><input id="unit" required placeholder="Enter Unit"></div>
 <div><label for="mobile">Mobile Number</label><input id="mobile" type="tel" placeholder="Country code ke saath"></div>
 <div><label for="joiningDate">Joining Date</label><input id="joiningDate" type="date"></div>
 <div><label for="status">Member Status</label>
 <select id="status"><option value="Active">Active</option><option value="Transferred">Transferred</option><option value="Inactive">Inactive</option></select></div>
-<div><label for="commonAdvance">Default Mess Advance (Rs)</label><input id="commonAdvance" type="number" min="0" step="0.01"><p class="help">Settings ka default amount. Isse deposit ya member balance create nahi hota.</p></div>
+<div><label for="movementOrder">Movement Order Upload (PDF / Photo)</label><input id="movementOrder" type="file" accept="application/pdf,image/*"><p class="help">PDF ya image, maximum 4 MB.</p><div id="movementOrderStatus" class="help"></div></div>
 <div><label for="photo">Member Photo (optional)</label><input id="photo" type="file" accept="image/*"><p class="help">Photo compress karke save hogi.</p></div>
 </div>
+<div class="leave-fields"><h3>Leave Details</h3><div class="grid"><div><label for="leaveFrom">Leave From</label><input id="leaveFrom" type="date"></div><div><label for="leaveTo">Leave To</label><input id="leaveTo" type="date"></div><div><label for="joiningBackDate">Joining Back Date</label><input id="joiningBackDate" type="date"></div></div><p class="help">Leave dates Member ke Leave Card mein dikhengi.</p></div>
 <label for="notes">Notes</label>
 <textarea id="notes" placeholder="Additional details"></textarea>
 <div class="actions">
@@ -218,7 +216,7 @@ const KEYS=["crpfMessProfessionalV1","crpfMessPrototypeV2"];
 const $=id=>document.getElementById(id);
 const arr=v=>Array.isArray(v)?v:[];
 const txt=v=>String(v??"");
-let photoData="",data=loadData(),selectedId="";
+let photoData="",movementOrderData="",movementOrderName="",data=loadData(),selectedId="";
 
 function parse(key){
   try{
@@ -284,7 +282,7 @@ function getPhoto(m){return m&&(m.photo||m.photoData||m.image)||""}
 function renderMembers(){
   const q=$("search").value.toLowerCase().trim(),f=$("statusFilter").value;
   const list=data.members.filter(m=>{
-    const hay=[memberName(m),memberId(m),m.rank,m.duty,m.mobile,m.unit].join(" ").toLowerCase();
+    const hay=[memberName(m),memberId(m),m.rank,m.mobile,m.unit].join(" ").toLowerCase();
     return (!q||hay.includes(q))&&(f==="All"||memberStatus(m)===f);
   });
   const box=$("memberList");box.replaceChildren();
@@ -304,7 +302,7 @@ function renderMembers(){
     const info=document.createElement("div");info.className="memberInfo";
     const name=document.createElement("h4");name.textContent=memberName(m);info.appendChild(name);
     const meta=document.createElement("div");meta.className="meta";
-    meta.textContent=(memberId(m)||"No Service ID")+" · "+(m.rank||"Rank not set")+" · "+(m.duty||"Member");
+    meta.textContent=(memberId(m)||"No Service ID")+" · "+(m.rank||"Rank not set")+" · "+(m.unit||"Unit not set");
     info.appendChild(meta);
     const statusPill=document.createElement("span");statusPill.className="pill"+(status==="Active"?"":" inactive");statusPill.textContent=status;info.appendChild(statusPill);
     el.appendChild(info);
@@ -340,9 +338,8 @@ function showDetails(id,shouldScroll=true){
 
   const grid=document.createElement("div");grid.className="detailGrid";
   [
-    ["Service ID",memberId(m)||"—"],["Rank",m.rank||"—"],["Duty",m.duty||"—"],
-    ["Company / Unit",m.unit||"—"],["Mobile",m.mobile||"—"],["Joining Date",m.joiningDate||"—"],
-    ["Member Status",memberStatus(m)],["Default Mess Advance",money(m.commonAdvance??m.defaultAdvance??m.monthlyLimit??0)]
+    ["Service ID",memberId(m)||"—"],["Rank",m.rank||"—"],["Unit",m.unit||"—"],
+    ["Mobile",m.mobile||"—"],["Joining Date",m.joiningDate||"—"],["Member Status",memberStatus(m)]
   ].forEach(([label,value])=>{
     const item=document.createElement("div");item.className="detailItem";
     const small=document.createElement("small");small.textContent=label;
@@ -350,6 +347,12 @@ function showDetails(id,shouldScroll=true){
     item.append(small,strong);grid.appendChild(item);
   });
   box.appendChild(grid);
+  const leave=document.createElement("div");leave.className="leave-card";
+  leave.innerHTML="<h3>Leave Card</h3><div class=\"leave-dates\"><div><small>Leave From</small><strong>"+esc(m.leaveFrom||"—")+"</strong></div><div><small>Leave To</small><strong>"+esc(m.leaveTo||"—")+"</strong></div><div><small>Joining Back</small><strong>"+esc(m.joiningBackDate||"—")+"</strong></div></div>";
+  box.appendChild(leave);
+  const order=document.createElement("div");order.className="detailNotes";
+  if(m.movementOrderData){const a=document.createElement("a");a.href=m.movementOrderData;a.download=m.movementOrderName||"movement-order";a.textContent="Open / Download Movement Order: "+(m.movementOrderName||"File");order.appendChild(a)}else order.textContent="Movement Order: Not uploaded";
+  box.appendChild(order);
   const notes=document.createElement("div");notes.className="detailNotes";
   notes.innerHTML="<b>Notes:</b> "+esc(m.notes||"—");
   box.appendChild(notes);
@@ -372,8 +375,8 @@ function hideForm(){
 function resetForm(){
   $("memberForm").reset();
   $("editId").value="";
-  $("commonAdvance").value=getCommonAdvance();
   $("joiningDate").value=today();
+  $("movementOrderStatus").textContent="";movementOrderData="";movementOrderName="";
   $("formTitle").textContent="Add New Member";
   $("saveBtn").textContent="Save Member";
   photoData="";
@@ -385,13 +388,16 @@ function editMember(id){
   $("serviceId").value=memberId(m);
   $("name").value=memberName(m);
   $("rank").value=m.rank||"Constable";
-  $("duty").value=m.duty||"Member";
   $("unit").value=m.unit||"";
   $("mobile").value=m.mobile||"";
   $("joiningDate").value=m.joiningDate||"";
   $("status").value=memberStatus(m);
-  $("commonAdvance").value=m.commonAdvance??m.defaultAdvance??m.monthlyLimit??getCommonAdvance();
+  $("leaveFrom").value=m.leaveFrom||"";
+  $("leaveTo").value=m.leaveTo||"";
+  $("joiningBackDate").value=m.joiningBackDate||"";
   $("notes").value=m.notes||"";
+  movementOrderData=m.movementOrderData||"";movementOrderName=m.movementOrderName||"";
+  $("movementOrderStatus").textContent=movementOrderName?"Current file: "+movementOrderName:"No movement order uploaded";
   photoData=getPhoto(m);
   $("photo").value="";
   $("formTitle").textContent="Edit Member";
@@ -399,6 +405,12 @@ function editMember(id){
   $("formCard").classList.remove("hidden");
   $("formCard").scrollIntoView({behavior:"smooth",block:"start"});
 }
+$("movementOrder").addEventListener("change",function(){
+  const file=this.files&&this.files[0];if(!file)return;
+  if(!(file.type==="application/pdf"||file.type.startsWith("image/"))){showMessage("PDF ya image file select karein.",true);this.value="";return}
+  if(file.size>4*1024*1024){showMessage("Movement order 4 MB se chhota rakhein.",true);this.value="";return}
+  const reader=new FileReader();reader.onload=()=>{movementOrderData=reader.result;movementOrderName=file.name;$("movementOrderStatus").textContent="Ready: "+file.name;showMessage("Movement order upload ready hai.")};reader.onerror=()=>showMessage("File read nahi ho payi.",true);reader.readAsDataURL(file);
+});
 $("photo").addEventListener("change",function(){
   const file=this.files&&this.files[0];if(!file)return;
   if(!file.type.startsWith("image/")){showMessage("Photo file select karein.",true);return}
@@ -428,17 +440,18 @@ $("memberForm").addEventListener("submit",function(e){
   if(!serviceId||!name){showMessage("Service ID aur naam zaroori hain.",true);return}
   const duplicate=data.members.find(m=>memberId(m).toLowerCase()===serviceId.toLowerCase()&&String(m.id)!==String(id));
   if(duplicate){showMessage("Yeh Service / Member ID pehle se maujood hai.",true);return}
-  const amount=Number($("commonAdvance").value);
-  if(!Number.isFinite(amount)||amount<0){showMessage("Default Mess Advance sahi enter karein.",true);return}
+  const unit=$("unit").value.trim();
+  if(!unit){showMessage("Unit zaroor enter karein.",true);return}
   const existing=id?getMember(id):null;
   const member={
     ...(existing||{}),
     id:existing?existing.id:makeId(),
     serviceId,memberId:serviceId,name,fullName:name,
-    rank:$("rank").value,duty:$("duty").value,
-    unit:$("unit").value.trim(),mobile:$("mobile").value.trim(),
-    joiningDate:$("joiningDate").value,status:$("status").value,
-    commonAdvance:amount,defaultAdvance:amount,
+    rank:$("rank").value,unit,
+    mobile:$("mobile").value.trim(),joiningDate:$("joiningDate").value,status:$("status").value,
+    leaveFrom:$("leaveFrom").value,leaveTo:$("leaveTo").value,joiningBackDate:$("joiningBackDate").value,
+    movementOrderData:movementOrderData||(existing&&existing.movementOrderData)||"",
+    movementOrderName:movementOrderName||(existing&&existing.movementOrderName)||"",
     notes:$("notes").value.trim(),photo:photoData||getPhoto(existing||{}),
     updatedAt:new Date().toISOString()
   };

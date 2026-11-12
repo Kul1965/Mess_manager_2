@@ -262,3 +262,56 @@ main>section>h3,main>.card>h3,main>.panel>h3{
  color:#2e654b!important;border-left:3px solid #c8ad59!important;
  font-weight:600!important;text-shadow:none!important;
 }
+
+
+/* Mobile viewport recovery: prevent the whole page sliding sideways */
+html,body{
+ width:100%!important;
+ max-width:100%!important;
+ min-width:0!important;
+ overflow-x:hidden!important;
+}
+*,*::before,*::after{box-sizing:border-box}
+body{margin:0!important}
+.shared-crpf-header{
+ display:block!important;
+ width:100%!important;
+ max-width:100%!important;
+ min-width:0!important;
+ margin:0!important;
+ left:auto!important;
+ right:auto!important;
+}
+.shared-crpf-header>.crpf-brand,
+.shared-crpf-header>.office-cards,
+.shared-crpf-header>.office-clock{
+ width:100%!important;
+ max-width:1200px!important;
+ margin-left:auto!important;
+ margin-right:auto!important;
+ min-width:0!important;
+}
+.shared-crpf-header>.crpf-brand{display:flex!important}
+.shared-crpf-header>.office-cards{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important}
+.shared-crpf-nav{
+ display:flex!important;
+ width:100%!important;
+ max-width:100%!important;
+ min-width:0!important;
+ overflow-x:auto!important;
+}
+main{
+ display:block!important;
+ width:100%!important;
+ max-width:1200px!important;
+ min-width:0!important;
+ margin-left:auto!important;
+ margin-right:auto!important;
+ overflow-x:clip!important;
+}
+.heading,.stats,.section,.quickGrid{min-width:0!important;max-width:100%!important}
+.heading{flex-wrap:wrap!important}
+@media(max-width:600px){
+ main{padding-left:10px!important;padding-right:10px!important}
+ .stats{grid-template-columns:repeat(2,minmax(0,1fr))!important}
+}

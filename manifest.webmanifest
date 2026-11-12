@@ -8,10 +8,10 @@
   "theme_color": "#1599f5",
   "icons": [
     {
-      "src": "assets/crpf-app-icon.svg?v=3",
+      "src": "assets/crpf-app-icon.svg?v=4",
       "sizes": "any",
       "type": "image/svg+xml",
-      "purpose": "any"
+      "purpose": "any maskable"
     }
   ]
 }

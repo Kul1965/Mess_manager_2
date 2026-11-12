@@ -6,7 +6,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>CRPF Smart Mess Manager</title>
 <link rel="manifest" href="manifest.webmanifest">
-<link rel="icon" type="image/svg+xml" href="assets/crpf-app-icon.svg?v=3">
+<link rel="icon" type="image/svg+xml" href="assets/crpf-app-icon.svg?v=4">
 <style>
 :root{--g:#176747;--deep:#10563e;--bg:#f2f6f3;--text:#214d3b;--muted:#78857e;--border:#dce5df;--white:#fff;--red:#bd3942}
 *{box-sizing:border-box}
@@ -164,7 +164,7 @@ td:last-child,th:last-child{text-align:right}
   
 <div class="heading">
     <div>
-      <h2 class="page-title">Dashboard</h2>
+      <h2 class="page-title">🏠 Dashboard</h2>
       <p>Current saved records ka summary</p>
     </div>
     <span class="live">● Live totals</span>
@@ -296,18 +296,33 @@ const money=v=>"Rs "+num(v).toLocaleString("en-IN",{minimumFractionDigits:2,maxi
 const text=v=>String(v??"");
 
 function readData(){
-  // Prefer the main application database; do not merge two copies,
-  // because that can double-count records.
-  for(const key of STORAGE_KEYS){
+  // Read both supported app keys. Keep the richest data copy for dashboard
+  // totals, but merge member records by stable ID so an empty newer key
+  // cannot hide members still present in the legacy key. Never write here.
+  const copies=STORAGE_KEYS.map(key=>{
     try{
-      const raw=localStorage.getItem(key);
-      if(!raw)continue;
-      const d=JSON.parse(raw);
-      if(d&&typeof d==="object"&&!Array.isArray(d)&&
-         ["members","items","meals","ledger"].some(k=>Array.isArray(d[k])))return d;
-    }catch(e){}
+      const d=JSON.parse(localStorage.getItem(key)||"null");
+      return d&&typeof d==="object"&&!Array.isArray(d)?d:null;
+    }catch(e){return null}
+  }).filter(Boolean);
+  if(!copies.length)return {};
+  const score=d=>arr(d.members).length*100000+
+    ["items","meals","ledger","recipes","purchases","transactions"].reduce((n,k)=>n+arr(d[k]).length,0);
+  const best=copies.reduce((a,b)=>score(b)>score(a)?b:a);
+  const merged={...best};
+  const seen=new Set();
+  merged.members=[];
+  copies.forEach(d=>arr(d.members).forEach(m=>{
+    if(!m||typeof m!=="object")return;
+    const id=m.id??m.serviceId??m.memberId??m.serviceNo??m.memberNo;
+    const key=id!=null&&String(id).trim()? "id:"+String(id).trim() : "json:"+JSON.stringify(m);
+    if(!seen.has(key)){seen.add(key);merged.members.push(m)}
+  }));
+  const primary=copies[0];
+  if(primary.settings&&typeof primary.settings==="object"){
+    merged.settings={...(best.settings||{}),...primary.settings};
   }
-  return {};
+  return merged;
 }
 function dateValue(o){
   return text(o&&(o.date||o.createdAt||o.timestamp)).slice(0,10);

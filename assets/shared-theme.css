@@ -64,3 +64,22 @@ header:not(:has(img))::before,.hero::before{background-image:url("crpf-monogram.
 .shared-crpf-nav a{flex:0 0 auto!important;color:#f4fff8!important;padding:10px 13px!important;border-radius:11px!important;font-size:13px!important;font-weight:800!important;background:linear-gradient(180deg,#25845f,#10563e)!important;border:1px solid #64a987!important;box-shadow:0 3px 0 #073c2b,0 1px 0 #ffffff30 inset!important;text-decoration:none!important}
 .shared-crpf-nav a.active{background:linear-gradient(180deg,#e3c85f,#b18b22)!important;border-color:#f7e7a0!important;color:#183e2d!important;box-shadow:0 3px 0 #765b19,0 1px 0 #ffffff88 inset!important}
 @media(max-width:390px){.shared-crpf-header{padding:10px 8px 8px!important}.shared-crpf-header .crpf-brand{min-height:74px;gap:7px}.shared-crpf-header .brandLogo{width:72px;height:72px;flex-basis:72px}.shared-crpf-header .crpf-word{font-size:27px}.shared-crpf-header .brandText h1{font-size:15px;margin:3px 0 6px}.shared-crpf-header .india-flag{width:42px;height:28px;flex-basis:42px}.shared-crpf-header .office-cards{gap:4px;margin-top:8px}.shared-crpf-header .office-cards article{padding:6px 5px;gap:3px;min-height:34px}.shared-crpf-header .office-cards small{font-size:8px}.shared-crpf-header .office-cards strong{font-size:9px}.shared-crpf-header .office-clock{gap:6px;padding-top:7px;font-size:11px}.shared-crpf-header .office-clock strong{font-size:12px}.shared-crpf-nav{gap:5px!important;padding:8px 6px!important}.shared-crpf-nav a{padding:8px 10px!important;font-size:11px!important}}
+
+/* Layout correction: keep brand, info chips and clock on separate rows */
+.shared-crpf-header{display:block!important;width:100%!important;min-width:0!important;overflow:hidden}
+.shared-crpf-header>.crpf-brand{display:flex!important;width:100%!important;min-width:0!important;flex-wrap:nowrap!important}
+.shared-crpf-header>.office-cards{display:grid!important;width:100%!important;grid-template-columns:repeat(3,minmax(0,1fr))!important}
+.shared-crpf-header>.office-clock{display:flex!important;width:100%!important;min-height:28px}
+.shared-crpf-header .brandText{flex:1 1 auto!important;min-width:0!important}
+.shared-crpf-header .brandText h1{white-space:nowrap!important;overflow:hidden!important;text-overflow:ellipsis!important}
+.shared-crpf-header .india-flag{flex:0 0 54px!important}
+.shared-crpf-nav{position:relative!important;z-index:2!important}
+.page-title{display:block!important;color:#fff!important;background:linear-gradient(110deg,#0d563c,#176747)!important;border-left:5px solid #e2c65c!important;border-radius:10px!important;padding:12px 15px!important;margin:0 0 12px!important;text-shadow:0 2px 3px #001c12!important;box-shadow:0 4px 12px #123b2825!important}
+@media(max-width:390px){
+ .shared-crpf-header>.crpf-brand{min-height:74px!important}
+ .shared-crpf-header .brandLogo{width:72px!important;height:72px!important;flex-basis:72px!important}
+ .shared-crpf-header .india-flag{flex-basis:42px!important;width:42px!important;height:28px!important}
+ .shared-crpf-header .brandText h1{font-size:15px!important}
+ .shared-crpf-header>.office-cards{grid-template-columns:repeat(3,minmax(0,1fr))!important}
+ .shared-crpf-header>.office-clock{justify-content:center!important}
+}

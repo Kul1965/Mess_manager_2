@@ -172,6 +172,7 @@ button.danger{background:linear-gradient(180deg,#fff4f4,#ffe3e3);border:1px soli
 <option value="Active">Active</option>
 <option value="Transferred">Transferred</option>
 <option value="Inactive">Inactive</option>
+<option value="On Leave">On Leave</option>
 </select>
 </div>
 <div id="memberList"></div>
@@ -201,7 +202,6 @@ button.danger{background:linear-gradient(180deg,#fff4f4,#ffe3e3);border:1px soli
 <div><label for="movementOrder">Movement Order Upload (PDF / Photo)</label><input id="movementOrder" type="file" accept="application/pdf,image/*"><p class="help">PDF ya image, maximum 4 MB.</p><div id="movementOrderStatus" class="help"></div></div>
 <div><label for="photo">Member Photo (optional)</label><input id="photo" type="file" accept="image/*"><p class="help">Photo compress karke save hogi.</p></div>
 </div>
-<div class="leave-fields"><h3>Leave Details</h3><div class="grid"><div><label for="leaveFrom">Leave From</label><input id="leaveFrom" type="date"></div><div><label for="leaveTo">Leave To</label><input id="leaveTo" type="date"></div><div><label for="joiningBackDate">Joining Back Date</label><input id="joiningBackDate" type="date"></div></div><p class="help">Leave dates Member ke Leave Card mein dikhengi.</p></div>
 <label for="notes">Notes</label>
 <textarea id="notes" placeholder="Additional details"></textarea>
 <div class="actions">
@@ -305,9 +305,17 @@ function updateStats(){
 function getPhoto(m){return m&&(m.photo||m.photoData||m.image)||""}
 function renderMembers(){
   const q=$("search").value.toLowerCase().trim(),f=$("statusFilter").value;
+  const leaveRecords=arr(data.leaves).concat(arr(data.leaveRecords));
+  const onLeave=m=>leaveRecords.some(x=>{
+    const ref=String(x.memberId??x.member_id??x.jawanId??x.serviceId??"");
+    const s=txt(x.status||x.state||"on_leave").toLowerCase().replace(/[ -]/g,"_");
+    return (ref===String(m.id)||ref===String(m.serviceId)||ref===String(m.memberId))&&!["returned","joined_back","closed","cancelled","completed"].includes(s);
+  });
   const list=data.members.filter(m=>{
-    const hay=[memberName(m),memberId(m),m.rank,m.mobile,m.unit].join(" ").toLowerCase();
-    return (!q||hay.includes(q))&&(f==="All"||memberStatus(m)===f);
+    const leave=onLeave(m);
+    const hay=[memberName(m),memberId(m),m.rank,m.mobile,m.unit,leave?"leave on leave":"",memberStatus(m)].join(" ").toLowerCase();
+    const statusMatch=f==="All"||(f==="On Leave"?leave:memberStatus(m)===f);
+    return (!q||hay.includes(q))&&statusMatch;
   });
   const box=$("memberList");box.replaceChildren();
   if(!list.length){
@@ -317,7 +325,7 @@ function renderMembers(){
   }
   list.forEach(m=>{
     const el=document.createElement("div");el.className="member";
-    const photo=getPhoto(m),status=memberStatus(m);
+    const photo=getPhoto(m),status=memberStatus(m),leaveRecords=arr(data.leaves).concat(arr(data.leaveRecords)),onLeave=leaveRecords.some(x=>{const ref=String(x.memberId??x.member_id??x.jawanId??x.serviceId??"");const s=txt(x.status||x.state||"on_leave").toLowerCase().replace(/[ -]/g,"_");return (ref===String(m.id)||ref===String(m.serviceId)||ref===String(m.memberId))&&!["returned","joined_back","closed","cancelled","completed"].includes(s)});
     if(photo){
       const img=document.createElement("img");img.className="photo";img.src=photo;img.alt="Member photo";el.appendChild(img);
     }else{
@@ -328,7 +336,7 @@ function renderMembers(){
     const meta=document.createElement("div");meta.className="meta";
     meta.textContent=(memberId(m)||"No Service ID")+" · "+(m.rank||"Rank not set")+" · "+(m.unit||"Unit not set");
     info.appendChild(meta);
-    const statusPill=document.createElement("span");statusPill.className="pill"+(status==="Active"?"":" inactive");statusPill.textContent=status;info.appendChild(statusPill);
+    const statusPill=document.createElement("span");statusPill.className="pill"+(status==="Active"?"":" inactive");statusPill.textContent=onLeave?"On Leave":status;info.appendChild(statusPill);
     el.appendChild(info);
 
     const actions=document.createElement("div");actions.className="memberActions";
@@ -416,9 +424,6 @@ function editMember(id){
   $("mobile").value=m.mobile||"";
   $("joiningDate").value=m.joiningDate||"";
   $("status").value=memberStatus(m);
-  $("leaveFrom").value=m.leaveFrom||"";
-  $("leaveTo").value=m.leaveTo||"";
-  $("joiningBackDate").value=m.joiningBackDate||"";
   $("notes").value=m.notes||"";
   movementOrderData=m.movementOrderData||"";movementOrderName=m.movementOrderName||"";
   $("movementOrderStatus").textContent=movementOrderName?"Current file: "+movementOrderName:"No movement order uploaded";
@@ -473,7 +478,6 @@ $("memberForm").addEventListener("submit",function(e){
     serviceId,memberId:serviceId,name,fullName:name,
     rank:$("rank").value,unit,
     mobile:$("mobile").value.trim(),joiningDate:$("joiningDate").value,status:$("status").value,
-    leaveFrom:$("leaveFrom").value,leaveTo:$("leaveTo").value,joiningBackDate:$("joiningBackDate").value,
     movementOrderData:movementOrderData||(existing&&existing.movementOrderData)||"",
     movementOrderName:movementOrderName||(existing&&existing.movementOrderName)||"",
     notes:$("notes").value.trim(),photo:photoData||getPhoto(existing||{}),

@@ -86,6 +86,30 @@ button{border:0;border-radius:8px;padding:9px 11px;font-weight:bold;cursor:point
  .stat strong{font-size:18px}
  .detailGrid{grid-template-columns:1fr 1fr}
 }
+
+/* Richer member cards and form styling */
+.card{border:1px solid #b9d2c3;border-radius:15px;box-shadow:0 5px 16px rgba(16,86,62,.12),0 1px 0 #fff inset;padding:15px}
+.stats .stat{border:1px solid #a9cbb7;background:linear-gradient(145deg,#fff 0%,#edf7f0 100%);box-shadow:0 4px 10px rgba(16,86,62,.10)}
+.stat strong{color:#0b6845}
+.stat span{color:#526c5d}
+.formCard{background:linear-gradient(145deg,#ffffff 0%,#f0f8f2 100%);border:2px solid #7db497;box-shadow:0 7px 20px rgba(13,91,59,.16)}
+.formCard .sectionHead{margin:-15px -15px 13px;padding:13px 15px;background:linear-gradient(120deg,#0c563b,#21845b);color:#fff;border-radius:12px 12px 0 0;border-bottom:3px solid #d9b83f}
+.formCard .sectionHead h2{color:#fff}
+.formIntro{background:#e2f2e8;border-left:4px solid #168253;border-radius:7px;padding:9px 11px;color:#315b43}
+label{color:#155c3f;font-size:12px;letter-spacing:.15px}
+input,select,textarea{border:1.5px solid #b5d0bf;background:#fff;box-shadow:0 1px 2px rgba(8,65,42,.05);transition:border-color .15s,box-shadow .15s}
+input:focus,select:focus,textarea:focus{outline:none;border-color:#128252;box-shadow:0 0 0 3px rgba(18,130,82,.15)}
+button.primary{background:linear-gradient(180deg,#21865c,#10563e);color:#fff;border:1px solid #0b4d35;box-shadow:0 3px 0 #083d2b,0 1px 0 #ffffff35 inset}
+button.secondary{background:linear-gradient(180deg,#edf8f0,#d8ecdf);color:#105c3d;border:1px solid #a9cbb5;box-shadow:0 2px 0 #b8d3c1}
+button.danger{background:linear-gradient(180deg,#fff4f4,#ffe3e3);border:1px solid #e7b7b7}
+.member{padding:11px 9px;margin:5px 0;border:1px solid #d4e5da;border-radius:11px;background:linear-gradient(100deg,#fff,#f5faf6);box-shadow:0 2px 6px rgba(18,75,48,.06)}
+.member h4{color:#124f37}
+.pill{background:#d9f0e2;color:#0b6845;font-weight:bold}
+.inactive{background:#ffe4e4;color:#a62e37}
+.detailItem{background:linear-gradient(145deg,#fff,#eaf5ed);border-color:#c9dfd1}
+.detailItem strong{color:#14583d}
+@media(max-width:420px){.card{padding:11px}.formCard .sectionHead{margin:-11px -11px 12px;padding:11px}}
+
 </style>
 </head>
 <body>

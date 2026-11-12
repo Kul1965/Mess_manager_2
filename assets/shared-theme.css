@@ -10,3 +10,8 @@ nav a.active,nav a[aria-current=page]{background:linear-gradient(180deg,#e3c85f,
 button,.btn,.primary{border-radius:9px!important}
 section,.card,.panel,.box{border-radius:12px}
 @media(max-width:420px){header,.hero{padding:12px 10px!important}nav{gap:6px!important;padding:8px!important}nav a{padding:8px 10px!important;font-size:11px!important}}
+
+header:not(:has(img))::before,.hero::before{content:"";display:block;width:76px;height:76px;flex:0 0 76px;background:url("crpf-monogram.svg") center/contain no-repeat;filter:drop-shadow(0 5px 9px #001c1280);margin-right:2px}
+header:not(:has(img)),.hero{display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+header:not(:has(img)) h1,header:not(:has(img)) h2,.hero h1{flex:1 1 220px}
+@media(max-width:420px){header:not(:has(img))::before,.hero::before{width:62px;height:62px;flex-basis:62px}}

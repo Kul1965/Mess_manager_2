@@ -8,7 +8,7 @@
   "theme_color": "#1599f5",
   "icons": [
     {
-      "src": "assets/crpf-app-icon.svg",
+      "src": "assets/crpf-app-icon.svg?v=3",
       "sizes": "any",
       "type": "image/svg+xml",
       "purpose": "any"

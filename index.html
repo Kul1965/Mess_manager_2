@@ -333,7 +333,7 @@ function calculate(){
     });
   });
   items.forEach(item=>{
-    const ps=arr(item.purchases);
+    const ps=arr(item.purchases).filter(p=>p&&typeof p==="object");
     const qtyTotal=sumEntries(ps,p=>num(p.quantityBase??p.baseQuantity??p.quantityBaseUnits));
     const purchaseValue=sumEntries(ps,p=>num(p.total??p.totalCost??(num(p.quantity??p.qty)*num(p.rate??p.unitRate))));
     if(qtyTotal>0){

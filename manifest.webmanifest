@@ -2,15 +2,16 @@
   "name": "CRPF Smart Mess Manager",
   "short_name": "CRPF Mess",
   "start_url": "./index.html",
+  "scope": "./",
   "display": "standalone",
-  "background_color": "#f2f6f3",
-  "theme_color": "#176747",
+  "background_color": "#1599f5",
+  "theme_color": "#1599f5",
   "icons": [
     {
-      "src": "assets/crpf-monogram.svg",
+      "src": "assets/crpf-app-icon.svg",
       "sizes": "any",
       "type": "image/svg+xml",
-      "purpose": "any maskable"
+      "purpose": "any"
     }
   ]
 }

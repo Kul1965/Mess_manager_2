@@ -5,12 +5,15 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>CRPF Smart Mess Manager</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" type="image/svg+xml" href="assets/crpf-monogram.svg">
 <style>
 :root{--g:#176747;--deep:#10563e;--bg:#f2f6f3;--text:#214d3b;--muted:#78857e;--border:#dce5df;--white:#fff;--red:#bd3942}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);font-family:Arial,sans-serif;color:var(--text);font-size:14px}
 a{color:inherit;text-decoration:none}
-header{background:linear-gradient(120deg,#10583e,#21805a);color:white;padding:22px 16px}
+header{background:linear-gradient(120deg,#10583e,#21805a);color:white;padding:16px}
+.brandRow{display:flex;align-items:center;gap:14px}.brandLogo{width:78px;height:78px;object-fit:contain;filter:drop-shadow(0 4px 5px #001c1266);flex:0 0 auto}.brandText{min-width:0}@media(max-width:420px){.brandLogo{width:62px;height:62px}.brandRow{gap:10px}}
 .head{max-width:1200px;margin:auto}
 .eyebrow{font-size:11px;letter-spacing:1.5px;opacity:.85;font-weight:bold;margin-bottom:10px}
 header h1{font-size:clamp(22px,4vw,30px);margin:0 0 8px;line-height:1.3}
@@ -76,9 +79,9 @@ td:last-child,th:last-child{text-align:right}
 
 <header>
   <div class="head">
-    <div class="eyebrow">MESS MANAGEMENT SYSTEM</div>
-    <h1>🛡️ CRPF SMART MESS MANAGER</h1>
-    <p>Mess ka poora hisaab ek jagah.</p>
+    <div class="brandRow"><img class="brandLogo" src="assets/crpf-monogram.svg" alt="CRPF Monogram"><div class="brandText"><div class="eyebrow">MESS MANAGEMENT SYSTEM</div>
+    <h1>CRPF SMART MESS MANAGER</h1>
+    <p>Mess ka poora hisaab ek jagah.</p></div></div>
     <div class="topActions">
       <a href="members.html">＋ Add Member</a>
       <a href="meals.html">＋ Record Meal</a>

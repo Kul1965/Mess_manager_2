@@ -226,3 +226,39 @@ main>section>h3,main>.card>h3,main>.panel>h3{
  text-shadow:none!important;
  box-shadow:0 1px 4px #284b380a!important;
 }
+
+/* Balanced CRPF theme: readable medium green header and navbar, soft page headings */
+.shared-crpf-header{
+ background:linear-gradient(115deg,#247553,#328766 60%,#408d6c)!important;
+ color:#fff!important;
+ border-bottom:2px solid #b2d2bb!important;
+ box-shadow:0 3px 10px #153e2b24!important;
+}
+.shared-crpf-header .crpf-word{color:#f7d66d!important}
+.shared-crpf-header .brandText h1{color:#fff!important;font-weight:650!important}
+.shared-crpf-header .office-cards article{
+ background:#276c51!important;border-color:#6caa87!important;
+}
+.shared-crpf-header .office-cards small{color:#e3f3e9!important}
+.shared-crpf-header .office-cards strong{color:#fff!important}
+.shared-crpf-header .office-clock,.shared-crpf-header .office-clock strong{color:#fff!important}
+.shared-crpf-header .office-clock b,.shared-crpf-header .clock-symbol,.shared-crpf-header .calendar-symbol{color:#f4db8a!important}
+.shared-crpf-nav{
+ background:linear-gradient(180deg,#2e8060,#246b50)!important;
+ border-bottom:2px solid #1c6248!important;
+ box-shadow:0 2px 7px #143c2920!important;
+}
+.shared-crpf-nav a{
+ background:#3b8b69!important;color:#fff!important;
+ border:1px solid #82b89a!important;
+ font-weight:600!important;box-shadow:none!important;
+}
+.shared-crpf-nav a.active{
+ background:#f0d783!important;color:#31533e!important;
+ border-color:#f6e6ad!important;font-weight:650!important;
+}
+.page-title,.heading h2,main>h1,main>h2{
+ background:linear-gradient(100deg,#e7f2e9,#f5faf6)!important;
+ color:#2e654b!important;border-left:3px solid #c8ad59!important;
+ font-weight:600!important;text-shadow:none!important;
+}

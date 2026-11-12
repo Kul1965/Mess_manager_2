@@ -204,3 +204,25 @@ main>section>h3,main>.card>h3,main>.panel>h3{
  .shared-crpf-nav a{padding:7px 9px!important;font-size:11px!important}
  .page-title,.heading h2,main>h1,main>h2{padding:8px 10px!important;font-size:18px!important}
 }
+
+
+/* Page banner and page heading: light, single-line visual treatment */
+.page-banner{
+ background:linear-gradient(100deg,#edf6f0,#f8fbf9)!important;
+ color:#355f49!important;
+ border:1px solid #dce9df!important;
+ border-left:3px solid #c6ad59!important;
+ border-radius:8px!important;
+ box-shadow:0 1px 4px #284b380a!important;
+}
+.page-banner h2{color:#355f49!important;font-weight:600!important;text-shadow:none!important}
+.page-banner p{color:#718279!important}
+.page-title{
+ background:linear-gradient(100deg,#edf6f0,#f8fbf9)!important;
+ color:#355f49!important;
+ border:1px solid #dce9df!important;
+ border-left:3px solid #c6ad59!important;
+ font-weight:600!important;
+ text-shadow:none!important;
+ box-shadow:0 1px 4px #284b380a!important;
+}

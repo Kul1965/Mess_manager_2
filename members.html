@@ -117,22 +117,22 @@ button.danger{background:linear-gradient(180deg,#fff4f4,#ffe3e3);border:1px soli
 <link rel="stylesheet" href="assets/shared-theme.css">
 </head>
 <body>
-<header>
-<img src="assets/crpf-monogram.svg" alt="CRPF Monogram" style="width:74px;height:74px;object-fit:contain;flex:0 0 74px;filter:drop-shadow(0 3px 5px #001c1266);border:0;border-radius:0;padding:0;background:transparent">
-<div class="brand-copy"><h1>CRPF Smart Mess Manager</h1>
-<p>Jawan Member Register · View, Add and Edit</p></div>
+<header class="crpf-top shared-crpf-header">
+ <div class="crpf-brand">
+  <img class="brandLogo" src="assets/crpf-monogram.svg" alt="CRPF Monogram">
+  <div class="brandText"><div class="crpf-word">CRPF</div><h1>Cooking House System</h1><div class="tricolor-line"><i></i><i></i><i></i></div></div>
+  <div class="india-flag" aria-label="Indian flag"><span></span><span><b>☸</b></span><span></span></div>
+ </div>
+ <div class="office-cards" aria-label="Mess information">
+  <article><small>🏛 Mess</small><strong data-office="mess">CRPF Smart Mess</strong></article>
+  <article><small>👤 NCO</small><strong data-office="nco">Not set</strong></article>
+  <article><small>📋 SO</small><strong data-office="so">Not set</strong></article>
+ </div>
+ <div class="office-clock"><span class="clock-symbol">◷</span><strong data-clock>--:--:--</strong><b>|</b><span class="calendar-symbol">▦</span><strong data-date>--/--/----</strong></div>
 </header>
+<nav class="shared-crpf-nav"><a href="index.html" class="">⌂ Home</a><a href="members.html" class="active">👥 Members</a><a href="mess-staff.html" class="">🛡 Mess Staff</a><a href="store.html" class="">📦 Ration Store</a><a href="recipes.html" class="">🍲 Recipes</a><a href="meals.html" class="">🍴 Meals</a><a href="accounts.html" class="">💳 Accounts</a><a href="reports.html" class="">📊 Reports</a><a href="settlement.html" class="">🧾 Settlement</a><a href="backup.html" class="">💾 Backup</a><a href="settings.html" class="">⚙ Settings</a><a href="records.html" class="">📁 Records</a></nav>
 
-<nav>
-<a href="index.html">Dashboard</a>
-<a href="members.html" class="active">Members</a>
-<a href="store.html">Store</a>
-<a href="recipes.html">Recipes</a>
-<a href="meals.html">Meals</a>
-<a href="accounts.html">Accounts</a>
-<a href="settlement.html">Settlement</a>
-<a href="settings.html">Settings</a>
-</nav>
+
 
 <main>
 <!-- Details always appear above the register and form -->
@@ -535,6 +535,18 @@ try{
   console.error("Member page load error:",e);
   const box=$("memberList");if(box)box.textContent="Member list load nahi hui. Data safe hai; browser data delete na karein. Error: "+(e&&e.message?e.message:"Unknown");
 }
+})();
+</script>
+<script>
+(function(){
+ const keys=["crpfMessProfessionalV1","crpfMessPrototypeV2"];
+ let d={};
+ for(const k of keys){try{const x=JSON.parse(localStorage.getItem(k)||"null");if(x&&typeof x==="object"){d=x;break}}catch(e){}}
+ const s=d.settings&&typeof d.settings==="object"?d.settings:{};
+ const values={mess:s.messName||"CRPF Smart Mess",nco:s.messNco||s.messNCO||"Not set",so:s.messSo||s.messSO||"Not set"};
+ document.querySelectorAll("[data-office]").forEach(el=>{el.textContent=values[el.dataset.office]||"Not set"});
+ function tick(){const n=new Date();const t=n.toLocaleTimeString("en-IN",{hour:"2-digit",minute:"2-digit",second:"2-digit",hour12:true});const day=n.toLocaleDateString("en-IN",{day:"2-digit",month:"2-digit",year:"numeric"});document.querySelectorAll("[data-clock]").forEach(x=>x.textContent=t);document.querySelectorAll("[data-date]").forEach(x=>x.textContent=day)}
+ tick();setInterval(tick,1000);
 })();
 </script>
 </body>

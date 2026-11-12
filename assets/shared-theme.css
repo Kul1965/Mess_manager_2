@@ -1,0 +1,12 @@
+/* Shared CRPF green 3D theme */
+:root{--g:#176747;--deep:#10563e;--bg:#f2f6f3;--white:#fff;--text:#214d3b;--muted:#78857e;--border:#dce5df;--red:#bd3942}
+body{background:var(--bg)!important;color:var(--text)!important;font-family:Arial,sans-serif!important}
+header,.hero{background:linear-gradient(135deg,#073c2b 0%,#176747 55%,#0b4d36 100%)!important;color:#fff!important;border-bottom:3px solid #176747!important;box-shadow:0 5px 14px #102f202b!important;padding:14px 15px!important}
+header h1,header h2,.hero h1{font-size:clamp(18px,4vw,23px)!important;margin:0 0 5px!important;text-shadow:0 2px 3px #001c12!important}
+header p,.hero p{font-size:12px!important;line-height:1.5!important;opacity:.94}
+nav{display:flex!important;gap:7px!important;overflow-x:auto!important;background:linear-gradient(180deg,#176747,#0c4e37)!important;padding:9px 10px!important;border-bottom:3px solid #176747!important;box-shadow:0 5px 12px #163c2828!important;scrollbar-width:thin}
+nav a{white-space:nowrap!important;color:#f4fff8!important;padding:9px 12px!important;border-radius:9px!important;font-size:12px!important;font-weight:bold!important;background:linear-gradient(180deg,#25845f,#10563e)!important;border:1px solid #64a987!important;box-shadow:0 3px 0 #073c2b,0 1px 0 #ffffff30 inset!important;text-decoration:none!important}
+nav a.active,nav a[aria-current=page]{background:linear-gradient(180deg,#e3c85f,#b18b22)!important;border-color:#f7e7a0!important;color:#183e2d!important;box-shadow:0 3px 0 #765b19,0 1px 0 #ffffff88 inset!important}
+button,.btn,.primary{border-radius:9px!important}
+section,.card,.panel,.box{border-radius:12px}
+@media(max-width:420px){header,.hero{padding:12px 10px!important}nav{gap:6px!important;padding:8px!important}nav a{padding:8px 10px!important;font-size:11px!important}}

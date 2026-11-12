@@ -315,3 +315,52 @@ main{
  main{padding-left:10px!important;padding-right:10px!important}
  .stats{grid-template-columns:repeat(2,minmax(0,1fr))!important}
 }
+
+
+/* Put clock/date alongside Mess, NCO and SO information chips */
+.shared-crpf-header>.office-cards{
+ display:grid!important;
+ grid-template-columns:repeat(3,minmax(0,1fr))!important;
+ gap:5px!important;
+}
+.shared-crpf-header>.office-clock{
+ display:flex!important;
+ grid-column:auto!important;
+ width:auto!important;
+ max-width:none!important;
+ min-width:0!important;
+ margin:0!important;
+ padding:5px 6px!important;
+ border:1px solid #6caa87!important;
+ border-radius:18px!important;
+ background:#276c51!important;
+ color:#fff!important;
+ gap:3px!important;
+ justify-content:center!important;
+ align-content:center!important;
+ flex-wrap:wrap!important;
+ white-space:normal!important;
+ font-size:9px!important;
+ line-height:1.15!important;
+}
+.shared-crpf-header>.office-clock strong{
+ color:#fff!important;
+ font-size:9px!important;
+ font-weight:650!important;
+}
+.shared-crpf-header>.office-clock b{display:none!important}
+.shared-crpf-header>.office-clock .clock-symbol,
+.shared-crpf-header>.office-clock .calendar-symbol{
+ color:#f4db8a!important;
+ font-size:11px!important;
+}
+@media(max-width:390px){
+ .shared-crpf-header>.office-cards{gap:4px!important}
+ .shared-crpf-header>.office-cards article{padding:6px 4px!important;min-height:36px!important}
+ .shared-crpf-header>.office-cards small{font-size:8px!important}
+ .shared-crpf-header>.office-cards strong{font-size:9px!important}
+ .shared-crpf-header>.office-clock{padding:4px 3px!important;font-size:8px!important;gap:2px!important}
+ .shared-crpf-header>.office-clock strong{font-size:8px!important}
+ .shared-crpf-header>.office-clock .clock-symbol,
+ .shared-crpf-header>.office-clock .calendar-symbol{font-size:10px!important}
+}

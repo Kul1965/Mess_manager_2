@@ -19,13 +19,14 @@ header{background:radial-gradient(circle at 15% 10%,#287b58 0,#10583e 45%,#073b2
 header h1{font-size:clamp(22px,4vw,30px);margin:0 0 8px;line-height:1.3}
 header p{margin:0;color:#e2eee6;line-height:1.5}
 .topActions{display:none}
-.office-cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:0 0 12px}
-.office-cards article{min-width:0;padding:12px 10px;border:1px solid #b8d6c3;border-radius:13px;background:linear-gradient(145deg,#fff,#eaf6ee);box-shadow:0 4px 12px #15452c18}
-.office-cards small,.clock-panel small{display:block;font-size:10px;letter-spacing:1px;font-weight:800;color:#6c8877;margin-bottom:7px}
-.office-cards strong{display:block;font-size:13px;color:#10563e;overflow-wrap:anywhere}
-.clock-panel{display:flex;justify-content:space-between;align-items:center;padding:12px 15px;margin:0 0 15px;border-radius:14px;background:linear-gradient(120deg,#0c563b,#207b55);color:#fff;box-shadow:0 5px 13px #143e2926}
-.clock-panel small{color:#d4eadb}.clock-panel strong{display:block;font-size:25px;letter-spacing:1.5px}.clock-panel span{display:block;font-size:11px;color:#e0f1e5;margin-top:3px}.clock-panel .clock-icon{font-size:32px;color:#f2d778;margin:0}
-@media(max-width:380px){.office-cards{gap:5px}.office-cards article{padding:10px 7px}.office-cards strong{font-size:11px}}
+.office-strip{display:grid;grid-template-columns:minmax(0,1fr) minmax(105px,.7fr);align-items:stretch;background:#edf6ef;padding:7px 10px 9px;gap:6px;border-bottom:1px solid #c8ddce}
+.office-cards{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:5px;margin:0}
+.office-cards article{min-width:0;padding:7px 6px;border:1px solid #b8d6c3;border-radius:13px;background:linear-gradient(145deg,#fff,#eaf6ee);box-shadow:0 4px 12px #15452c18}
+.office-cards small,.clock-panel small{display:block;font-size:8px;letter-spacing:.5px;font-weight:800;color:#6c8877;margin-bottom:3px}
+.office-cards strong{display:block;font-size:10px;color:#10563e;overflow-wrap:anywhere}
+.clock-panel{display:flex;justify-content:space-between;align-items:center;padding:6px 9px;margin:0;border-radius:14px;background:linear-gradient(120deg,#0c563b,#207b55);color:#fff;box-shadow:0 5px 13px #143e2926}
+.clock-panel small{color:#d4eadb}.clock-panel strong{display:block;font-size:17px;letter-spacing:1px}.clock-panel span{display:block;font-size:9px;color:#e0f1e5;margin-top:3px}.clock-panel .clock-icon{font-size:22px;color:#f2d778;margin:0}
+@media(max-width:380px){.office-strip{padding:5px 6px;gap:4px}.office-cards{gap:3px}.office-cards article{padding:6px 4px}.office-cards strong{font-size:9px}.office-cards small{font-size:7px}.clock-panel strong{font-size:15px}.clock-panel{padding:5px 6px}}
 .topActions a{display:inline-block;padding:10px 13px;border-radius:9px;background:linear-gradient(180deg,#277c56,#10563e);border:1px solid #79b18f;font-weight:bold;font-size:12px;box-shadow:0 3px 0 #063c2a}
 .topActions a:first-child{background:linear-gradient(180deg,#f7e7a1,#d6b13a);border-color:#fff0a8;color:#173e2d;box-shadow:0 3px 0 #8c6715}
 .navWrap{background:white;border-bottom:1px solid var(--border);overflow-x:auto}
@@ -93,6 +94,12 @@ td:last-child,th:last-child{text-align:right}
   </div>
 </header>
 
+<div class="office-strip"><section class="office-cards" aria-label="Mess information">
+ <article><small>MESS NAME</small><strong id="dashMessName">CRPF Smart Mess</strong></article>
+ <article><small>MESS NCO</small><strong id="dashMessNco">Not set</strong></article>
+ <article><small>MESS SO</small><strong id="dashMessSo">Not set</strong></article>
+</section>
+<div class="clock-panel"><div><small>MESS OFFICE CLOCK</small><strong id="liveClock">--:--:--</strong><span id="liveDate"></span></div><span class="clock-icon">◷</span></div></div>
 <div class="navWrap">
 <nav>
   <a class="active" href="index.html">Dashboard</a>
@@ -110,12 +117,7 @@ td:last-child,th:last-child{text-align:right}
 </div>
 
 <main>
-  <section class="office-cards" aria-label="Mess information">
- <article><small>MESS NAME</small><strong id="dashMessName">CRPF Smart Mess</strong></article>
- <article><small>MESS NCO</small><strong id="dashMessNco">Not set</strong></article>
- <article><small>MESS SO</small><strong id="dashMessSo">Not set</strong></article>
-</section>
-<div class="clock-panel"><div><small>MESS OFFICE CLOCK</small><strong id="liveClock">--:--:--</strong><span id="liveDate"></span></div><span class="clock-icon">◷</span></div>
+  
 <div class="heading">
     <div>
       <h2>Dashboard</h2>

@@ -528,12 +528,12 @@ $("search").addEventListener("input",renderMembers);
 $("statusFilter").addEventListener("change",renderMembers);
 
 try{
-  $("commonAdvance").value=getCommonAdvance();
   $("joiningDate").value=today();
   renderMembers();
   renderLeaveCard();
 }catch(e){
-  alert("Member data read karne mein dikkat hui. Browser data delete na karein.");
+  console.error("Member page load error:",e);
+  const box=$("memberList");if(box)box.textContent="Member list load nahi hui. Data safe hai; browser data delete na karein. Error: "+(e&&e.message?e.message:"Unknown");
 }
 })();
 </script>

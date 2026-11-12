@@ -57,6 +57,10 @@ footer{text-align:center;color:var(--muted);font-size:12px;padding:10px}
     <label for="messName">Mess ka naam</label>
     <input id="messName" placeholder="CRPF Smart Mess">
 
+    <label for="messNco">Mess NCO ka naam</label>
+    <input id="messNco" placeholder="Mess NCO name">
+    <label for="messSo">Mess SO ka naam</label>
+    <input id="messSo" placeholder="Mess SO name">
     <label for="commonAdvance">Common Mess Advance (Rs)</label>
     <input id="commonAdvance" type="number" min="0" step="0.01" value="4000">
     <p class="help">Yeh sirf naye member form ka default amount hai. Isse kisi purane member ka balance, payment ya advance jama nahi badlega.</p>
@@ -172,6 +176,8 @@ footer{text-align:center;color:var(--muted);font-size:12px;padding:10px}
   function loadSettings(){
     const s = data.settings || {};
     document.getElementById("messName").value = s.messName || "CRPF Smart Mess";
+    document.getElementById("messNco").value = s.messNco || s.messNCO || "";
+    document.getElementById("messSo").value = s.messSo || s.messSO || "";
     document.getElementById("commonAdvance").value =
       s.commonAdvance ?? s.defaultAdvance ?? 4000;
     document.getElementById("monthlyBudget").value = s.monthlyBudget ?? 0;
@@ -191,6 +197,8 @@ footer{text-align:center;color:var(--muted);font-size:12px;padding:10px}
     data.settings = {
       ...(data.settings || {}),
       messName: value("messName") || "CRPF Smart Mess",
+      messNco: value("messNco"),
+      messSo: value("messSo"),
       commonAdvance: numberValue("commonAdvance"),
       defaultAdvance: numberValue("commonAdvance"),
       monthlyBudget: numberValue("monthlyBudget"),

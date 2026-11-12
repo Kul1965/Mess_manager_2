@@ -67,7 +67,7 @@ dialog::backdrop{background:#102b4677}
 @media(max-width:750px){.stats{grid-template-columns:repeat(2,minmax(0,1fr))}}
 @media(max-width:500px){.hero h1{font-size:21px}.stats{gap:9px}.stat{padding:12px}.stat strong{font-size:18px}.form-grid{grid-template-columns:1fr}.full{grid-column:auto}.panel{padding:13px}.top h2{font-size:23px}}
 </style>
-<link rel="stylesheet" href="assets/shared-theme.css?v=8">
+<link rel="stylesheet" href="assets/shared-theme.css?v=9">
 <link rel="icon" type="image/svg+xml" href="assets/crpf-app-icon.svg?v=4">
 <link rel="manifest" href="manifest.webmanifest">
 </head>
@@ -96,7 +96,7 @@ dialog::backdrop{background:#102b4677}
       <h2 class="page-title">📦 Ration Store & Purchase</h2>
       <div class="muted">Items, purchase history, stock and weighted average rate.</div>
     </div>
-    <button class="btn primary" id="addItemBtn">＋ Add Store Item</button>
+    <div class="actions"><button class="btn secondary" id="preRationBtn">＋ Pre Ration</button><button class="btn primary" id="addItemBtn">＋ Add My Item</button></div>
   </div>
 
   <section class="stats">
@@ -167,6 +167,15 @@ dialog::backdrop{background:#102b4677}
       </div>
       <div class="form-buttons"><button class="btn primary" type="submit">Save Item</button><button class="btn secondary" type="button" data-close="itemDialog">Cancel</button></div>
     </form>
+  </div>
+</dialog>
+
+<dialog id="preRationDialog">
+  <div class="modal-head"><h2>Predefined Ration Library</h2><button class="close" type="button" data-close="preRationDialog">✕ Close</button></div>
+  <div class="modal-body">
+    <p class="muted">GitHub mein saved standard ration list. Jo item chahiye select karke add karein. Pehle se maujood item duplicate nahi hoga.</p>
+    <div id="preRationList" class="form-grid"></div>
+    <div class="form-buttons"><button class="btn primary" type="button" id="addSelectedRation">Add Selected Ration</button><button class="btn secondary" type="button" data-close="preRationDialog">Cancel</button></div>
   </div>
 </dialog>
 
@@ -290,6 +299,41 @@ function stockFor(data,item){
   const stock=Math.max(0,qty-consumedForItem(data,item));
   return {qty:stock,value:stock*avg,avg,totalQty:qty,purchaseValue:value,used:consumedForItem(data,item)};
 }
+
+/* GitHub-hosted predefined ration starter library */
+const PRE_RATION=[
+ ["Rice","kg"],["Wheat Flour / Atta","kg"],["Lentils / Dal","kg"],["Chickpeas / Chana","kg"],
+ ["Potato","kg"],["Onion","kg"],["Tomato","kg"],["Cooking Oil","ltr"],
+ ["Salt","kg"],["Sugar","kg"],["Milk","ltr"],["Curd","kg"],
+ ["Egg","pcs"],["Tea Leaves","kg"],["Turmeric Powder","kg"],["Red Chilli Powder","kg"],
+ ["Coriander Powder","kg"],["Cumin Seeds","kg"],["Garlic","kg"],["Ginger","kg"],
+ ["Green Chilli","kg"],["Mixed Vegetables","kg"],["Chicken","kg"],["Fresh Coriander","kg"]
+];
+function openPreRation(){
+ const d=getData();
+ $("preRationList").innerHTML=PRE_RATION.map((x,i)=>{
+  const exists=d.items.some(it=>String(it.name||"").trim().toLowerCase()===x[0].toLowerCase());
+  return `<label class="field" style="display:flex;align-items:center;gap:8px;padding:8px;border:1px solid var(--border);border-radius:9px;background:#fff">
+   <input type="checkbox" class="pre-ration-check" value="${i}" ${exists?"disabled":""} style="width:auto">
+   <span>${esc(x[0])} <small class="muted">${esc(x[1])} · ${exists?"Already added":"Available"}</small></span>
+  </label>`;
+ }).join("");
+ $("preRationDialog").showModal();
+}
+$("preRationBtn").addEventListener("click",openPreRation);
+$("addSelectedRation").addEventListener("click",()=>{
+ const d=getData(),selected=[...document.querySelectorAll(".pre-ration-check:checked")];
+ if(!selected.length)return alert("Pehle ration items select karein.");
+ let added=0;
+ selected.forEach(box=>{
+  const [name,unit]=PRE_RATION[Number(box.value)];
+  if(!d.items.some(it=>String(it.name||"").trim().toLowerCase()===name.toLowerCase())){
+   d.items.push({id:"i_"+uid(),name,unit,note:"GitHub predefined ration",source:"github-predefined",purchases:[]});added++;
+  }
+ });
+ if(saveData(d)){ $("preRationDialog").close();render();alert(added+" pre ration items add ho gaye. Ab purchase quantity/rate enter karein.");}
+});
+
 function render(){
   const d=getData();
   const items=d.items;

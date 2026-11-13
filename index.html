@@ -454,53 +454,25 @@ body.mobile-nav-open{overflow:hidden!important}
 </style>
 
 <style id="nco-so-colour-consistency">
-/* Keep Mess NCO and Mess SO colour identity identical on laptop, tablet and mobile */
+/* Home: Mess, NCO and SO use the same soft mint raised-pill style */
+.top-info .info-pill,
+.topbar .top-info .info-pill,
+.top-info .mess-name-pill,
 .top-info .nco-pill,
-.topbar .top-info .nco-pill{
-  background:#4b3b08!important;
-  border:1px solid #d8b63d!important;
-  color:#ffe48a!important;
-  -webkit-text-fill-color:#ffe48a!important;
-  opacity:1!important;
-  filter:none!important;
+.top-info .so-pill{
+ background:linear-gradient(180deg,#f7fff9 0%,#e3f3e8 52%,#d2eadb 100%)!important;
+ border:1px solid #a7cdb4!important;
+ border-top-color:#fff!important;
+ color:#185b40!important;
+ -webkit-text-fill-color:#185b40!important;
+ text-shadow:0 1px 0 rgba(255,255,255,.8)!important;
+ box-shadow:inset 0 1px 0 rgba(255,255,255,.98),inset 0 -2px 3px rgba(36,86,57,.05),0 2px 0 #b9d7c2,0 4px 8px rgba(24,73,47,.09)!important;
+ opacity:1!important;filter:none!important;
 }
-.top-info .nco-pill strong,
-.topbar .top-info .nco-pill strong{
-  color:#fff1a8!important;
-  -webkit-text-fill-color:#fff1a8!important;
+.top-info .info-pill strong,
+.top-info .info-pill span{
+ color:#124d35!important;-webkit-text-fill-color:#124d35!important;font-weight:800!important;
 }
-.top-info .so-pill,
-.topbar .top-info .so-pill{
-  background:#073b56!important;
-  border:1px solid #4b9cc4!important;
-  color:#9edcff!important;
-  -webkit-text-fill-color:#9edcff!important;
-  opacity:1!important;
-  filter:none!important;
-}
-.top-info .so-pill strong,
-.topbar .top-info .so-pill strong{
-  color:#e1f5ff!important;
-  -webkit-text-fill-color:#e1f5ff!important;
-}
-
-/* Fixed app shell: header and navbar stay still; only page content scrolls */
-html,body{height:100%;overflow:hidden!important}
-.app{height:100vh!important;height:100dvh!important;min-height:0!important;overflow:hidden!important}
-.main{height:100vh!important;height:100dvh!important;min-height:0!important;display:flex!important;flex-direction:column!important;overflow:hidden!important}
-.main>.topbar,.main>.top-nav{flex:0 0 auto!important}
-.main>.content{flex:1 1 auto!important;min-height:0!important;overflow-y:auto!important;overflow-x:hidden!important;overscroll-behavior-y:contain!important;-webkit-overflow-scrolling:touch!important}
-.sidebar{height:100vh!important;height:100dvh!important;min-height:0!important;overflow:hidden!important}
-.sidebar>.nav{min-height:0!important;overflow-y:auto!important;overscroll-behavior:contain!important;-webkit-overflow-scrolling:touch!important}
-
-/* Fixed app shell: header and navbar stay still; only page content scrolls */
-html,body{height:100%;overflow:hidden!important}
-.app{height:100vh!important;height:100dvh!important;min-height:0!important;overflow:hidden!important}
-.main{height:100vh!important;height:100dvh!important;min-height:0!important;display:flex!important;flex-direction:column!important;overflow:hidden!important}
-.main>.topbar,.main>.top-nav{flex:0 0 auto!important}
-.main>.content{flex:1 1 auto!important;min-height:0!important;overflow-y:auto!important;overflow-x:hidden!important;overscroll-behavior-y:contain!important;-webkit-overflow-scrolling:touch!important}
-.sidebar{height:100vh!important;height:100dvh!important;min-height:0!important;overflow:hidden!important}
-.sidebar>.nav{min-height:0!important;overflow-y:auto!important;overscroll-behavior:contain!important;-webkit-overflow-scrolling:touch!important}
 </style>
 <link rel="stylesheet" href="./assets/command-centre.css?v=20261113-soft3d-buttons">
 <style id="crpf-login-header-fix">

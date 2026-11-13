@@ -4,8 +4,8 @@
   "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
-  "background_color": "#1599f5",
-  "theme_color": "#1599f5",
+  "background_color": "#f2f6f3",
+  "theme_color": "#176747",
   "icons": [
     {
       "src": "assets/crpf-home-icon.png",

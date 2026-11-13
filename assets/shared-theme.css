@@ -500,3 +500,25 @@ main{
  .shared-crpf-header>.office-cards>article small{font-size:8px!important}
  .shared-crpf-header>.office-cards>article strong{font-size:9px!important}
 }
+
+
+/* Compact header finish: clock under title; three small office chips */
+.shared-crpf-header>.office-cards{
+ display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;
+ gap:4px!important;margin:6px auto 0!important;
+}
+.shared-crpf-header>.office-cards>article{
+ min-height:30px!important;height:30px!important;padding:3px 6px!important;
+ border-radius:8px!important;gap:1px!important;
+}
+.shared-crpf-header>.office-cards>article small{font-size:7px!important;line-height:1!important}
+.shared-crpf-header>.office-cards>article strong{font-size:8px!important;line-height:1.05!important}
+.shared-crpf-header>.crpf-brand{padding-top:8px!important;padding-bottom:7px!important}
+.shared-crpf-header .crpf-brand .office-clock{margin-top:3px!important;font-size:9px!important;gap:4px!important}
+.shared-crpf-header .crpf-brand .office-clock strong{font-size:10px!important}
+@media(max-width:390px){
+ .shared-crpf-header>.office-cards{gap:3px!important}
+ .shared-crpf-header>.office-cards>article{height:28px!important;min-height:28px!important;padding:3px 4px!important}
+ .shared-crpf-header>.office-cards>article small{font-size:6.5px!important}
+ .shared-crpf-header>.office-cards>article strong{font-size:7.5px!important}
+}

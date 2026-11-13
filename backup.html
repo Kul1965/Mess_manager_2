@@ -26,6 +26,11 @@ button{background:var(--g);color:white;border:0;font-weight:bold;cursor:pointer}
 button.secondary{background:white;color:var(--g);border:1px solid var(--g)}
 button.danger{background:var(--red)}
 .status{padding:12px;background:#edf6ef;border:1px solid var(--border);border-radius:8px;white-space:pre-wrap;overflow-wrap:anywhere}
+.file-picker{border:1px dashed #8ab69a;background:#f4faf5;border-radius:10px;padding:13px;margin:12px 0}
+.file-picker button{margin:0 0 9px}
+.file-name{font-weight:700;overflow-wrap:anywhere;color:#176747;padding:7px 0}
+.file-check{font-size:12px;color:#66766c;line-height:1.5}
+#restoreBtn:disabled{cursor:not-allowed;opacity:.5}
 .warning{background:#fff8e8;border:1px solid #efdfb8;padding:12px;border-radius:9px;line-height:1.6}
 .stats{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}
 .stat{border:1px solid var(--border);border-radius:9px;padding:12px}
@@ -70,11 +75,16 @@ button.danger{background:var(--red)}
 <section class="card">
 <h2>2. Restore from Backup</h2>
 <p>Select a JSON backup previously downloaded from this page. The restore process will check the file before writing anything.</p>
-<input id="backupFile" type="file" accept=".json,application/json">
+<div class="file-picker">
+  <input id="backupFile" type="file" accept=".json,application/json" hidden>
+  <button id="chooseBackupBtn" class="secondary" type="button">📂 Choose Backup File</button>
+  <div id="selectedFile" class="file-name">No file selected yet.</div>
+  <div id="fileCheck" class="file-check">Choose a JSON backup from your device's Files or Downloads folder.</div>
+</div>
 <div class="warning">
 <strong>Important:</strong> Restore can replace data stored under matching keys. First download a fresh backup of the current browser data. Restore only a file that you trust and that belongs to this software.
 </div>
-<button id="restoreBtn" type="button">Restore Selected Backup</button>
+<button id="restoreBtn" type="button" disabled style="opacity:.5">Restore Selected Backup</button>
 </section>
 
 <section class="card">
@@ -228,6 +238,25 @@ function validateBackup(obj){
   }
   return true;
 }
+$("chooseBackupBtn").addEventListener("click",()=> $("backupFile").click());
+$("backupFile").addEventListener("change",()=>{
+  const file=$("backupFile").files[0];
+  const restore=$("restoreBtn");
+  if(!file){
+    $("selectedFile").textContent="No file selected yet.";
+    $("fileCheck").textContent="Choose a JSON backup from Files or Downloads.";
+    restore.disabled=true;
+    restore.style.opacity=".5";
+    return;
+  }
+  $("selectedFile").textContent="Selected: "+file.name;
+  if(!file.name.toLowerCase().endsWith(".json") && file.type!=="application/json"){
+    $("fileCheck").textContent="This does not look like a JSON file. Please choose the CRPF Mess .json backup.";
+    restore.disabled=true; restore.style.opacity=".5"; return;
+  }
+  $("fileCheck").textContent="File selected. Tap Restore Selected Backup to validate it before restoring.";
+  restore.disabled=false; restore.style.opacity="1";
+});
 async function restoreBackup(){
   const file=$("backupFile").files[0];
   if(!file){

@@ -522,3 +522,79 @@ main{
  .shared-crpf-header>.office-cards>article small{font-size:6.5px!important}
  .shared-crpf-header>.office-cards>article strong{font-size:7.5px!important}
 }
+
+
+/* Desktop app shell adapted from Mess_system — keep Mess_manager_2 green/gold palette */
+@media (min-width: 851px) {
+  body {
+    display:grid!important;
+    grid-template-columns:190px minmax(0,1fr)!important;
+    grid-template-rows:auto 1fr auto!important;
+    align-items:start!important;
+    min-height:100vh!important;
+  }
+  body>.shared-crpf-header {
+    grid-column:2!important;grid-row:1!important;
+    width:100%!important;min-width:0!important;
+    border-radius:0!important;
+  }
+  body>nav.shared-crpf-nav {
+    grid-column:1!important;grid-row:1 / 4!important;
+    position:sticky!important;top:0!important;
+    display:flex!important;flex-direction:column!important;
+    align-items:stretch!important;gap:6px!important;
+    width:190px!important;height:100vh!important;max-height:100vh!important;
+    min-width:0!important;min-height:100vh!important;
+    overflow-x:hidden!important;overflow-y:auto!important;
+    padding:12px 9px 20px!important;
+    background:linear-gradient(180deg,#176747 0%,#10563e 65%,#0b4934 100%)!important;
+    border-right:2px solid #c9ad52!important;border-bottom:0!important;
+    box-shadow:4px 0 14px #123b2820!important;
+    scrollbar-width:thin!important;
+  }
+  body>nav.shared-crpf-nav::before {
+    content:"";display:block;flex:0 0 auto;width:76px;height:82px;
+    margin:3px auto 8px;
+    background:url("crpf-monogram.svg") center/contain no-repeat;
+    filter:drop-shadow(0 3px 5px #001c1266);
+  }
+  body>nav.shared-crpf-nav a {
+    display:flex!important;align-items:center!important;
+    min-height:42px!important;width:100%!important;
+    padding:10px 11px!important;margin:0!important;
+    white-space:normal!important;line-height:1.25!important;
+    border-radius:8px!important;
+    background:transparent!important;border:1px solid transparent!important;
+    color:#f5fff8!important;font-size:12px!important;font-weight:700!important;
+    box-shadow:none!important;
+  }
+  body>nav.shared-crpf-nav a:hover {
+    background:#287c59!important;border-color:#78ae8c!important;
+  }
+  body>nav.shared-crpf-nav a.active {
+    background:linear-gradient(135deg,#f4df91,#d6b64d)!important;
+    border-color:#fff0b5!important;color:#214b36!important;
+    box-shadow:0 2px 5px #001c1233!important;
+  }
+  body>main {
+    grid-column:2!important;grid-row:2!important;
+    width:100%!important;max-width:1400px!important;
+    padding:20px clamp(14px,2vw,28px) 30px!important;
+  }
+  body>.footer,body>footer {
+    grid-column:2!important;grid-row:3!important;
+  }
+}
+@media (max-width:850px) {
+  body {display:block!important}
+  body>nav.shared-crpf-nav {
+    position:relative!important;top:auto!important;
+    display:flex!important;flex-direction:row!important;
+    width:100%!important;height:auto!important;min-height:0!important;
+    max-height:none!important;overflow-x:auto!important;overflow-y:hidden!important;
+    padding:8px 9px!important;border-right:0!important;
+  }
+  body>nav.shared-crpf-nav::before {display:none!important}
+  body>nav.shared-crpf-nav a {flex:0 0 auto!important;white-space:nowrap!important}
+  body>main {width:100%!important;max-width:100%!important}
+}

@@ -146,3 +146,34 @@ tbody tr:hover{background:#f6faf6!important}
  .guide-card p,.guide-card li{font-size:15px!important;line-height:1.8!important}
  .guide-card h2{font-size:20px!important}
 }
+
+
+/* Unified premium header: match CRPF green navigation */
+.topbar{
+ background:linear-gradient(115deg,#0f503a 0%,#176747 58%,#10563e 100%)!important;
+ color:#fff!important;border-bottom:3px solid #c49a24!important;
+ box-shadow:0 5px 16px rgba(16,62,43,.16)!important;
+}
+.topbar h1,.topbar h2,.topbar .heading h1,.topbar .brand-title h1{
+ color:#f1d276!important;
+}
+.topbar p,.topbar small,.topbar .dashboard-date,.topbar .heading p{
+ color:#e3eee7!important;
+}
+.topbar .info-pill{
+ background:rgba(255,255,255,.10)!important;
+ color:#f5fbf6!important;border:1px solid rgba(224,201,126,.55)!important;
+}
+.topbar .info-pill strong{color:#ffe49a!important}
+.topbar .nco-pill,.topbar .so-pill{
+ background:rgba(255,255,255,.10)!important;
+ color:#f5fbf6!important;border-color:rgba(224,201,126,.55)!important;
+}
+.topbar .nco-pill strong,.topbar .so-pill strong{color:#ffe49a!important}
+.topbar .mobile-menu-toggle{
+ background:linear-gradient(145deg,#e6c66a,#b88a25)!important;
+ color:#123e2d!important;border:1px solid #f4dfa0!important;
+}
+@media(max-width:850px){
+ .topbar{border-bottom-width:3px!important;box-shadow:0 5px 15px rgba(16,62,43,.17)!important}
+}

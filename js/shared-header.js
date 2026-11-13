@@ -73,4 +73,60 @@
  box-shadow:inset 0 1px 0 rgba(255,255,255,.98),inset 0 -2px 3px rgba(36,86,57,.05),0 2px 0 #b9d7c2,0 4px 8px rgba(24,73,47,.09)!important;
 }
 .dh-info .dh-pill strong{color:#124d35!important;font-weight:800!important}
+`;s.textContent += `
+/* Match every page header layout to Home and unify mint side navigation */
+/* Same two-row header structure on every page */
+.topbar{
+ display:flex!important;flex-direction:column!important;align-items:stretch!important;
+ justify-content:center!important;gap:8px!important;padding:10px 18px 9px!important;
+ background:linear-gradient(135deg,#e4f5e9 0%,#ccebd8 52%,#b9dfc9 100%)!important;
+ border-bottom:1px solid #9fcbb0!important;
+ box-shadow:inset 0 1px 0 #fff,0 3px 10px rgba(25,82,52,.10)!important;
+}
+.dh-brand{width:100%!important;justify-content:flex-start!important}
+.dh-info{
+ width:100%!important;display:flex!important;flex-direction:row!important;
+ align-items:center!important;justify-content:flex-start!important;
+ flex-wrap:nowrap!important;gap:7px!important;overflow-x:auto!important;
+ white-space:nowrap!important;scrollbar-width:none!important;padding:1px 0 3px!important;
+}
+.dh-info::-webkit-scrollbar{display:none!important}
+.dh-info .dh-pill{flex:0 0 auto!important}
+.dh-title h1{color:#176747!important;text-shadow:0 1px 0 #fff!important}
+.dh-title h2{color:#245c43!important}
+.dh-date{color:#356d52!important}
+.dh-divider{background:#8dbda0!important}
+/* Mint 3D side navigation */
+.sidebar{
+ background:linear-gradient(180deg,#e4f5e9 0%,#cdebd8 52%,#b9dfc9 100%)!important;
+ border-right:1px solid #9fcbb0!important;
+ box-shadow:4px 0 14px rgba(25,82,52,.12)!important;
+}
+.sidebar .brand{
+ background:linear-gradient(180deg,#d9f0e1,#c2e5cf)!important;
+ border-bottom:1px solid #a8d0b5!important;
+ box-shadow:inset 0 1px 0 #fff,0 3px 8px rgba(25,82,52,.08)!important;
+}
+.sidebar .brand h2,.sidebar .brand b{color:#176747!important;text-shadow:0 1px 0 #fff!important}
+.sidebar .brand p,.sidebar .brand small{color:#356d52!important}
+.sidebar .nav{background:transparent!important;padding:10px 8px!important;gap:6px!important}
+.sidebar .nav a{
+ display:flex!important;align-items:center!important;gap:9px!important;
+ margin:4px 0!important;padding:11px 12px!important;border-radius:10px!important;
+ color:#185b40!important;background:linear-gradient(180deg,#f8fffa 0%,#dcefe3 100%)!important;
+ border:1px solid #a7cdb4!important;text-decoration:none!important;font-weight:700!important;
+ box-shadow:inset 0 1px 0 #fff,0 2px 0 #b9d7c2,0 4px 7px rgba(24,73,47,.09)!important;
+}
+.sidebar .nav a:hover,.sidebar .nav a.active{
+ color:#104b34!important;background:linear-gradient(180deg,#c9ead4,#addcbd)!important;
+ border-color:#79b58f!important;box-shadow:inset 0 1px 0 #fff,0 3px 0 #94c5a4,0 5px 9px rgba(24,73,47,.12)!important;
+}
+@media(max-width:850px){
+ .topbar{padding:10px 12px 8px!important;gap:7px!important}
+ .dh-brand{width:100%!important}
+ .dh-info{width:100%!important;justify-content:flex-start!important;flex-wrap:nowrap!important}
+ .sidebar .brand{padding:9px 8px!important}
+ .sidebar .nav{padding:8px 7px!important}
+ .sidebar .nav a{padding:10px 9px!important;margin:3px 0!important}
+}
 `;document.head.appendChild(s);const sideNav=document.querySelector(".sidebar .nav");if(sideNav){const navItems=[["index.html","▦ Dashboard"],["members.html","👥 Members"],["ration-store.html","📦 Ration Store"],["purchases.html","🛒 Purchases"],["recipes.html","🍲 Recipes"],["making-menu.html","📅 Making Menu"],["mess-staff.html","👨‍🍳 Mess Staff"],["accounts.html","💰 Accounts"],["reports.html","📊 Reports"],["mess-handover.html","🔄 Mess Handover"],["settings.html","⚙️ Settings"],["backup.html","💾 Backup & Restore"],["software-guide.html","📖 हिन्दी गाइड"]];const current=location.pathname.split("/").pop()||"index.html";sideNav.innerHTML=navItems.map(([href,label])=>'<a href="'+href+'"'+(current===href?' class="active" aria-current="page"':'')+'>'+label+'</a>').join("");}const sideBrand=document.querySelector(".sidebar .brand");if(sideBrand){sideBrand.innerHTML=`<div class="side-emblem-row"><img class="side-crpf-logo" src="https://commons.wikimedia.org/wiki/Special:Redirect/file/CRPF_Logo.svg" alt="CRPF monogram"><span class="side-flag flag-art" role="img" aria-label="Indian flag"><i></i><i></i><i></i><b>✺</b></span></div><h2>CRPF MESS</h2><p>Cooking House System</p>`;}b.innerHTML=`<div class="dh-brand"><img class="dh-logo" src="https://commons.wikimedia.org/wiki/Special:Redirect/file/CRPF_Logo.svg" alt="CRPF emblem"><span class="dh-divider"></span><div class="dh-title"><h1>CRPF</h1><h2>Cooking House System</h2><div class="dh-date" id="dhClock"></div><div class="dh-tri"><i></i><i></i><i></i></div></div><span class="dh-flag flag-art" role="img" aria-label="Indian flag"><i></i><i></i><i></i><b>✺</b></span></div><div class="dh-info"><div class="dh-pill dh-mess">🏛️ Mess: <strong id="dhMess">A Coy (CRPF)</strong></div><div class="dh-pill dh-role">👤 NCO: <strong id="dhNco">Not Set</strong></div><div class="dh-pill dh-role">📋 SO: <strong id="dhSo">Not Set</strong></div></div>`;if(legacy)legacy.classList.add("legacy-date-hidden");if(legacyNow)legacyNow.classList.add("legacy-date-hidden");const navItemsTop=[["index.html","⌂","Home"],["members.html","👥","Members"],["ration-store.html","📦","Ration Store"],["purchases.html","🛒","Purchases"],["recipes.html","🍲","Recipes"],["making-menu.html","📅","Making Menu"],["mess-staff.html","👨‍🍳","Mess Staff"],["accounts.html","💰","Accounts"],["reports.html","📊","Reports"],["mess-handover.html","🔄","Handover"],["settings.html","⚙️","Settings"],["backup.html","💾","Backup"],["software-guide.html","📖","हिन्दी गाइड"]],curTop=location.pathname.split("/").pop()||"index.html",topNav=document.createElement("nav");topNav.className="top-nav";topNav.setAttribute("aria-label","Main navigation");topNav.innerHTML='<button type="button" class="tab-menu" aria-label="Open navigation menu" aria-expanded="false">☰</button>'+navItemsTop.map(x=>'<a href="'+x[0]+'" '+(curTop===x[0]?'class="selected" aria-current="page"':'')+'><span class="top-nav-icon">'+x[1]+'</span><span>'+x[2]+'</span></a>').join("");b.insertAdjacentElement("afterend",topNav);function tick(){const d=new Date(),e=document.getElementById("dhClock");if(e)e.textContent="🕒 "+d.toLocaleTimeString("en-GB",{hour12:false})+" | "+d.toLocaleDateString("en-GB")}tick();setInterval(tick,1000);try{const d=JSON.parse(localStorage.getItem("crpfMessData")||"{}"),st=d.settings||{},staff=Array.isArray(d.staff)?d.staff:[],a=staff.filter(x=>String(x.status||"Active").toLowerCase()==="active"),role=k=>a.filter(x=>String(x.duty||"").trim().toLowerCase()===k).map(x=>x.name).filter(Boolean).join(", ")||"Not Set";document.getElementById("dhMess").textContent=st.messName||"A Coy (CRPF)";document.getElementById("dhNco").textContent=role("mess nco");document.getElementById("dhSo").textContent=role("mess so")}catch(e){}}if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",init);else init()})();

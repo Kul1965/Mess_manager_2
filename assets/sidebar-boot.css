@@ -23,3 +23,9 @@
     pointer-events: auto !important;
   }
 }
+
+/* Keep legacy header/sidebar hidden until the shared mint styling and markup are ready. */
+body:not([data-dash-header="1"]) .topbar,
+body:not([data-dash-header="1"]) .sidebar {
+  visibility: hidden !important;
+}

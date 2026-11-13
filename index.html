@@ -511,6 +511,28 @@ html,body{height:100%;overflow:hidden!important}
 #messLoginControls button{flex:0 0 auto!important;padding:6px 9px!important;font-size:10px!important}
 @media(max-width:1400px){.topbar{display:flex!important;flex-direction:column!important;align-items:stretch!important;gap:8px!important}.topbar>.heading{width:100%!important}.topbar>.top-info{width:100%!important}}
 </style>
+<style id="crpf-navbar-header-match">
+/* Navigation is attached flush to the header, with matching forest-green finish */
+.top-nav{
+ margin:0!important;width:100%!important;border-radius:0!important;
+ border:0!important;border-bottom:3px solid #c49a32!important;
+ background:linear-gradient(180deg,#174c38 0%,#103b2d 100%)!important;
+ box-shadow:0 4px 12px rgba(16,59,45,.16)!important;
+ padding:8px 12px!important;
+}
+.top-nav a{background:rgba(255,255,255,.09)!important;border:1px solid rgba(225,238,226,.24)!important;color:#f5fbf6!important;box-shadow:none!important}
+.top-nav a:hover,.top-nav a.selected{background:#c49a32!important;border-color:#e3c878!important;color:#173d2c!important;text-shadow:none!important;box-shadow:0 2px 7px rgba(0,0,0,.15)!important}
+.top-nav .tab-menu{background:#c49a32!important;border:1px solid #e3c878!important;color:#173d2c!important;box-shadow:none!important}
+.topbar>.top-info>.mess-name-pill{
+ background:linear-gradient(135deg,#f6e8bd,#e7c96f)!important;
+ border:1px solid #c49a32!important;color:#49380d!important;
+ box-shadow:0 2px 7px rgba(130,96,20,.12)!important;font-weight:700!important;
+}
+.topbar>.top-info>.mess-name-pill #messName{color:#173d2c!important;font-weight:800!important}
+@media(max-width:850px){
+ .top-nav{margin:0!important;width:100%!important;border-radius:0!important;padding:7px 8px!important}
+}
+</style>
 </head>
 
 <body>
@@ -557,7 +579,7 @@ html,body{height:100%;overflow:hidden!important}
     </div>
 
     <div class="top-info">
-      <div class="info-pill">🏛️ Mess: <span id="messName">A Coy (CRPF)</span></div>
+      <div class="info-pill mess-name-pill">🏛️ Mess: <span id="messName">A Coy (CRPF)</span></div>
       <div class="info-pill nco-pill">👤 Mess NCO: <strong id="messNco">Not Set</strong></div>
       <div class="info-pill so-pill">📋 Mess SO: <strong id="messSo">Not Set</strong></div>
     </div>

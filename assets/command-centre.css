@@ -269,3 +269,23 @@ tbody tr:last-child td:last-child{border-bottom-right-radius:10px}
   box-shadow:inset 0 1px 0 rgba(255,255,255,.95),0 3px 0 #e0e9e2,0 6px 13px rgba(20,61,40,.09)!important;
  }
 }
+
+
+/* Attach mobile navigation directly beneath the CRPF header */
+@media(max-width:850px){
+ .topbar{
+  margin-bottom:0!important;
+  border-bottom:0!important;
+  border-radius:0!important;
+ }
+ .mobile-tabbar{
+  margin:0 12px 12px!important;
+  margin-top:0!important;
+  border-top-left-radius:0!important;
+  border-top-right-radius:0!important;
+  border-top:1px solid rgba(190,224,202,.7)!important;
+  position:relative!important;
+  top:0!important;
+ }
+ .topbar + .mobile-tabbar{margin-top:0!important}
+}

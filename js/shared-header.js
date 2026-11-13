@@ -19,4 +19,44 @@
  box-sizing:border-box!important;border-left:0!important;border-right:0!important;
  border-radius:0!important;left:auto!important;right:auto!important;
 }
+`;s.textContent += `
+/* Mint glass header and navbar theme */
+.topbar{
+ background:linear-gradient(135deg,#e2f4e9 0%,#ccebd9 48%,#b8dfc9 100%)!important;
+ border-bottom:2px solid #9bcbb0!important;
+ box-shadow:inset 0 2px 0 rgba(255,255,255,.9),0 5px 14px rgba(31,91,59,.12)!important;
+}
+.dh-title h1,.dh-title h2{color:#14583d!important;text-shadow:0 1px 0 rgba(255,255,255,.65)!important}
+.dh-divider{background:#6fa987!important}
+.dh-date,.dh-clock{color:#185b40!important;background:rgba(255,255,255,.56)!important;border-color:#a8cdb5!important}
+.dh-pill,.dh-info .dh-pill{
+ color:#185b40!important;background:linear-gradient(180deg,#f7fff9,#dcefe2)!important;
+ border:1px solid #a9cfb6!important;
+ box-shadow:inset 0 1px 0 #fff,0 2px 4px rgba(31,91,59,.08)!important;
+}
+.top-nav{
+ background:linear-gradient(180deg,#dff3e6 0%,#c7e8d3 55%,#b5ddc5 100%)!important;
+ border-top:1px solid #f8fff9!important;border-bottom:2px solid #8fbea0!important;
+ box-shadow:inset 0 2px 3px rgba(255,255,255,.85),0 4px 10px rgba(25,82,52,.12)!important;
+}
+.top-nav .tab-menu{
+ color:#15583e!important;background:linear-gradient(180deg,#f7fff9,#d7eddf)!important;
+ border:1px solid #9fc9ad!important;
+ box-shadow:inset 0 1px 0 #fff,0 2px 0 #a8cbb3,0 4px 7px rgba(25,82,52,.1)!important;
+}
+.top-nav a{
+ color:#15583e!important;background:linear-gradient(180deg,#f8fffa 0%,#d9eee0 100%)!important;
+ border:1px solid #a5cdb2!important;
+ text-shadow:0 1px 0 rgba(255,255,255,.8)!important;
+ box-shadow:inset 0 1px 0 #fff,inset 0 -2px 3px rgba(36,86,57,.06),0 3px 0 #a9cdb5,0 5px 9px rgba(24,73,47,.10)!important;
+}
+.top-nav a:hover,.top-nav a.selected{
+ color:#0e4d34!important;background:linear-gradient(180deg,#c6e9d2,#a9d9bb)!important;
+ border-color:#72b18b!important;box-shadow:inset 0 1px 0 rgba(255,255,255,.9),0 3px 0 #8fbea0,0 5px 10px rgba(24,73,47,.12)!important;
+}
+.top-nav a.selected{outline:2px solid #80b994!important;outline-offset:-3px!important}
+@media(max-width:850px){
+ .topbar{background:linear-gradient(135deg,#e2f4e9,#c2e5d0)!important}
+ .top-nav{background:linear-gradient(180deg,#dff3e6,#b9e0c8)!important}
+}
 `;document.head.appendChild(s);const sideNav=document.querySelector(".sidebar .nav");if(sideNav){const navItems=[["index.html","▦ Dashboard"],["members.html","👥 Members"],["ration-store.html","📦 Ration Store"],["purchases.html","🛒 Purchases"],["recipes.html","🍲 Recipes"],["making-menu.html","📅 Making Menu"],["mess-staff.html","👨‍🍳 Mess Staff"],["accounts.html","💰 Accounts"],["reports.html","📊 Reports"],["mess-handover.html","🔄 Mess Handover"],["settings.html","⚙️ Settings"],["backup.html","💾 Backup & Restore"],["software-guide.html","📖 हिन्दी गाइड"]];const current=location.pathname.split("/").pop()||"index.html";sideNav.innerHTML=navItems.map(([href,label])=>'<a href="'+href+'"'+(current===href?' class="active" aria-current="page"':'')+'>'+label+'</a>').join("");}const sideBrand=document.querySelector(".sidebar .brand");if(sideBrand){sideBrand.innerHTML=`<div class="side-emblem-row"><img class="side-crpf-logo" src="https://commons.wikimedia.org/wiki/Special:Redirect/file/CRPF_Logo.svg" alt="CRPF monogram"><span class="side-flag flag-art" role="img" aria-label="Indian flag"><i></i><i></i><i></i><b>✺</b></span></div><h2>CRPF MESS</h2><p>Cooking House System</p>`;}b.innerHTML=`<div class="dh-brand"><img class="dh-logo" src="https://commons.wikimedia.org/wiki/Special:Redirect/file/CRPF_Logo.svg" alt="CRPF emblem"><span class="dh-divider"></span><div class="dh-title"><h1>CRPF</h1><h2>Cooking House System</h2><div class="dh-date" id="dhClock"></div><div class="dh-tri"><i></i><i></i><i></i></div></div><span class="dh-flag flag-art" role="img" aria-label="Indian flag"><i></i><i></i><i></i><b>✺</b></span></div><div class="dh-info"><div class="dh-pill dh-mess">🏛️ Mess: <strong id="dhMess">A Coy (CRPF)</strong></div><div class="dh-pill dh-role">👤 NCO: <strong id="dhNco">Not Set</strong></div><div class="dh-pill dh-role">📋 SO: <strong id="dhSo">Not Set</strong></div></div>`;if(legacy)legacy.classList.add("legacy-date-hidden");if(legacyNow)legacyNow.classList.add("legacy-date-hidden");const navItemsTop=[["index.html","⌂","Home"],["members.html","👥","Members"],["ration-store.html","📦","Ration Store"],["purchases.html","🛒","Purchases"],["recipes.html","🍲","Recipes"],["making-menu.html","📅","Making Menu"],["mess-staff.html","👨‍🍳","Mess Staff"],["accounts.html","💰","Accounts"],["reports.html","📊","Reports"],["mess-handover.html","🔄","Handover"],["settings.html","⚙️","Settings"],["backup.html","💾","Backup"],["software-guide.html","📖","हिन्दी गाइड"]],curTop=location.pathname.split("/").pop()||"index.html",topNav=document.createElement("nav");topNav.className="top-nav";topNav.setAttribute("aria-label","Main navigation");topNav.innerHTML='<button type="button" class="tab-menu" aria-label="Open navigation menu" aria-expanded="false">☰</button>'+navItemsTop.map(x=>'<a href="'+x[0]+'" '+(curTop===x[0]?'class="selected" aria-current="page"':'')+'><span class="top-nav-icon">'+x[1]+'</span><span>'+x[2]+'</span></a>').join("");b.insertAdjacentElement("afterend",topNav);function tick(){const d=new Date(),e=document.getElementById("dhClock");if(e)e.textContent="🕒 "+d.toLocaleTimeString("en-GB",{hour12:false})+" | "+d.toLocaleDateString("en-GB")}tick();setInterval(tick,1000);try{const d=JSON.parse(localStorage.getItem("crpfMessData")||"{}"),st=d.settings||{},staff=Array.isArray(d.staff)?d.staff:[],a=staff.filter(x=>String(x.status||"Active").toLowerCase()==="active"),role=k=>a.filter(x=>String(x.duty||"").trim().toLowerCase()===k).map(x=>x.name).filter(Boolean).join(", ")||"Not Set";document.getElementById("dhMess").textContent=st.messName||"A Coy (CRPF)";document.getElementById("dhNco").textContent=role("mess nco");document.getElementById("dhSo").textContent=role("mess so")}catch(e){}}if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",init);else init()})();

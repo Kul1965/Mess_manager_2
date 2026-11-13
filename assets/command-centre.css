@@ -94,3 +94,35 @@ tbody tr:hover{background:#f6faf6!important}
 .topbar{background:#fff!important;color:var(--cc-ink)!important;border-bottom:1px solid var(--cc-line)!important}
 .topbar h1,.topbar h2{color:var(--cc-green)!important}
 .footer{color:var(--cc-muted)!important}
+
+
+/* Readability fix: member detail cards and weekly menu panels */
+.account-grid>div,.meal-entry,.payment-summary>div{
+ background:#f4f8f4!important;color:#214d3b!important;border:1px solid #dce5df!important;
+}
+.account-grid>div *,.meal-entry *,.payment-summary>div *{
+ color:#214d3b!important;
+}
+.account-grid small,.meal-entry small,.payment-summary small,.mm-muted{
+ color:#78857e!important;
+}
+.account-grid strong,.meal-entry strong,.payment-summary strong{
+ color:#176747!important;font-weight:750!important;
+}
+.day-card,.mm-choice{
+ background:#ffffff!important;color:#214d3b!important;border:1px solid #dce5df!important;
+}
+.day-card *,.mm-choice *,.picked span{
+ color:#214d3b!important;
+}
+.day-card h3{
+ background:linear-gradient(100deg,#e7f1e9,#f6f8f4)!important;
+ color:#176747!important;text-shadow:none!important;box-shadow:none!important;
+ border-left-color:#c49a24!important;
+}
+.picked span{background:#edf5ee!important;border:1px solid #dce5df!important}
+.slot{border-bottom-color:#e1e9e2!important}
+.mm-stat{background:#f4f8f4!important;border-color:#dce5df!important;color:#214d3b!important}
+.mm-stat *{color:#214d3b!important}
+.mm-stat small{color:#78857e!important}
+.mm-stat b{color:#176747!important}

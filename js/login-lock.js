@@ -17,8 +17,15 @@
    const out=document.createElement("button");out.type="button";out.textContent="🔒 Logout";out.style.cssText=style;
    out.addEventListener("click",()=>{sessionStorage.removeItem(SESSION);location.replace("login.html");});
    wrap.append(change,out);
-   const info=document.querySelector(".dh-info");
-   if(info){info.appendChild(wrap);}else{wrap.style.margin="8px 12px";document.querySelector(".topbar")?.insertAdjacentElement("afterend",wrap);}
+   const info=document.querySelector(".top-info, .dh-info");
+   if(info){
+     info.appendChild(wrap);
+     wrap.style.marginLeft="6px";
+     wrap.style.flex="0 0 auto";
+   }else{
+     wrap.style.margin="8px 12px";
+     document.querySelector(".topbar")?.insertAdjacentElement("afterend",wrap);
+   }
  }
  if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",addControls);else addControls();
 })();

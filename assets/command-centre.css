@@ -289,3 +289,38 @@ tbody tr:last-child td:last-child{border-bottom-right-radius:10px}
  }
  .topbar + .mobile-tabbar{margin-top:0!important}
 }
+
+
+/* Universal soft 3D button finish — PDF-style light palette */
+button:not(.tab-menu):not(.top-nav a),
+.btn,.primary,.mm-primary,.guide-actions button,.toolbar button,.form-actions button,
+a.btn, input[type="button"],input[type="submit"]{
+ color:#18563e!important;
+ background:linear-gradient(180deg,#ffffff 0%,#edf5ef 58%,#dfece3 100%)!important;
+ border:1px solid #b9d2c1!important;
+ border-top-color:#ffffff!important;
+ border-radius:11px!important;
+ font-weight:750!important;
+ text-shadow:0 1px 0 rgba(255,255,255,.8)!important;
+ box-shadow:inset 0 1px 0 rgba(255,255,255,.98),inset 0 -2px 3px rgba(36,86,57,.07),0 3px 0 #bfd2c4,0 6px 11px rgba(24,73,47,.12)!important;
+}
+button:hover,.btn:hover,.primary:hover,.mm-primary:hover,
+.guide-actions button:hover,.toolbar button:hover,.form-actions button:hover{
+ color:#10563e!important;
+ background:linear-gradient(180deg,#fafffb 0%,#e2f0e6 100%)!important;
+ filter:brightness(1.015)!important;
+}
+button:active,.btn:active,.primary:active,.mm-primary:active,
+.guide-actions button:active,.toolbar button:active,.form-actions button:active{
+ transform:translateY(2px)!important;
+ box-shadow:inset 0 2px 4px rgba(24,73,47,.12),0 1px 0 #bfd2c4!important;
+}
+button:disabled,.btn:disabled,.primary:disabled,.mm-primary:disabled{
+ color:#6d8979!important;background:linear-gradient(180deg,#edf3ee,#e3ebe5)!important;
+ border-color:#d2dfd5!important;box-shadow:0 2px 0 #d7e1d9!important;
+ text-shadow:none!important;opacity:1!important;
+}
+button.danger,.btn.danger,.danger{
+ color:#a7353e!important;background:linear-gradient(180deg,#fff,#f9e9e9)!important;
+ border-color:#e6caca!important;box-shadow:inset 0 1px 0 #fff,0 3px 0 #ead4d4,0 5px 9px rgba(100,30,30,.08)!important;
+}

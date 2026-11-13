@@ -74,18 +74,17 @@
 }
 .dh-info .dh-pill strong{color:#124d35!important;font-weight:800!important}
 `;s.textContent += `
-/* Match every page header layout to Home and unify mint side navigation */
-/* Same two-row header structure on every page */
+/* Match every page header layout to the reference: brand and all info pills share one line on wide screens */
 .topbar{
- display:flex!important;flex-direction:column!important;align-items:stretch!important;
- justify-content:center!important;gap:8px!important;padding:10px 18px 9px!important;
+ display:flex!important;flex-direction:row!important;align-items:center!important;
+ justify-content:space-between!important;gap:14px!important;padding:10px 18px 9px!important;
  background:linear-gradient(135deg,#e4f5e9 0%,#ccebd8 52%,#b9dfc9 100%)!important;
  border-bottom:1px solid #9fcbb0!important;
  box-shadow:inset 0 1px 0 #fff,0 3px 10px rgba(25,82,52,.10)!important;
 }
-.dh-brand{width:100%!important;justify-content:flex-start!important}
+.dh-brand{width:auto!important;flex:0 1 auto!important;justify-content:flex-start!important}
 .dh-info{
- width:100%!important;display:flex!important;flex-direction:row!important;
+ width:auto!important;flex:0 1 auto!important;display:flex!important;flex-direction:row!important;
  align-items:center!important;justify-content:flex-start!important;
  flex-wrap:nowrap!important;gap:7px!important;overflow-x:auto!important;
  white-space:nowrap!important;scrollbar-width:none!important;padding:1px 0 3px!important;
@@ -122,9 +121,9 @@
  border-color:#79b58f!important;box-shadow:inset 0 1px 0 #fff,0 3px 0 #94c5a4,0 5px 9px rgba(24,73,47,.12)!important;
 }
 @media(max-width:850px){
- .topbar{padding:10px 12px 8px!important;gap:7px!important}
- .dh-brand{width:100%!important}
- .dh-info{width:100%!important;justify-content:flex-start!important;flex-wrap:nowrap!important}
+ .topbar{flex-direction:column!important;align-items:stretch!important;padding:10px 12px 8px!important;gap:7px!important}
+ .dh-brand{width:100%!important;flex:0 0 auto!important}
+ .dh-info{width:100%!important;flex:0 0 auto!important;justify-content:flex-start!important;flex-wrap:nowrap!important}
  .sidebar .brand{padding:9px 8px!important}
  .sidebar .nav{padding:8px 7px!important}
  .sidebar .nav a{padding:10px 9px!important;margin:3px 0!important}

@@ -559,6 +559,47 @@ body.mobile-nav-open{overflow:hidden!important}
 .sidebar .nav a{display:flex!important;align-items:center!important;gap:9px!important;margin:4px 0!important;padding:11px 12px!important;border-radius:10px!important;color:#185b40!important;background:linear-gradient(180deg,#f8fffa 0%,#dcefe3 100%)!important;border:1px solid #a7cdb4!important;box-shadow:inset 0 1px 0 #fff,0 2px 0 #b9d7c2,0 4px 7px rgba(24,73,47,.09)!important}
 .sidebar .nav a:hover,.sidebar .nav a.active{color:#104b34!important;background:linear-gradient(180deg,#c9ead4,#addcbd)!important;border-color:#79b58f!important;box-shadow:inset 0 1px 0 #fff,0 3px 0 #94c5a4,0 5px 9px rgba(24,73,47,.12)!important}
 </style>
+
+<style id="home-member-header-match">
+/* HOME HEADER: match the Members page single-line Mess/NCO/SO layout */
+.topbar{
+ display:flex!important;flex-direction:row!important;align-items:center!important;
+ justify-content:space-between!important;gap:12px!important;flex-wrap:nowrap!important;
+}
+.topbar .brand-lockup{flex:0 1 auto!important;width:auto!important;min-width:0!important}
+.topbar .top-info{
+ flex:1 1 auto!important;width:auto!important;min-width:0!important;
+ display:flex!important;flex-direction:row!important;flex-wrap:nowrap!important;
+ align-items:center!important;justify-content:flex-end!important;gap:6px!important;
+ overflow-x:auto!important;overflow-y:hidden!important;white-space:nowrap!important;
+ scrollbar-width:none!important;padding:2px 0 5px!important;
+}
+.topbar .top-info::-webkit-scrollbar{display:none!important}
+.topbar .top-info .info-pill{flex:0 0 auto!important;white-space:nowrap!important}
+@media(max-width:850px){
+ .topbar{flex-direction:row!important;align-items:center!important;gap:7px!important;padding:8px 9px!important}
+ .topbar .brand-lockup{flex:0 0 auto!important;gap:6px!important}
+ .topbar .crpf-logo{width:39px!important;height:45px!important}
+ .topbar .brand-divider{height:41px!important;width:2px!important;flex:0 0 2px!important}
+ .topbar .brand-title h1{font-size:19px!important;line-height:1!important;margin:0 0 2px!important}
+ .topbar .brand-title h2{font-size:10px!important;line-height:1.1!important;white-space:nowrap!important;margin:0!important}
+ .topbar .dashboard-date{font-size:7px!important;margin-top:2px!important;white-space:nowrap!important}
+ .topbar .tricolour-line{height:3px!important;margin-top:4px!important;max-width:120px!important}
+ .topbar .india-flag{display:none!important}
+ .topbar .top-info{flex:1 1 0!important;width:auto!important;min-width:0!important;justify-content:flex-end!important;gap:4px!important}
+ .topbar .top-info .info-pill{font-size:8px!important;padding:4px 6px!important;line-height:1.2!important}
+ .topbar .top-info .nco-pill,.topbar .top-info .so-pill{max-width:none!important;white-space:nowrap!important}
+}
+@media(max-width:430px){
+ .topbar{gap:5px!important;padding-left:6px!important;padding-right:6px!important}
+ .topbar .crpf-logo{width:34px!important;height:40px!important}
+ .topbar .brand-divider{height:37px!important}
+ .topbar .brand-title h1{font-size:17px!important}
+ .topbar .brand-title h2{font-size:9px!important}
+ .topbar .dashboard-date{font-size:6px!important}
+ .topbar .top-info .info-pill{font-size:7px!important;padding:4px 5px!important}
+}
+</style>
 </head>
 
 <body>

@@ -3,553 +3,878 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>CRPF Smart Mess Manager - Members</title>
-<link rel="manifest" href="manifest.webmanifest">
-<link rel="icon" type="image/png" sizes="192x192" href="assets/crpf-home-icon.png?v=1">
-<link rel="apple-touch-icon" sizes="64x64" href="assets/crpf-home-icon.png?v=1">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CRPF Mess - Members Management</title>
 <style>
-:root{--g:#176747;--deep:#10563e;--bg:#f2f6f3;--white:#fff;--text:#214d3b;--muted:#78857e;--border:#dce5df;--red:#bd3942}
-*{box-sizing:border-box}
-body{margin:0;background:var(--bg);font-family:Arial,sans-serif;color:var(--text);font-size:14px}
-header{position:relative;display:flex;align-items:center;gap:12px;background:linear-gradient(135deg,#073c2b 0%,#176747 55%,#0b4d36 100%);color:white;padding:13px 15px;border-bottom:3px solid #d6b53c;box-shadow:0 5px 14px #102f202b}
-.brand-mark{width:46px;height:46px;flex:0 0 46px;display:grid;place-items:center;border:2px solid #e4c45a;border-radius:12px;background:linear-gradient(145deg,#f5e5a0,#b58b25 48%,#f4df8b);box-shadow:0 3px 0 #765b19,0 5px 9px #001c12;color:#123f2d;font-weight:900;font-size:11px;letter-spacing:.5px;text-shadow:0 1px #fff8}
-.brand-copy{min-width:0}
-header h1{margin:0 0 5px;font-size:clamp(17px,4vw,22px);letter-spacing:.2px;text-shadow:0 2px 3px #001c12}
-header p{margin:0;font-size:12px;opacity:.92}
-nav{display:flex;gap:7px;overflow-x:auto;background:linear-gradient(180deg,#176747,#0c4e37);padding:9px 10px;border-bottom:3px solid #d6b53c;box-shadow:0 5px 12px #163c2828;scrollbar-width:thin}
-nav a{white-space:nowrap;text-decoration:none;color:#f4fff8;padding:9px 12px;border-radius:9px;font-size:12px;font-weight:bold;background:linear-gradient(180deg,#25845f,#10563e);border:1px solid #64a987;box-shadow:0 3px 0 #073c2b,0 1px 0 #ffffff30 inset;transition:transform .15s,filter .15s}
-nav a:active{transform:translateY(2px);box-shadow:0 1px 0 #073c2b}
-nav a.active{background:linear-gradient(180deg,#e3c85f,#b18b22);border-color:#f7e7a0;color:#183e2d;box-shadow:0 3px 0 #765b19,0 1px 0 #ffffff88 inset}
-@media(max-width:420px){header{padding:11px 10px;gap:10px}.brand-mark{width:42px;height:42px;flex-basis:42px;border-radius:10px}nav{gap:6px;padding:8px}nav a{padding:8px 10px;font-size:11px}}
-main{max-width:1100px;margin:13px auto;padding:0 11px 28px}
-.card{background:white;border:1px solid var(--border);border-radius:12px;padding:13px;margin-bottom:12px;box-shadow:0 2px 8px #183d2910}
-h2{font-size:18px;margin:0 0 11px}
-h3{font-size:16px;margin:0 0 10px}
-label{display:block;font-weight:bold;font-size:12px;margin:10px 0 5px}
-input,select,textarea{width:100%;padding:10px;border:1px solid var(--border);border-radius:8px;font-size:14px;background:white;color:var(--text);min-width:0}
-textarea{min-height:65px;resize:vertical}
-button{border:0;border-radius:8px;padding:9px 11px;font-weight:bold;cursor:pointer;font-size:12px}
-.primary{background:var(--g);color:white}
-.secondary{background:#eaf3ed;color:var(--g)}
-.danger{background:#fff0f0;color:var(--red)}
-.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px;margin-bottom:12px}
-.stat{background:white;border:1px solid var(--border);border-radius:10px;padding:10px;min-width:0}
-.stat strong{display:block;font-size:21px;color:var(--g)}
-.stat span{font-size:11px;color:var(--muted);line-height:1.4}
-.toolbar{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;align-items:center;margin-bottom:10px}
-.toolbar input{min-width:0}
-.filters{display:grid;grid-template-columns:1fr;gap:8px;margin-bottom:10px}
-.member{display:grid;grid-template-columns:43px minmax(0,1fr) auto;gap:9px;align-items:center;padding:9px 0;border-top:1px solid var(--border)}
-.photo{width:43px;height:43px;border-radius:9px;object-fit:cover;background:#eaf3ed;display:block}
-.avatar{width:43px;height:43px;border-radius:9px;background:#eaf3ed;display:grid;place-items:center;color:var(--g);font-size:20px}
-.memberInfo{min-width:0}
-.member h4{margin:0 0 4px;font-size:14px;overflow-wrap:anywhere}
-.meta{font-size:11px;color:var(--muted);line-height:1.5;overflow-wrap:anywhere}
-.pill{display:inline-block;background:#eaf3ed;color:var(--g);padding:3px 6px;border-radius:20px;font-size:10px;margin-top:3px}
-.inactive{background:#fff0f0;color:var(--red)}
-.memberActions{display:flex;gap:5px;flex-wrap:wrap;justify-content:flex-end}
-.memberActions button{padding:8px 9px}
-.empty{padding:18px 8px;text-align:center;color:var(--muted);font-size:13px}
-.help{color:var(--muted);font-size:11px;line-height:1.5}
-.grid{display:grid;grid-template-columns:1fr;gap:0 12px}
-.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
-.actions button{flex:1;min-width:100px}
-#message{font-size:12px;line-height:1.5;margin-top:9px}
-.detailTop{display:flex;align-items:center;gap:12px;margin-bottom:12px}
-.detailPhoto{width:76px;height:76px;object-fit:cover;border-radius:12px;background:#eaf3ed}
-.detailName{font-size:18px;font-weight:bold;overflow-wrap:anywhere}
-.detailGrid{display:grid;grid-template-columns:1fr 1fr;gap:7px}
-.detailItem{padding:9px;background:#f6f9f7;border:1px solid #e7eee9;border-radius:8px;min-width:0}
-.detailItem small{display:block;color:var(--muted);font-size:11px;margin-bottom:4px}
-.detailItem strong{font-size:13px;overflow-wrap:anywhere}
-.detailNotes{margin-top:9px;padding:10px;background:#f6f9f7;border-radius:8px;line-height:1.5;overflow-wrap:anywhere}
-.sectionHead{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:10px}
-.sectionHead h2{margin:0}
-.formCard{border:1px solid #cbded1}
-.formIntro{font-size:12px;line-height:1.5;color:var(--muted);margin:0 0 9px}
-.hidden{display:none!important}
-@media(min-width:600px){
- .grid{grid-template-columns:repeat(2,minmax(0,1fr))}
- .filters{grid-template-columns:minmax(0,1fr) 180px}
- .member{grid-template-columns:46px minmax(0,1fr) auto}
- .photo,.avatar{width:46px;height:46px}
- .detailGrid{grid-template-columns:repeat(3,minmax(0,1fr))}
+:root {
+  --bg:#f2f6f3;--sidebar:#10563e;--card:#ffffff;
+  --border:#dce5df;--yellow:#c49a24;--green:#176747;
+  --white:#fff;--muted:#78857e;
 }
-@media(max-width:420px){
- main{padding:0 8px 20px}
- .card{padding:10px}
- .member{grid-template-columns:37px minmax(0,1fr);gap:8px}
- .photo,.avatar{width:37px;height:37px}
- .memberActions{grid-column:2;justify-content:flex-start;margin-top:1px}
- .memberActions button{padding:7px 9px}
- .toolbar{grid-template-columns:minmax(0,1fr) auto}
- .toolbar button{padding:9px 10px}
- .stat{padding:8px}
- .stat strong{font-size:18px}
- .detailGrid{grid-template-columns:1fr 1fr}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:Arial,sans-serif;background:var(--bg);color:white}
+.app{display:flex;min-height:100vh}
+.sidebar{width:190px;min-width:190px;background:linear-gradient(180deg,#10563e,#10563e)}
+.brand{text-align:center;padding:20px 8px;border-bottom:1px solid #1b684e}
+.brand .emblem{font-size:35px}
+.brand h2{color:var(--yellow);font-size:19px;margin-top:7px}
+.brand p{font-size:11px;margin-top:6px;color:#d2e5db}
+.nav{padding:14px 0}
+.nav a{display:block;padding:14px 11px;color:white;text-decoration:none;font-size:13px;font-weight:bold;margin:3px 8px;border-radius:7px}
+.nav a:hover,.nav a.active{background:#176747}
+.main{flex:1;min-width:0}
+.topbar{background:#10563e;border-bottom:1px solid #1b704f;padding:14px 22px;display:flex;justify-content:space-between;align-items:center;gap:10px}
+.topbar h1{font-size:21px;color:var(--yellow)}
+.topbar p{font-size:12px;color:#d0e5d9;margin-top:5px}
+.content{padding:22px}
+.page-title{margin-bottom:20px}
+.page-title h2{font-size:24px;margin-bottom:5px}
+.page-title p{color:var(--muted);font-size:13px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:13px;margin-bottom:18px}
+.stat,.panel{background:linear-gradient(140deg,#ffffff,#10563e);border:1px solid var(--border);border-radius:12px;padding:17px}
+.stat span{font-size:13px;color:#d9e9e1}
+.stat strong{display:block;font-size:25px;margin-top:9px}
+.panel{margin-bottom:18px}
+.panel h3{font-size:17px;margin-bottom:16px}
+.toolbar{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:16px}
+input,select,textarea{background:#041f17;color:white;border:1px solid #26724f;border-radius:6px;padding:11px;width:100%;font-size:13px}
+input::placeholder,textarea::placeholder{color:#93aa9d}
+input[type=file]{padding:8px}
+.search{max-width:330px}
+button{border:0;border-radius:6px;padding:11px 15px;font-size:13px;font-weight:bold;cursor:pointer}
+.primary{background:#087b45;color:white}
+.secondary{background:#14563e;color:white;border:1px solid #38835e}
+.danger{background:#a83232;color:white}
+button:hover{filter:brightness(1.15)}
+table{width:100%;border-collapse:collapse;font-size:12px;min-width:750px}
+th{text-align:left;color:#b4d3c4;padding:12px 9px;border-bottom:1px solid #285541}
+td{padding:11px 9px;border-bottom:1px solid #193e30;vertical-align:middle}
+.table-wrap{overflow-x:auto}
+.photo{width:38px;height:38px;border-radius:50%;object-fit:cover;background:#164d38}
+.status{padding:5px 8px;border-radius:20px;font-size:10px;background:#145d3b;color:#9ff0bb}
+.inactive{background:#613535;color:#ffc1c1}
+.actions{display:flex;flex-wrap:nowrap;align-items:center;justify-content:flex-start;gap:3px;white-space:nowrap;min-width:max-content}
+.actions button{padding:5px 7px;font-size:10px;line-height:1.15;min-width:0;white-space:nowrap}
+td.no-print{white-space:nowrap}
+.table-wrap table{min-width:900px}
+.table-wrap th:nth-child(2),.table-wrap td:nth-child(2),
+.table-wrap th:nth-child(3),.table-wrap td:nth-child(3),
+.table-wrap th:nth-child(6),.table-wrap td:nth-child(6){white-space:nowrap}
+.table-wrap th:nth-child(3),.table-wrap td:nth-child(3){min-width:125px}
+.table-wrap th:nth-child(6),.table-wrap td:nth-child(6){min-width:92px}
+.form-actions{display:flex;flex-wrap:wrap;justify-content:flex-end;align-items:center;gap:8px;margin-top:20px;width:100%;max-width:100%}
+.form-actions button{flex:0 1 auto;min-width:0;max-width:100%;white-space:normal}
+.modal-box{width:100%;max-width:750px;overflow-x:hidden}
+@media(max-width:480px){
+ .modal{padding:10px}
+ .modal-box{padding:14px;margin:10px auto}
+ .form-actions{gap:7px}
+ .form-actions button{padding:9px 10px;font-size:12px}
 }
+.empty{text-align:center;color:var(--muted);padding:30px}
+.modal{display:none;position:fixed;inset:0;background:#000b;z-index:10;overflow:auto;padding:20px}
+.modal-box{background:#073326;border:1px solid #26724f;border-radius:12px;max-width:750px;margin:25px auto;padding:22px}
+.modal-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:20px}
+.modal-head h3{color:var(--yellow)}
+.close{background:#663333;color:white}
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.field label{display:block;font-size:12px;color:#c5dfd2;margin-bottom:7px}
+.field.full{grid-column:1/-1}
+.form-actions{display:flex;justify-content:flex-end;gap:9px;margin-top:20px}
+.details{line-height:2.1;font-size:14px}
+.payment-summary{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin:12px 0}.payment-summary>div{background:#041f17;border:1px solid #dce5df;border-radius:8px;padding:12px}.payment-summary small{display:block;color:#78857e}.payment-summary strong{display:block;font-size:18px;margin-top:5px}.payment-list{max-height:220px;overflow:auto;margin:12px 0}.payment-member{width:100%;text-align:left;margin:5px 0;background:#ffffff;color:#fff;border:1px solid #dce5df}.payment-member.selected{border-color:#c49a24;background:#14563e}
+.details img{width:100px;height:100px;object-fit:cover;border-radius:50%;margin-bottom:15px}
+.footer{text-align:center;padding:20px;color:#789d8a;font-size:11px}
+@media(max-width:700px){
+ .app{display:block}.sidebar{width:100%;min-width:0}
+ .brand{padding:10px}.brand .emblem{font-size:25px}
+ .brand h2{font-size:16px}
+ .nav{display:flex;overflow-x:auto;padding:8px;gap:4px}
+ .nav a{white-space:nowrap;padding:11px;margin:0;font-size:11px}
+ .topbar{align-items:flex-start;flex-direction:column}
+ .content{padding:12px}.stats{gap:8px}
+ .stat{padding:12px}.stat strong{font-size:20px}
+ .form-grid{grid-template-columns:1fr}
+ .field.full{grid-column:auto}
+}
+@media print{
+ body{background:white!important;color:black!important}
+ .sidebar,.topbar,.toolbar,.no-print,.modal{display:none!important}
+ .main,.content,.panel{background:white!important;color:black!important;border:0!important}
+ .panel{padding:0}
+ table{min-width:0;color:black}
+ th,td{color:black!important;border-bottom:1px solid #ccc}
+ .status{color:black!important;background:#eee!important}
+ .print-heading{display:block!important}
+ .footer{color:black}
+}
+.print-heading{display:none;text-align:center;color:black!important;margin-bottom:20px}
+.account-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;margin:10px 0}.account-grid>div,.meal-entry{background:#041f17;border:1px solid #dce5df;border-radius:8px;padding:12px}.account-grid small{display:block;color:#78857e;font-size:11px}.account-grid strong{display:block;font-size:18px;margin-top:6px}.meal-entry{margin:8px 0;line-height:1.6}.meal-head{display:flex;justify-content:space-between}.meal-entry small{color:#78857e}.view-heading{margin:18px 0 10px;color:var(--yellow)}@media(max-width:480px){.account-grid strong{font-size:15px}}
+.app-toast{position:fixed;top:14px;left:50%;transform:translateX(-50%);z-index:20000;width:min(92vw,520px);display:flex;align-items:center;gap:11px;padding:13px 15px 16px;border-radius:12px;border:1px solid #55bd83;background:#e3f8eb;color:#104d2e;box-shadow:0 12px 35px #0007;font-size:14px;font-weight:700;animation:toastDrop .22s ease-out;overflow:hidden}
+.app-toast.success{background:#e3f8eb;border-color:#55bd83;color:#104d2e}
+.app-toast.error{background:#ffe8e8;border-color:#d96a70;color:#76252b}
+.app-toast.warning{background:#fff4d8;border-color:#d8ad45;color:#65470b}
+.app-toast.info{background:#e5f1ff;border-color:#75a8df;color:#173e69}
+.app-toast-icon{width:25px;height:25px;flex:0 0 25px;border-radius:50%;display:grid;place-items:center;background:#b5e9c7;color:#075b37;font-size:16px}
+.app-toast.error .app-toast-icon{background:#f7c5c8;color:#8e2029}
+.app-toast.warning .app-toast-icon{background:#f8e2a5;color:#78540b}
+.app-toast.info .app-toast-icon{background:#c6ddf8;color:#1d568d}
+.app-toast-message{flex:1;line-height:1.4}
+.app-toast-close{padding:0 3px;border:0;background:transparent;color:inherit;font-size:23px;line-height:1}
+.app-toast-progress{position:absolute;bottom:0;left:0;height:3px;background:currentColor;opacity:.45;animation:toastProgress 4.2s linear forwards}
+@keyframes toastDrop{from{opacity:0;transform:translate(-50%,-12px)}to{opacity:1;transform:translate(-50%,0)}}
+@keyframes toastProgress{from{width:100%}to{width:0}}
+@media(max-width:480px){.app-toast{top:8px;padding:11px 12px 14px;font-size:13px}}
 
-/* Richer member cards and form styling */
-.card{border:1px solid #b9d2c3;border-radius:15px;box-shadow:0 5px 16px rgba(16,86,62,.12),0 1px 0 #fff inset;padding:15px}
-.stats .stat{border:1px solid #a9cbb7;background:linear-gradient(145deg,#fff 0%,#edf7f0 100%);box-shadow:0 4px 10px rgba(16,86,62,.10)}
-.stat strong{color:#0b6845}
-.stat span{color:#526c5d}
-.formCard{background:linear-gradient(145deg,#ffffff 0%,#f0f8f2 100%);border:2px solid #7db497;box-shadow:0 7px 20px rgba(13,91,59,.16)}
-.formCard .sectionHead{margin:-15px -15px 13px;padding:13px 15px;background:linear-gradient(120deg,#0c563b,#21845b);color:#fff;border-radius:12px 12px 0 0;border-bottom:3px solid #d9b83f}
-.formCard .sectionHead h2{color:#fff}
-.formIntro{background:#e2f2e8;border-left:4px solid #168253;border-radius:7px;padding:9px 11px;color:#315b43}
-label{color:#155c3f;font-size:12px;letter-spacing:.15px}
-input,select,textarea{border:1.5px solid #b5d0bf;background:#fff;box-shadow:0 1px 2px rgba(8,65,42,.05);transition:border-color .15s,box-shadow .15s}
-input:focus,select:focus,textarea:focus{outline:none;border-color:#128252;box-shadow:0 0 0 3px rgba(18,130,82,.15)}
-button.primary{background:linear-gradient(180deg,#21865c,#10563e);color:#fff;border:1px solid #0b4d35;box-shadow:0 3px 0 #083d2b,0 1px 0 #ffffff35 inset}
-button.secondary{background:linear-gradient(180deg,#edf8f0,#d8ecdf);color:#105c3d;border:1px solid #a9cbb5;box-shadow:0 2px 0 #b8d3c1}
-button.danger{background:linear-gradient(180deg,#fff4f4,#ffe3e3);border:1px solid #e7b7b7}
-.member{padding:11px 9px;margin:5px 0;border:1px solid #d4e5da;border-radius:11px;background:linear-gradient(100deg,#fff,#f5faf6);box-shadow:0 2px 6px rgba(18,75,48,.06)}
-.member h4{color:#124f37}
-.pill{background:#d9f0e2;color:#0b6845;font-weight:bold}
-.inactive{background:#ffe4e4;color:#a62e37}
-.detailItem{background:linear-gradient(145deg,#fff,#eaf5ed);border-color:#c9dfd1}
-.detailItem strong{color:#14583d}
-@media(max-width:420px){.card{padding:11px}.formCard .sectionHead{margin:-11px -11px 12px;padding:11px}}
 
-.leave-fields{margin:14px 0;padding:12px;border:1px solid #8fbea2;border-radius:12px;background:linear-gradient(140deg,#f2faf4,#e2f2e8)}.leave-fields h3,.leave-card h3{color:#10563e;margin:0 0 9px}.leave-card{margin-top:12px;padding:12px;border:1px solid #8fbea2;border-radius:12px;background:linear-gradient(140deg,#f5fbf6,#e4f3e9)}.leave-dates{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:7px}.leave-dates>div{padding:9px;border-radius:8px;background:#fff;border:1px solid #c7dfcf;min-width:0}.leave-dates small{display:block;color:#647b6b;font-size:10px;margin-bottom:5px}.leave-dates strong{font-size:12px;color:#10563e;overflow-wrap:anywhere}@media(max-width:420px){.leave-dates{grid-template-columns:1fr 1fr}}
+/* Mobile app-style slide-out navigation */
+.mobile-menu-toggle{display:none;border:1px solid #438568;background:#176747;color:#fff;border-radius:9px;width:42px;height:40px;font-size:23px;line-height:1;cursor:pointer;flex:0 0 42px}
+.mobile-menu-backdrop{display:none}
+@media(max-width:850px){
+ .topbar{flex-direction:row!important;align-items:center!important}
+ .mobile-menu-toggle{display:inline-flex;align-items:center;justify-content:center}
+ .topbar>div:first-of-type,.topbar>.heading{min-width:0;flex:1}
+ .sidebar{position:fixed!important;z-index:10002;top:0;left:0;width:min(285px,82vw)!important;min-width:0!important;height:100vh;height:100dvh;min-height:100vh!important;overflow-y:auto;transform:translateX(-105%);transition:transform .25s ease;box-shadow:8px 0 28px #0008}
+ body.mobile-nav-open .sidebar{transform:translateX(0)}
+ body.mobile-nav-open{overflow:hidden}
+ .sidebar .brand{padding:18px 8px}
+ .sidebar .nav{display:block;padding:12px 10px;overflow:visible}
+ .sidebar .nav a{display:block;white-space:normal;padding:13px 12px;margin:3px 0;font-size:14px;border-radius:8px}
+ .mobile-menu-backdrop{display:block;position:fixed;inset:0;background:#0009;z-index:10001;opacity:0;pointer-events:none;transition:opacity .25s}
+ body.mobile-nav-open .mobile-menu-backdrop{opacity:1;pointer-events:auto}
+}
 </style>
-<link rel="stylesheet" href="assets/shared-theme.css?v=11">
-</head>
+<style>
+/* Keep member detail view and its action buttons inside narrow phone screens */
+#viewModal{box-sizing:border-box;width:100%;max-width:100vw;padding:10px;overflow-x:hidden}
+#viewModal .modal-box{box-sizing:border-box;width:100%;max-width:620px;min-width:0;margin:10px auto;padding:clamp(10px,3vw,18px);overflow-x:hidden}
+#viewModal .details{box-sizing:border-box;width:100%;max-width:100%;min-width:0;overflow-wrap:anywhere;word-break:break-word;line-height:1.8}
+#viewModal .details img,#viewModal .details iframe{max-width:100%;box-sizing:border-box}
+#viewModal .account-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px;width:100%;max-width:100%}
+#viewModal .account-grid>div{min-width:0;box-sizing:border-box;overflow-wrap:anywhere}
+#viewModal .meal-entry{max-width:100%;min-width:0;box-sizing:border-box;overflow-wrap:anywhere;word-break:break-word}
+#viewModal .form-actions{display:flex;flex-wrap:wrap;justify-content:center;gap:7px;width:100%;max-width:100%;box-sizing:border-box}
+#viewModal .form-actions button{flex:1 1 125px;min-width:0;max-width:100%;white-space:normal;overflow-wrap:anywhere;padding:10px 8px}
+@media(max-width:480px){
+ #viewModal{padding:6px}
+ #viewModal .modal-box{padding:11px;margin:6px auto;border-radius:12px}
+ #viewModal .details{font-size:13px}
+ #viewModal .account-grid{gap:7px}
+ #viewModal .account-grid>div{padding:10px}
+ #viewModal .form-actions button{flex:1 1 105px;font-size:12px}
+}
+</style></head>
 <body>
-<header class="crpf-top shared-crpf-header">
- <div class="crpf-brand">
-  <img class="brandLogo" src="assets/crpf-monogram.svg" alt="CRPF Monogram">
-  <div class="brandText"><div class="crpf-word">CRPF</div><h1>Cooking House System</h1><div class="tricolor-line"><i></i><i></i><i></i></div><div class="office-clock" aria-label="Current time and date"><span class="clock-symbol">◷</span><span>Time</span><strong data-clock>--:--:--</strong><span class="calendar-symbol">▦</span><span>Date</span><strong data-date>--/--/----</strong></div></div>
-  <div class="india-flag" aria-label="Indian flag"><span></span><span><b>☸</b></span><span></span></div>
+<div class="app">
+<aside class="sidebar">
+ <div class="brand">
+  <div class="emblem">🛡️</div>
+  <h2>CRPF MESS</h2>
+  <p>Cooking House System</p>
  </div>
- <div class="office-cards" aria-label="Mess information">
-  <article><small>🏛 Mess</small><strong data-office="mess">CRPF Smart Mess</strong></article>
-  <article><small>👤 NCO</small><strong data-office="nco">Not set</strong></article>
-  <article><small>📋 SO</small><strong data-office="so">Not set</strong></article>
+ <nav class="nav">
+  <a href="index.html">▦ Dashboard</a>
+  <a class="active" href="members.html">👥 Members</a>
+  <a href="ration-store.html">📦 Ration Store</a>
+  <a href="purchases.html">🛒 Purchases</a>
+  <a href="recipes.html">🍲 Recipes</a>
+  <a href="making-menu.html">📅 Making Menu</a>
+  <a href="mess-staff.html">👨‍🍳 Mess Staff</a>
+  <a href="accounts.html">💰 Accounts</a>
+  <a href="reports.html">📊 Reports</a>
+  <a href="mess-handover.html">🔄 Mess Handover</a>
+  <a href="settings.html">⚙️ Settings</a>
+  <a href="backup.html">💾 Backup & Restore</a><a href="software-guide.html">📖 हिन्दी गाइड</a>
+ </nav>
+</aside>
+
+<main class="main">
+<header class="topbar">
+ <div>
+  <h1>CRPF Mess Management System</h1>
+  <p>Cooking House | Members Management</p>
  </div>
- 
+ <div id="date"></div>
 </header>
-<nav class="shared-crpf-nav"><a href="index.html" class="">⌂ Home</a><a href="members.html" class="active">👥 Members</a><a href="mess-staff.html" class="">🛡 Mess Staff</a><a href="store.html" class="">📦 Ration Store</a><a href="recipes.html" class="">🍲 Recipes</a><a href="meals.html" class="">🍴 Making Meals</a><a href="accounts.html" class="">💳 Accounts</a><a href="settlement.html" class="">🧾 Mess Handover</a><a href="backup.html" class="">💾 Backup</a><a href="settings.html" class="">⚙ Settings</a><a href="records.html" class="">📁 Records</a></nav>
 
+<div class="content">
+ <div class="page-title">
+  <h2>👥 Members Management</h2>
+  <p>Register, manage and view all mess members</p>
+ </div>
 
+ <div class="stats">
+  <div class="stat" role="button" tabindex="0" style="cursor:pointer" onclick="setMemberFilter('All')"><span>Total Members ↗</span><strong id="total">0</strong></div>
+  <div class="stat" role="button" tabindex="0" style="cursor:pointer" onclick="setMemberFilter('Active')"><span>Active Members ↗</span><strong id="active">0</strong></div>
+  <div class="stat" role="button" tabindex="0" style="cursor:pointer" onclick="setMemberFilter('Inactive')"><span>Inactive Members ↗</span><strong id="inactive">0</strong></div>
+  <div class="stat" role="button" tabindex="0" style="cursor:pointer" onclick="setMemberFilter('Transferred')"><span>Transferred ↗</span><strong id="transferred">0</strong></div>
+  <div class="stat" role="button" tabindex="0" style="cursor:pointer" onclick="setMemberFilter('Leave')"><span>On Leave ↗</span><strong id="onLeave">0</strong></div>
+ </div>
 
-<main>
-<!-- Details always appear above the register and form -->
-<section class="card hidden" id="detailsCard">
-<div class="sectionHead">
-<h2>Member Details</h2>
-<button type="button" class="secondary" id="closeDetails">Close ✕</button>
+ <section class="panel no-print">
+  <div class="toolbar">
+   <h3>Member Records</h3>
+   <div style="display:flex;gap:8px;flex-wrap:wrap">
+    <button class="secondary" onclick="printList()">📄 Download PDF</button>
+    <button type="button" id="addMemberBtn" class="primary">＋ Add New Member</button>
+   </div>
+  </div>
+  <div class="toolbar">
+   <input class="search" id="search" placeholder="Search name, force number or rank..." oninput="render()">
+   <select id="filter" style="max-width:180px" onchange="render()">
+    <option value="All">All Members</option>
+    <option value="Active">Active</option>
+    <option value="Inactive">Inactive</option><option value="Transferred">Transferred</option><option value="Leave">Leave</option>
+   </select>
+  </div>
+ </section>
+
+ <section class="panel">
+  <div class="print-heading">
+   <h2>CRPF MESS – COOKING HOUSE</h2>
+   <h3 id="printMess">Members Register</h3>
+   <p id="printDate"></p>
+  </div>
+  <div class="table-wrap">
+   <table>
+    <thead><tr>
+     <th>Photo</th><th>Force No.</th><th>Member Name</th>
+     <th>Rank</th><th>Contact</th><th>Joining Date</th>
+     <th>Status</th><th class="no-print">Actions</th>
+    </tr></thead>
+    <tbody id="memberRows"></tbody>
+   </table>
+  </div>
+  <div class="empty" id="empty" style="display:none">No members found. Click Add New Member to register.</div>
+ </section>
 </div>
-<div id="detailBox"></div>
-<div class="actions">
-<button type="button" class="primary" id="detailEdit">Edit Member</button>
-<button type="button" class="secondary" id="detailCloseBottom">Close Details</button>
-</div>
-</section>
-
-<section class="card" id="memberLeaveCard" style="border:2px solid #d8bd58;background:linear-gradient(135deg,#fffdf3,#edf7f0);">
-<div class="sectionHead"><h2 class="section-title">🛌 Jawans On Leave</h2><span class="pill" id="memberLeaveCount">0 On Leave</span></div>
-<div id="memberLeaveList" class="help">Leave entry Accounts section se hogi. Yahan current leave par gaye jawan dikhेंगे.</div>
-</section>
-
-<section class="stats">
-<div class="stat"><strong id="totalCount">0</strong><span>Total Members</span></div>
-<div class="stat"><strong id="activeCount">0</strong><span>Active Members</span></div>
-<div class="stat"><strong id="inactiveCount">0</strong><span>Inactive / Transferred</span></div>
-</section>
-
-<section class="card">
-<div class="toolbar">
-<div>
-<h2 class="page-title">👥 Members Management</h2>
-<div class="help">Register, manage and view all mess members</div>
-</div>
-<button type="button" class="primary" id="openAdd">＋ Add New</button>
-</div>
-
-<div class="filters">
-<input id="search" placeholder="Search name, service ID, rank, mobile..." aria-label="Search members">
-<select id="statusFilter" aria-label="Filter member status">
-<option value="All">All Members</option>
-<option value="Active">Active</option>
-<option value="Transferred">Transferred</option>
-<option value="Inactive">Inactive</option>
-<option value="On Leave">On Leave</option>
-</select>
-</div>
-<div id="memberList"></div>
-</section>
-
-<section class="card formCard hidden" id="formCard">
-<div class="sectionHead">
-<h2 id="formTitle">Add New Member</h2>
-<button type="button" class="secondary" id="closeForm">Close ✕</button>
-</div>
-<p class="formIntro">Member ki details bharein. Default Mess Advance sirf reference amount hai; actual payment Accounts mein record karein.</p>
-
-<form id="memberForm">
-<input id="editId" type="hidden">
-<div class="grid">
-<div><label for="serviceId">Service / Member ID *</label><input id="serviceId" required placeholder="e.g. M2134"></div>
-<div><label for="name">Full Name *</label><input id="name" required placeholder="Jawan ka poora naam"></div>
-<div><label for="rank">Rank</label>
-<select id="rank">
-<option>Constable</option><option>Head Constable</option><option>ASI</option><option>SI</option><option>Inspector</option><option>Other</option>
-</select></div>
-<div><label for="unit">Unit *</label><input id="unit" required placeholder="Enter Unit"></div>
-<div><label for="mobile">Mobile Number</label><input id="mobile" type="tel" placeholder="Country code ke saath"></div>
-<div><label for="joiningDate">Joining Date</label><input id="joiningDate" type="date"></div>
-<div><label for="status">Member Status</label>
-<select id="status"><option value="Active">Active</option><option value="Transferred">Transferred</option><option value="Inactive">Inactive</option></select></div>
-<div><label for="movementOrder">Movement Order Upload (PDF / Photo)</label><input id="movementOrder" type="file" accept="application/pdf,image/*"><p class="help">PDF ya image, maximum 4 MB.</p><div id="movementOrderStatus" class="help"></div></div>
-<div><label for="photo">Member Photo (optional)</label><input id="photo" type="file" accept="image/*"><p class="help">Photo compress karke save hogi.</p></div>
-</div>
-<label for="notes">Notes</label>
-<textarea id="notes" placeholder="Additional details"></textarea>
-<div class="actions">
-<button class="primary" type="submit" id="saveBtn">Save Member</button>
-<button class="secondary" type="button" id="clearBtn">Clear Form</button>
-</div>
-<div id="message" aria-live="polite"></div>
-</form>
-</section>
+<div class="footer">CRPF Mess Management System | Members Register</div>
 </main>
+</div>
 
+<!-- ADD / EDIT FORM -->
+<div class="modal" id="formModal">
+ <div class="modal-box">
+  <div class="modal-head">
+   <h3 id="formTitle">Add New Member</h3>
+   <button class="close" onclick="closeForm()">✕</button>
+  </div>
+  <form id="memberForm">
+   <div class="form-grid">
+    <div class="field">
+     <label>Force Number *</label>
+     <input id="forceNo" required placeholder="Enter force number">
+    </div>
+    <div class="field">
+     <label>Member Name *</label>
+     <input id="name" required placeholder="Full name">
+    </div>
+    <div class="field">
+     <label>Rank *</label>
+     <select id="rank" required>
+      <option value="">Select Rank</option>
+      <option>Commandant</option><option>Second-in-Command</option>
+      <option>Deputy Commandant</option><option>Assistant Commandant</option>
+      <option>Inspector</option><option>Sub Inspector</option>
+      <option>Assistant Sub Inspector</option><option>Head Constable</option>
+      <option>Constable</option><option>Other</option>
+     </select>
+    </div>
+    <div class="field">
+     <label>Contact Number</label>
+     <input id="contact" type="tel" placeholder="Mobile number">
+    </div>
+    <div class="field">
+     <label>Joining Date *</label>
+     <input id="joiningDate" type="date" required>
+    </div>
+    
+    <div class="field">
+     <label>Status</label>
+     <select id="status"><option>Active</option><option>Inactive</option><option>Transferred</option><option>Leave</option></select>
+    </div>
+    <div class="field">
+     <label>Member Photo</label>
+     <div style="display:flex;gap:8px;flex-wrap:wrap;margin:6px 0">
+      <button type="button" class="secondary" style="padding:11px 13px" onclick="document.getElementById('photoCamera').click()">📷 कैमरा</button>
+      <button type="button" class="secondary" style="padding:11px 13px" onclick="document.getElementById('photo').click()">🖼️ गैलरी</button>
+      <button type="button" class="secondary" style="padding:11px 13px" onclick="document.getElementById('photoFile').click()">📁 फ़ाइल चुनें</button>
+     </div>
+     <input id="photoCamera" type="file" accept="image/*" capture="environment" style="display:none">
+     <input id="photo" type="file" accept="image/*" style="display:none">
+     <input id="photoFile" type="file" accept="image/*" style="display:none">
+     <small class="muted" id="photoChoiceNote">कैमरा, गैलरी या फ़ाइलों में से फोटो चुनें। फोटो अपने आप छोटी होकर सेव होगी।</small>
+    </div>
+    <div class="field">
+     <label>Movement Orders / Document / PDF</label>
+     <div style="display:flex;gap:6px;flex-wrap:nowrap;margin:6px 0;align-items:center">
+      <button type="button" class="secondary" style="padding:10px 9px;font-size:12px;white-space:nowrap" onclick="document.getElementById('documentCamera').click()">📷 कैमरा</button>
+      <button type="button" class="secondary" style="padding:10px 9px;font-size:12px;white-space:nowrap" onclick="document.getElementById('documentGallery').click()">🖼️ गैलरी</button>
+      <button type="button" class="secondary" style="padding:10px 9px;font-size:12px;white-space:nowrap" onclick="document.getElementById('memberDocument').click()">📁 फ़ाइल / PDF</button>
+     </div>
+     <input id="documentCamera" type="file" accept="image/*" capture="environment" style="display:none">
+     <input id="documentGallery" type="file" accept="image/*" style="display:none">
+     <input id="memberDocument" type="file" accept="image/*,.pdf,application/pdf" style="display:none">
+     <small class="muted">Movement Order की फोटो कैमरे से लें, गैलरी से चुनें या PDF / फ़ाइल अपलोड करें। PDF अधिकतम 2 MB।</small>
+    </div>
+    <div class="field full">
+     <label>Address / Remarks</label>
+     <textarea id="remarks" rows="2" placeholder="Optional details"></textarea>
+    </div>
+   </div>
+   <div class="form-actions">
+    <button type="button" class="secondary" onclick="closeForm()">Cancel</button>
+    <button type="submit" class="primary">Save Member</button>
+   </div>
+  </form>
+ </div>
+</div>
+
+<!-- VIEW DETAILS -->
+<div class="modal" id="viewModal">
+ <div class="modal-box">
+  <div class="modal-head">
+   <h3>Member Details</h3>
+   <button class="close" onclick="closeView()">✕</button>
+  </div>
+  <div id="memberDetails" class="details"></div>
+  <div class="form-actions">
+   <button class="secondary" onclick="printMember()">📄 Member PDF</button>
+   <button class="primary" onclick="openPayment()">💰 Payment</button>
+   <button class="secondary" onclick="openLeaveCard()">🏖️ Leave Card</button>
+   <button class="primary" onclick="whatsAppMember()">WhatsApp</button>
+   <button class="primary" onclick="closeView()">Close</button>
+  </div>
+ </div>
+</div>
+
+<!-- MEMBER LEAVE CARD -->
+<div class="modal" id="leaveModal">
+ <div class="modal-box">
+  <div class="modal-head"><h3>🏖️ Member Leave / Chhutti Card</h3><button class="close" onclick="closeLeaveCard()">✕</button></div>
+  <div id="leaveMemberTitle" class="view-heading">Member Leave</div>
+  <div id="leaveCurrentInfo" class="meal-entry">Leave details</div>
+  <div class="form-grid">
+   <div class="field"><label>Chhutti Shuru Date *</label><input id="leaveFrom" type="date"></div>
+   <div class="field"><label>Wapas Aane Ki Date *</label><input id="leaveTo" type="date"></div>
+   <div class="field full"><label>Leave Reason / Purpose</label><input id="leaveReason" type="text" placeholder="Enter reason for leave"></div>
+   <div class="field full"><label>Remarks</label><textarea id="leaveRemarks" rows="2" placeholder="Optional remarks"></textarea></div>
+  </div>
+  <div class="form-actions">
+   <button class="secondary" onclick="closeLeaveCard()">Close</button>
+   <button class="secondary" id="returnFromLeaveBtn" onclick="returnFromLeave()" style="display:none">↩ Mark Returned / Active</button>
+   <button class="primary" onclick="saveLeave()">💾 Save Leave</button>
+  </div>
+  <h3 class="view-heading">Leave History</h3>
+  <div id="leaveHistoryList"></div>
+ </div>
+</div>
+
+<!-- MEMBER PAYMENT -->
+<div class="modal" id="paymentModal">
+ <div class="modal-box">
+  <div class="modal-head"><h3>Member Payment</h3><button class="close" onclick="closePayment()">✕</button></div>
+  <div id="paymentEntry">
+   <h3 class="view-heading" id="paymentMemberTitle">Member Bill</h3>
+   <div id="paymentMemberStatus" class="status" style="display:inline-block;margin-bottom:10px">Active</div>
+   <div class="payment-summary">
+    <div><small>Total Meal Bill</small><strong id="paymentBillTotal">₹0</strong></div>
+    <div><small>Already Mess Cutting Paid</small><strong id="paymentAlreadyPaid">₹0</strong></div>
+    <div><small>Balance Due</small><strong id="paymentBalanceDue">₹0</strong></div>
+    <div><small>Payment Status</small><strong id="paymentBillStatus">Not Paid</strong></div>
+   </div>
+   <div class="meal-entry" id="paymentAutoDetails">Bill and payment details are fetched automatically from this member's records.</div>
+   <div class="field" style="margin:12px 0">
+    <label for="paymentAmount">Payment Received (₹) — jitna paisa mila</label>
+    <input id="paymentAmount" type="number" min="0.01" step="0.01" placeholder="Enter received amount">
+   </div>
+   <div class="form-actions">
+    <button class="secondary" onclick="closePayment()">Close</button>
+    <button class="primary" id="receivePaymentBtn" onclick="receivePayment()">💰 Save Payment</button>
+   </div>
+  </div>
+ </div>
+</div>
 <script>
-(function(){
-"use strict";
+function showToast(message,type="info"){
+ const old=document.getElementById("appToast");
+ if(old)old.remove();
+ const text=String(message??"");
+ const kind=type==="success"||/success|saved|restored|updated|deleted/i.test(text)?"success":
+   type==="error"||/error|failed|not saved|save nahi|unable|invalid|already registered/i.test(text)?"error":
+   type==="warning"||/warning|khali|low stock|please allow/i.test(text)?"warning":"info";
+ const toast=document.createElement("div");
+ toast.id="appToast";
+ toast.className="app-toast "+kind;
+ toast.setAttribute("role",kind==="error"?"alert":"status");
+ toast.setAttribute("aria-live",kind==="error"?"assertive":"polite");
+ const icon=document.createElement("span");
+ icon.className="app-toast-icon";
+ icon.textContent=kind==="success"?"✓":kind==="error"?"!":kind==="warning"?"⚠":"ℹ";
+ const label=document.createElement("span");
+ label.className="app-toast-message";
+ label.textContent=text;
+ const close=document.createElement("button");
+ close.type="button";
+ close.className="app-toast-close";
+ close.setAttribute("aria-label","Close message");
+ close.textContent="×";
+ close.addEventListener("click",()=>toast.remove());
+ const bar=document.createElement("span");
+ bar.className="app-toast-progress";
+ toast.append(icon,label,close,bar);
+ document.body.appendChild(toast);
+ window.setTimeout(()=>{if(toast.isConnected)toast.remove()},4200);
+}
 
-const KEYS=["crpfMessProfessionalV1","crpfMessPrototypeV2"];
-const $=id=>document.getElementById(id);
-const arr=v=>Array.isArray(v)?v:[];
-const txt=v=>String(v??"");
-let photoData="",movementOrderData="",movementOrderName="",data=loadData(),selectedId="";
+const KEY="crpfMessData";
+let members=[];
+let editingId=null;
+let viewingId=null;
 
-function parse(key){
-  try{
-    const x=JSON.parse(localStorage.getItem(key)||"null");
-    return x&&typeof x==="object"&&!Array.isArray(x)?x:null;
-  }catch(e){return null}
+function getData(){
+ try{return JSON.parse(localStorage.getItem(KEY)||"{}")}
+ catch(e){return {}}
 }
-function mergeById(a,b){
-  const out=[],seen=new Set();
-  [...arr(a),...arr(b)].forEach(x=>{
-    const k=x&&x.id!=null?"id:"+x.id:"obj:"+JSON.stringify(x);
-    if(!seen.has(k)){seen.add(k);out.push(x)}
-  });
-  return out;
+function saveData(data){
+ localStorage.setItem(KEY,JSON.stringify(data));
 }
-function loadData(){
-  const old=parse(KEYS[1])||{};
-  const current=parse(KEYS[0])||{};
-  const d={...old,...current};
-  ["members","items","recipes","meals","ledger","expenses","handovers",
-   "limitHistory","movements","purchases","transactions","records","receipts","refunds"
-  ].forEach(k=>d[k]=mergeById(old[k],current[k]));
-  d.settings={...(old.settings||{}),...(current.settings||{})};
-  d.members=arr(d.members).filter(x=>x&&typeof x==="object");
-  d.leaves=arr(d.leaves).filter(x=>x&&typeof x==="object");
-  d.leaveRecords=arr(d.leaveRecords).filter(x=>x&&typeof x==="object");
-  return d;
+function esc(v){
+ return String(v??"").replace(/[&<>"']/g,c=>({
+  "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"
+ })[c]);
 }
-function saveData(){
-  const old=localStorage.getItem(KEYS[0]);
-  if(old){
-    try{localStorage.setItem("crpfMessMembersSafetyCopy",old)}catch(e){}
-  }
-  localStorage.setItem(KEYS[0],JSON.stringify(data));
+function money(v){
+ return "₹"+Number(v||0).toLocaleString("en-IN");
 }
-function makeId(){
-  return "m_"+Date.now().toString(36)+"_"+Math.random().toString(36).slice(2,8);
+function refresh(){
+ // Read-only refresh: preserve every member field and every transaction, including legacy Mess Advance records.
+ const data=getData();
+ members=Array.isArray(data.members)?data.members:[];
+ render();
 }
-function memberName(m){return m.name||m.fullName||m.memberName||"Unnamed member"}
-function memberId(m){return txt(m.serviceId||m.memberId||m.idNumber)}
-function memberStatus(m){return txt(m.status||"Active").trim()||"Active"}
-function statusKey(v){return txt(v||"Active").trim().toLowerCase().replace(/[ _-]+/g," ")}
-function esc(s){
-  return txt(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
-}
-function money(n){return "Rs "+Number(n||0).toLocaleString("en-IN",{maximumFractionDigits:2})}
-function getCommonAdvance(){
-  const s=data.settings||{};
-  const n=Number(s.commonAdvance??s.defaultAdvance??4000);
-  return Number.isFinite(n)&&n>=0?n:4000;
-}
-function today(){
-  const d=new Date();
-  return d.getFullYear()+"-"+String(d.getMonth()+1).padStart(2,"0")+"-"+String(d.getDate()).padStart(2,"0");
-}
-function showMessage(msg,isError){
-  $("message").textContent=msg;
-  $("message").style.color=isError?"#bd3942":"#176747";
-}
-function renderLeaveCard(){
-  const records=arr(data.leaves).concat(arr(data.leaveRecords)).filter(x=>x&&typeof x==="object");
-  const current=records.filter(x=>{
-    const s=txt(x.status||x.state||"on_leave").toLowerCase().replace(/[ -]/g,"_");
-    return !["returned","joined_back","closed","cancelled","completed"].includes(s);
-  });
-  $("memberLeaveCount").textContent=current.length+" On Leave";
-  const box=$("memberLeaveList");box.replaceChildren();
-  if(!current.length){box.textContent="Abhi koi jawan leave par record nahi hai. Leave entry Accounts section se add hogi.";return;}
-  current.forEach(x=>{
-    const m=getMember(x.memberId??x.member_id??x.jawanId??x.serviceId??"");
-    const row=document.createElement("div");row.className="member";
-    const info=document.createElement("div");info.className="memberInfo";
-    const nm=document.createElement("h4");nm.textContent=m?memberName(m):txt(x.memberName||x.name||"Jawan");info.appendChild(nm);
-    const meta=document.createElement("div");meta.className="meta";
-    meta.textContent="Leave From: "+txt(x.leaveFrom||x.fromDate||x.startDate||"—")+" · Joining Back: "+txt(x.joiningBackDate||x.returnDate||x.leaveTo||"—");info.appendChild(meta);
-    row.appendChild(info);box.appendChild(row);
-  });
-}
-function updateStats(){
-  $("totalCount").textContent=data.members.length;
-  $("activeCount").textContent=data.members.filter(m=>statusKey(memberStatus(m))==="active").length;
-  $("inactiveCount").textContent=data.members.filter(m=>["inactive","transferred","on leave"].includes(statusKey(memberStatus(m)))).length;
-}
-function getPhoto(m){return m&&(m.photo||m.photoData||m.image)||""}
-function renderMembers(){
-  const q=$("search").value.toLowerCase().trim(),f=$("statusFilter").value;
-  const leaveRecords=arr(data.leaves).concat(arr(data.leaveRecords)).filter(x=>x&&typeof x==="object");
-  const onLeave=m=>leaveRecords.some(x=>{
-    const ref=String(x.memberId??x.member_id??x.jawanId??x.serviceId??"");
-    const s=txt(x.status||x.state||"on_leave").toLowerCase().replace(/[ -]/g,"_");
-    return (ref===String(m.id)||ref===String(m.serviceId)||ref===String(m.memberId))&&!["returned","joined_back","closed","cancelled","completed"].includes(s);
-  });
-  const list=data.members.filter(m=>{
-    const leave=onLeave(m);
-    const hay=[memberName(m),memberId(m),m.rank,m.mobile,m.unit,leave?"leave on leave":"",memberStatus(m)].join(" ").toLowerCase();
-    const statusMatch=f==="All"||(f==="On Leave"?leave:statusKey(memberStatus(m))===statusKey(f));
-    return (!q||hay.includes(q))&&statusMatch;
-  });
-  const box=$("memberList");box.replaceChildren();
-  if(!list.length){
-    const empty=document.createElement("div");empty.className="empty";
-    empty.textContent="Koi member nahi mila. Add New button se member add karein.";
-    box.appendChild(empty);updateStats();return;
-  }
-  list.forEach(m=>{
-    const el=document.createElement("div");el.className="member";
-    const photo=getPhoto(m),status=memberStatus(m),leaveRecords=arr(data.leaves).concat(arr(data.leaveRecords)),onLeave=leaveRecords.some(x=>{const ref=String(x.memberId??x.member_id??x.jawanId??x.serviceId??"");const s=txt(x.status||x.state||"on_leave").toLowerCase().replace(/[ -]/g,"_");return (ref===String(m.id)||ref===String(m.serviceId)||ref===String(m.memberId))&&!["returned","joined_back","closed","cancelled","completed"].includes(s)});
-    if(photo){
-      const img=document.createElement("img");img.className="photo";img.src=photo;img.alt="Member photo";el.appendChild(img);
-    }else{
-      const avatar=document.createElement("div");avatar.className="avatar";avatar.textContent="👤";el.appendChild(avatar);
-    }
-    const info=document.createElement("div");info.className="memberInfo";
-    const name=document.createElement("h4");name.textContent=memberName(m);info.appendChild(name);
-    const meta=document.createElement("div");meta.className="meta";
-    meta.textContent=(memberId(m)||"No Service ID")+" · "+(m.rank||"Rank not set")+" · "+(m.unit||"Unit not set");
-    info.appendChild(meta);
-    const statusPill=document.createElement("span");statusPill.className="pill"+(status==="Active"?"":" inactive");statusPill.textContent=onLeave?"On Leave":status;info.appendChild(statusPill);
-    el.appendChild(info);
+function setMemberFilter(status){
+  const filter=document.getElementById("filter");
+  if(!filter)return;
+  filter.value=status;
+  render();
+  document.querySelector(".panel.no-print")?.scrollIntoView({behavior:"smooth",block:"start"});
+ }
+ function render(){
+ const query=document.getElementById("search").value.toLowerCase();
+ const filter=document.getElementById("filter").value;
+ const active=members.filter(m=>(m.status||"Active")==="Active");
+  const transferred=members.filter(m=>m.status==="Transferred");
+ document.getElementById("total").textContent=members.length;
+ document.getElementById("active").textContent=active.length;
+ document.getElementById("inactive").textContent=members.filter(m=>m.status==="Inactive").length;
+  const transferStat=document.getElementById("transferred");if(transferStat)transferStat.textContent=transferred.length;
+  const leaveStat=document.getElementById("onLeave");if(leaveStat)leaveStat.textContent=members.filter(m=>m.status==="Leave").length;
 
-    const actions=document.createElement("div");actions.className="memberActions";
-    [["View","view",m.id],["Edit","edit",m.id],[status==="Active"?"Inactive":"Activate","toggle",m.id]].forEach(([label,action,id])=>{
-      const b=document.createElement("button");
-      b.type="button";b.textContent=label;b.className=action==="toggle"?"secondary":"secondary";
-      b.dataset[action]=String(id);
-      actions.appendChild(b);
-    });
-    el.appendChild(actions);box.appendChild(el);
-  });
-  updateStats();
+ const list=members.filter(m=>{
+  const text=[m.forceNo,m.name,m.rank,m.contact,m.transferLocation,m.transferDate,m.finalBillPaid].join(" ").toLowerCase();
+  return text.includes(query)&&(filter==="All"||(m.status||"Active")===filter);
+ });
+ document.getElementById("empty").style.display=list.length?"none":"block";
+ document.getElementById("memberRows").innerHTML=list.map(m=>`
+ <tr>
+  <td>${m.photo?`<img class="photo" src="${m.photo}" alt="Member">`:"👤"}</td>
+  <td>${esc(m.forceNo)}</td>
+  <td>${esc(m.name)}</td>
+  <td>${esc(m.rank)}</td>
+  <td>${esc(m.contact)}</td>
+  <td>${esc(m.joiningDate)}</td>
+  <td><span class="status ${(m.status||"Active")==="Inactive"?"inactive":""}">${esc(m.status||"Active")}</span></td>
+  <td class="no-print"><div class="actions">
+   <button class="secondary" onclick="viewMember('${m.id}')">View</button>
+   <button class="primary" onclick="editMember('${m.id}')">Edit</button>
+   <button class="danger" onclick="deleteMember('${m.id}')">Delete</button>
+  </div></td>
+ </tr>`).join("");
 }
-function getMember(id){return data.members.find(m=>String(m.id)===String(id))}
-function showDetails(id,shouldScroll=true){
-  const m=getMember(id);if(!m)return;
-  selectedId=m.id;
-  const box=$("detailBox");box.replaceChildren();
-  const top=document.createElement("div");top.className="detailTop";
-  const photo=getPhoto(m);
-  if(photo){
-    const img=document.createElement("img");img.className="detailPhoto";img.src=photo;img.alt="Member photo";top.appendChild(img);
-  }else{
-    const avatar=document.createElement("div");avatar.className="avatar";avatar.style.width="76px";avatar.style.height="76px";avatar.style.fontSize="30px";avatar.textContent="👤";top.appendChild(avatar);
-  }
-  const intro=document.createElement("div");
-  const nm=document.createElement("div");nm.className="detailName";nm.textContent=memberName(m);intro.appendChild(nm);
-  const idLine=document.createElement("div");idLine.className="meta";idLine.textContent=(memberId(m)||"No Service ID")+" · "+(m.rank||"Rank not set");intro.appendChild(idLine);
-  const pill=document.createElement("span");pill.className="pill"+(memberStatus(m)==="Active"?"":" inactive");pill.textContent=memberStatus(m);intro.appendChild(pill);
-  top.appendChild(intro);box.appendChild(top);
-
-  const grid=document.createElement("div");grid.className="detailGrid";
-  [
-    ["Service ID",memberId(m)||"—"],["Rank",m.rank||"—"],["Unit",m.unit||"—"],
-    ["Mobile",m.mobile||"—"],["Joining Date",m.joiningDate||"—"],["Member Status",memberStatus(m)]
-  ].forEach(([label,value])=>{
-    const item=document.createElement("div");item.className="detailItem";
-    const small=document.createElement("small");small.textContent=label;
-    const strong=document.createElement("strong");strong.textContent=value;
-    item.append(small,strong);grid.appendChild(item);
-  });
-  box.appendChild(grid);
-  
-  const order=document.createElement("div");order.className="detailNotes";
-  if(m.movementOrderData){const a=document.createElement("a");a.href=m.movementOrderData;a.download=m.movementOrderName||"movement-order";a.textContent="Open / Download Movement Order: "+(m.movementOrderName||"File");order.appendChild(a)}else order.textContent="Movement Order: Not uploaded";
-  box.appendChild(order);
-  const notes=document.createElement("div");notes.className="detailNotes";
-  notes.innerHTML="<b>Notes:</b> "+esc(m.notes||"—");
-  box.appendChild(notes);
-  $("detailsCard").classList.remove("hidden");
-  $("detailEdit").onclick=()=>editMember(m.id);
-  if(shouldScroll)$("detailsCard").scrollIntoView({behavior:"smooth",block:"start"});
+function openForm(id=null){
+ editingId=id;
+ document.getElementById("memberForm").reset();
+ 
+ document.getElementById("formTitle").textContent=id?"Edit Member":"Add New Member";
+ if(id){
+  const m=members.find(x=>x.id===id);
+  if(!m)return;
+  ["forceNo","name","rank","contact","joiningDate","status","remarks"]
+   .forEach(k=>document.getElementById(k).value=m[k]??"");
+ }
+ document.getElementById("formModal").style.display="block";
 }
-function closeDetails(){
-  $("detailsCard").classList.add("hidden");
-  selectedId="";
-}
-function openForm(){
-  $("formCard").classList.remove("hidden");
-  $("formCard").scrollIntoView({behavior:"smooth",block:"start"});
-  setTimeout(()=>$("serviceId").focus({preventScroll:true}),250);
-}
-function hideForm(){
-  $("formCard").classList.add("hidden");
-}
-function resetForm(){
-  $("memberForm").reset();
-  $("editId").value="";
-  $("joiningDate").value=today();
-  $("movementOrderStatus").textContent="";movementOrderData="";movementOrderName="";
-  $("formTitle").textContent="Add New Member";
-  $("saveBtn").textContent="Save Member";
-  photoData="";
-  showMessage("");
-}
-function editMember(id){
-  const m=getMember(id);if(!m)return;
-  $("editId").value=m.id;
-  $("serviceId").value=memberId(m);
-  $("name").value=memberName(m);
-  $("rank").value=m.rank||"Constable";
-  $("unit").value=m.unit||"";
-  $("mobile").value=m.mobile||"";
-  $("joiningDate").value=m.joiningDate||"";
-  $("status").value=memberStatus(m);
-  $("notes").value=m.notes||"";
-  movementOrderData=m.movementOrderData||"";movementOrderName=m.movementOrderName||"";
-  $("movementOrderStatus").textContent=movementOrderName?"Current file: "+movementOrderName:"No movement order uploaded";
-  photoData=getPhoto(m);
-  $("photo").value="";
-  $("formTitle").textContent="Edit Member";
-  $("saveBtn").textContent="Update Member";
-  $("formCard").classList.remove("hidden");
-  $("formCard").scrollIntoView({behavior:"smooth",block:"start"});
-}
-$("movementOrder").addEventListener("change",function(){
-  const file=this.files&&this.files[0];if(!file)return;
-  if(!(file.type==="application/pdf"||file.type.startsWith("image/"))){showMessage("PDF ya image file select karein.",true);this.value="";return}
-  if(file.size>4*1024*1024){showMessage("Movement order 4 MB se chhota rakhein.",true);this.value="";return}
-  const reader=new FileReader();reader.onload=()=>{movementOrderData=reader.result;movementOrderName=file.name;$("movementOrderStatus").textContent="Ready: "+file.name;showMessage("Movement order upload ready hai.")};reader.onerror=()=>showMessage("File read nahi ho payi.",true);reader.readAsDataURL(file);
-});
-$("photo").addEventListener("change",function(){
-  const file=this.files&&this.files[0];if(!file)return;
-  if(!file.type.startsWith("image/")){showMessage("Photo file select karein.",true);return}
-  if(file.size>8*1024*1024){showMessage("Photo 8 MB se chhoti select karein.",true);this.value="";return}
-  const reader=new FileReader();
-  reader.onload=function(){
-    const img=new Image();
-    img.onload=function(){
-      try{
-        const max=360,scale=Math.min(1,max/Math.max(img.width,img.height));
-        const canvas=document.createElement("canvas");
-        canvas.width=Math.max(1,Math.round(img.width*scale));
-        canvas.height=Math.max(1,Math.round(img.height*scale));
-        canvas.getContext("2d").drawImage(img,0,0,canvas.width,canvas.height);
-        photoData=canvas.toDataURL("image/jpeg",0.72);
-        showMessage("Photo compressed. Ab Save kar sakte hain.");
-      }catch(e){photoData=reader.result;showMessage("Photo ready hai.")}
+function closeForm(){document.getElementById("formModal").style.display="none"}
+function editMember(id){openForm(id)}
+function readPhoto(file){
+ return new Promise((resolve,reject)=>{
+  if(!file){resolve(null);return}
+  if(!String(file.type||"").startsWith("image/")&&!/\\.(jpg|jpeg|png|webp|heic|heif)$/i.test(String(file.name||""))){reject(new Error("Please select a valid image file."));return}
+  const processImage=img=>{
+   try{
+    let max=600,quality=0.68;
+    const canvas=document.createElement("canvas");
+    const encode=()=>{
+     const scale=Math.min(1,max/Math.max(img.width,img.height));
+     canvas.width=Math.max(1,Math.round(img.width*scale));canvas.height=Math.max(1,Math.round(img.height*scale));
+     const ctx=canvas.getContext("2d");if(!ctx){reject(new Error("Photo processing unavailable. Please choose another photo."));return}
+     ctx.fillStyle="#fff";ctx.fillRect(0,0,canvas.width,canvas.height);ctx.drawImage(img,0,0,canvas.width,canvas.height);
+     const data=canvas.toDataURL("image/jpeg",quality),bytes=Math.ceil((data.length-data.indexOf(",")-1)*0.75);
+     if(bytes>500*1024&&(quality>0.42||max>320)){if(quality>0.42)quality=Math.max(0.42,quality-0.08);else max=Math.max(320,Math.round(max*0.8));encode();return}
+     if(bytes>500*1024){reject(new Error("Photo 500 KB se chhoti nahi ho payi. Camera se low-resolution photo lein."));return}
+     resolve(data);
     };
-    img.onerror=function(){showMessage("Photo read nahi ho paya.",true)};
-    img.src=reader.result;
+    encode();
+   }catch(err){reject(new Error("Unable to process this photo. Gallery se JPG photo dobara select karein."))}
   };
-  reader.readAsDataURL(file);
-});
-$("memberForm").addEventListener("submit",function(e){
-  e.preventDefault();
-  const id=$("editId").value,serviceId=$("serviceId").value.trim(),name=$("name").value.trim();
-  if(!serviceId||!name){showMessage("Service ID aur naam zaroori hain.",true);return}
-  const duplicate=data.members.find(m=>memberId(m).toLowerCase()===serviceId.toLowerCase()&&String(m.id)!==String(id));
-  if(duplicate){showMessage("Yeh Service / Member ID pehle se maujood hai.",true);return}
-  const unit=$("unit").value.trim();
-  if(!unit){showMessage("Unit zaroor enter karein.",true);return}
-  const existing=id?getMember(id):null;
-  const member={
-    ...(existing||{}),
-    id:existing?existing.id:makeId(),
-    serviceId,memberId:serviceId,name,fullName:name,
-    rank:$("rank").value,unit,
-    mobile:$("mobile").value.trim(),joiningDate:$("joiningDate").value,status:$("status").value,
-    movementOrderData:movementOrderData||(existing&&existing.movementOrderData)||"",
-    movementOrderName:movementOrderName||(existing&&existing.movementOrderName)||"",
-    notes:$("notes").value.trim(),photo:photoData||getPhoto(existing||{}),
-    updatedAt:new Date().toISOString()
+  const tryFileReader=()=>{
+   const reader=new FileReader();
+   reader.onerror=()=>reject(new Error("Phone photo file read nahi kar pa raha. Photo ko phone Gallery mein save karke dobara select karein."));
+   reader.onload=()=>{
+    const img=new Image();img.onerror=()=>reject(new Error("Photo format support nahi hua. JPG photo select karein."));
+    img.onload=()=>processImage(img);img.src=reader.result;
+   };
+   reader.readAsDataURL(file);
   };
-  if(!existing)member.createdAt=new Date().toISOString();
-  if(existing){
-    const index=data.members.findIndex(m=>String(m.id)===String(existing.id));
-    data.members[index]=member;
-  }else data.members.push(member);
-  try{
-    saveData();
-    renderMembers();
-    resetForm();hideForm();
-    showDetails(member.id,true);
-    // Show save message after reset.
-    $("message").textContent=existing?"Member updated successfully. Existing payment history was not changed.":"Member saved. Default advance was not recorded as a payment.";
-    $("message").style.color="#176747";
-  }catch(err){
-    showMessage("Save fail hua. Storage full ho sakta hai. Backup lein aur photo chhoti karein.",true);
-  }
-});
-$("memberList").addEventListener("click",function(e){
-  const b=e.target.closest("button");if(!b)return;
-  if(b.dataset.view!==undefined)showDetails(b.dataset.view,true);
-  if(b.dataset.edit!==undefined)editMember(b.dataset.edit);
-  if(b.dataset.toggle!==undefined){
-    const m=getMember(b.dataset.toggle);if(!m)return;
-    m.status=memberStatus(m)==="Active"?"Inactive":"Active";
-    m.updatedAt=new Date().toISOString();
-    try{
-      saveData();renderMembers();
-      if(selectedId&&String(selectedId)===String(m.id))showDetails(m.id,false);
-    }catch(err){alert("Status save nahi ho paya. Browser storage check karein.")}
-  }
-});
-$("openAdd").addEventListener("click",()=>{
-  resetForm();closeDetails();openForm();
-});
-$("closeForm").addEventListener("click",hideForm);
-$("clearBtn").addEventListener("click",resetForm);
-$("closeDetails").addEventListener("click",closeDetails);
-$("detailCloseBottom").addEventListener("click",closeDetails);
-$("search").addEventListener("input",renderMembers);
-$("statusFilter").addEventListener("change",renderMembers);
-
-try{
-  $("joiningDate").value=today();
-  renderMembers();
-  renderLeaveCard();
-}catch(e){
-  console.error("Member page load error:",e);
-  const box=$("memberList");if(box)box.textContent="Member list load nahi hui. Data safe hai; browser data delete na karein. Error: "+(e&&e.message?e.message:"Unknown");
+  if(typeof createImageBitmap==="function"){
+   createImageBitmap(file).then(bitmap=>{
+    const img={width:bitmap.width,height:bitmap.height};
+    const canvas=document.createElement("canvas");let max=600,quality=0.68;
+    const encode=()=>{
+     const scale=Math.min(1,max/Math.max(img.width,img.height));
+     canvas.width=Math.max(1,Math.round(img.width*scale));canvas.height=Math.max(1,Math.round(img.height*scale));
+     const ctx=canvas.getContext("2d");if(!ctx){bitmap.close&&bitmap.close();tryFileReader();return}
+     ctx.fillStyle="#fff";ctx.fillRect(0,0,canvas.width,canvas.height);ctx.drawImage(bitmap,0,0,canvas.width,canvas.height);
+     const data=canvas.toDataURL("image/jpeg",quality),bytes=Math.ceil((data.length-data.indexOf(",")-1)*0.75);
+     if(bytes>500*1024&&(quality>0.42||max>320)){if(quality>0.42)quality=Math.max(0.42,quality-0.08);else max=Math.max(320,Math.round(max*0.8));encode();return}
+     if(bitmap.close)bitmap.close();
+     if(bytes>500*1024){reject(new Error("Photo 500 KB se chhoti nahi ho payi. Camera se low-resolution photo lein."));return}
+     resolve(data);
+    };
+    try{encode()}catch(err){if(bitmap.close)bitmap.close();tryFileReader()}
+   }).catch(tryFileReader);
+  }else tryFileReader();
+ });
 }
-})();
+document.getElementById("memberForm").addEventListener("submit",async e=>{
+ e.preventDefault();
+ const data=getData();
+ data.members=Array.isArray(data.members)?data.members:[];
+ const file=document.getElementById("photoCamera").files[0]||document.getElementById("photo").files[0]||document.getElementById("photoFile").files[0];
+ const docFile=document.getElementById("documentCamera").files[0]||document.getElementById("documentGallery").files[0]||document.getElementById("memberDocument").files[0];
+ try{
+  const old=editingId?data.members.find(m=>m.id===editingId):null;
+  const photo=await readPhoto(file);
+  let memberDocument=old?.document||null;
+  if(docFile){
+   const docName=String(docFile.name||"").toLowerCase();
+   const isDocImage=String(docFile.type||"").startsWith("image/")||/\.(jpg|jpeg|png|webp|heic|heif)$/i.test(docName);
+   const isDocPdf=docFile.type==="application/pdf"||/\.pdf$/i.test(docName);
+   if(isDocImage){
+    const imageData=await readPhoto(docFile);
+    memberDocument={name:docFile.name||"member-document.jpg",type:"image/jpeg",data:imageData};
+   }else if(isDocPdf){
+    if(docFile.size>2*1024*1024){showToast("PDF 2 MB se chhoti honi chahiye.","error");return;}
+    memberDocument=await new Promise((resolve,reject)=>{const reader=new FileReader();reader.onload=()=>resolve({name:docFile.name||"member-document.pdf",type:"application/pdf",data:reader.result});reader.onerror=()=>reject(new Error("Document read nahi ho paya."));reader.readAsDataURL(docFile);});
+   }else{showToast("Sirf JPG, PNG, WebP photo ya PDF upload karein.","error");return;}
+  }
+  const transferHistory=Array.isArray(old?.transferHistory)?[...old.transferHistory]:[];
+  const member={
+   ...(old||{}),
+   id:editingId||("M"+Date.now()),
+   transferHistory,
+   leaveHistory:Array.isArray(old?.leaveHistory)?[...old.leaveHistory]:[],
+   forceNo:document.getElementById("forceNo").value.trim(),
+   name:document.getElementById("name").value.trim(),
+   rank:document.getElementById("rank").value,
+   contact:document.getElementById("contact").value.trim(),
+   joiningDate:document.getElementById("joiningDate").value,
+   status:document.getElementById("status").value,
+    transferLocation:old?.transferLocation||"",
+   transferDate:old?.transferDate||"",
+   finalBillAmount:Number(old?.finalBillAmount||0),
+   finalBillPaid:old?.finalBillPaid||"Not Paid",
+   remarks:document.getElementById("remarks").value.trim(),
+   photo:photo||(old?old.photo:""),
+   document:memberDocument
+  };
+  if(!member.forceNo||!member.name){showToast("Enter force number and member name.");return}
+  const duplicate=data.members.find(m=>m.forceNo.toLowerCase()===member.forceNo.toLowerCase()&&m.id!==member.id);
+  if(duplicate){showToast("This force number is already registered.");return}
+  if(editingId){
+   const i=data.members.findIndex(m=>m.id===editingId);
+   data.members[i]=member;
+  }else data.members.push(member);
+  try{saveData(data);}catch(saveErr){showToast("Save nahi hua. Browser storage full ho sakta hai. Photo hata kar dobara try karein.");return}
+  closeForm();
+  refresh();
+  showToast("Member saved successfully.","success");
+ }catch(err){showToast(err.message)}
+});
+function showDeleteConfirm(onConfirm){
+ const old=document.getElementById("deleteConfirmModal");
+ if(old)old.remove();
+ const wrap=document.createElement("div");
+ wrap.id="deleteConfirmModal";
+ wrap.style.cssText="position:fixed;inset:0;z-index:10050;background:rgba(0,0,0,.72);display:flex;align-items:center;justify-content:center;padding:18px";
+ wrap.innerHTML='<section role="dialog" aria-modal="true" aria-labelledby="deleteConfirmTitle" style="width:min(100%,380px);background:#ffffff;border:1px solid #dce5df;border-radius:18px;padding:23px 20px;text-align:center;box-shadow:0 18px 55px #0009;color:#fff"><div style="width:58px;height:58px;margin:0 auto 12px;border-radius:50%;display:grid;place-items:center;background:#51252a;color:#ffb5b5;font-size:29px">🗑️</div><h2 id="deleteConfirmTitle" style="font-size:20px;color:#fff;margin:0 0 10px">Confirm Delete</h2><p style="font-size:15px;line-height:1.5;color:#d5e8dd;margin:0 0 20px">Are you really sure you want to delete this item?</p><div style="display:flex;gap:10px"><button type="button" id="deleteCancel" style="flex:1;background:#d8f3e5;color:#075b37;border:1px solid #8fd3ae;border-radius:10px;padding:12px 8px;font-weight:700;font-size:14px">Cancel</button><button type="button" id="deleteConfirm" style="flex:1;background:#c93643;color:#fff;border:1px solid #ed6670;border-radius:10px;padding:12px 8px;font-weight:700;font-size:14px">Yes, Delete</button></div></section>';
+ document.body.appendChild(wrap);
+ const close=()=>{document.removeEventListener("keydown",keyHandler);wrap.remove()};
+ const keyHandler=e=>{if(e.key==="Escape")close()};
+ document.addEventListener("keydown",keyHandler);
+ wrap.querySelector("#deleteCancel").addEventListener("click",close);
+ wrap.querySelector("#deleteConfirm").addEventListener("click",()=>{close();onConfirm()});
+ wrap.addEventListener("click",e=>{if(e.target===wrap)close()});
+}
+function deleteMember(id){
+ const m=members.find(x=>x.id===id);
+ if(!m)return;
+ showDeleteConfirm(()=>{
+  const data=getData();
+  data.members=(data.members||[]).filter(x=>x.id!==id);
+  try{saveData(data);}catch(saveErr){showToast("Member delete nahi hua. Dobara try karein.","error");return}
+  refresh();
+  showToast("Member deleted successfully.","success");
+ });
+}
+function viewMember(id){
+ viewingId=id;
+ const m=members.find(x=>x.id===id);
+ if(!m)return;
+ const data=getData();
+ const records=(data.mealRecords||[]).filter(r=>(r.memberIds||[]).includes(id)).sort((a,b)=>(b.date||"").localeCompare(a.date||""));
+ const tx=(data.transactions||[]).filter(t=>t.memberId===id);
+ const mealTotal=records.reduce((s,r)=>s+Number(r.chargePerMember||0),0);
+ const paid=tx.filter(t=>t.type==="collection"||t.type==="cutting_collected").reduce((s,t)=>s+Number(t.amount||0),0);
+ const due=Math.max(0,mealTotal-paid),credit=Math.max(0,paid-mealTotal);
+ const history=records.length?records.map(r=>{
+  // Member history must show one recipe serving, not the whole group's deducted ration.
+  const recipes=(data.recipes||[]).filter(recipe=>(r.recipeIds||[]).some(recipeId=>String(recipeId)===String(recipe.id)));
+  let portions=[];
+  if(recipes.length){
+   const totals={};
+   recipes.forEach(recipe=>(recipe.ingredients||[]).forEach(ingredient=>{
+    const key=String(ingredient.itemName||ingredient.name)+"|"+String(ingredient.unit||"");
+    totals[key]=(totals[key]||0)+Number(ingredient.quantity||0);
+   }));
+   portions=Object.entries(totals).map(([key,quantity])=>{const parts=key.split("|");return {name:parts[0],quantity,unit:parts[1]}});
+  }else{
+   portions=(r.ingredientUsage||[]).map(i=>{const count=Math.max(1,(r.memberIds||[]).length);const perQty=i.recipeQuantity!=null?Number(i.recipeQuantity)/count:Number(i.quantity||0)/count;return {name:i.itemName,quantity:perQty,unit:i.recipeUnit||i.unit}});
+  }
+  return '<div class="meal-entry"><div class="meal-head"><b>'+esc((r.recipeNames||[]).join(" + ")||r.recipeName||r.items?.[0]||"Menu")+'</b><b>'+money(r.chargePerMember)+'</b></div><small>'+esc(r.date)+'</small><div>'+portions.map(i=>esc(i.name)+': '+esc(Number(i.quantity.toFixed(3)))+' '+esc(i.unit)).join(' • ')+'</div></div>';
+ }).join(""):'<p>No meal record yet.</p>';
+ document.getElementById("memberDetails").innerHTML=(m.photo?'<img src="'+m.photo+'" alt="Member photo"><br>':'')+(m.document&&m.document.data?'<h3 class="view-heading">Movement Orders / Member Document</h3><div class="meal-entry" style="display:table;width:fit-content;max-width:100%;min-width:0;overflow:hidden;margin:8px 0;padding:5px">'+(String(m.document.type||"").startsWith("image/")?'<img src="'+m.document.data+'" alt="Member document" style="display:block;width:auto;height:auto;max-width:100%;max-height:240px;object-fit:contain;margin:8px 0;border-radius:8px;background:#f2f6f3">':'<iframe title="Member PDF Document" src="'+m.document.data+'" style="display:block;width:100%;height:220px;max-height:32vh;border:1px solid #dce5df;border-radius:8px;margin-top:10px;background:#fff"></iframe>')+'</div>':'')+
+ '<b>Force Number:</b> '+esc(m.forceNo)+'<br><b>Name:</b> '+esc(m.name)+'<br><b>Rank:</b> '+esc(m.rank)+'<br><b>Contact:</b> '+esc(m.contact)+'<br><b>Joining Date:</b> '+esc(m.joiningDate)+'<br><b>Status:</b> '+esc(m.status)+'<br><b>Transfer Location:</b> '+esc(m.transferLocation||"—")+'<br><b>Transfer Date:</b> '+esc(m.transferDate||"—")+'<br><b>Final Mess Bill:</b> '+money(m.finalBillAmount)+'<br><b>Final Bill Status:</b> '+esc(m.finalBillPaid||"Not Paid")+'<br><b>Remarks:</b> '+esc(m.remarks)+
+ '<h3 class="view-heading">Transfer History</h3>'+(Array.isArray(m.transferHistory)&&m.transferHistory.length?m.transferHistory.map(h=>'<div class="meal-entry">'+esc(h.date)+' · '+esc(h.location||"Location not entered")+'</div>').join(""):'<p>No transfer history recorded.</p>')+
+ '<h3 class="view-heading">Leave / Chhutti Details</h3><div class="meal-entry"><b>Status:</b> '+(m.status==="Leave"?"On Leave":"Not on Leave")+'<br><b>From:</b> '+esc(m.leaveFrom||"—")+'<br><b>Return Date:</b> '+esc(m.leaveTo||"—")+'<br><b>Reason:</b> '+esc(m.leaveReason||"—")+'</div>'+
+ '<h3 class="view-heading">Leave History</h3>'+(Array.isArray(m.leaveHistory)&&m.leaveHistory.length?m.leaveHistory.map(h=>'<div class="meal-entry"><b>'+esc(h.from||"—")+' to '+esc(h.to||"—")+'</b><br>'+esc(h.reason||"No reason entered")+'<br><small>Saved: '+esc(h.savedDate||"")+' · '+esc(h.status||"Leave")+'</small>'+(h.returnedDate?'<br><small>Returned: '+esc(h.returnedDate)+'</small>':'')+'</div>').join(""):'<p>No leave history recorded.</p>')+
+ '<h3 class="view-heading">Account Summary</h3><div class="account-grid"><div><small>Total Meal Charge</small><strong>'+money(mealTotal)+'</strong></div><div><small>Total Mess Cutting Paid</small><strong>'+money(paid)+'</strong></div><div><small>Remaining Due</small><strong>'+money(due)+'</strong></div><div><small>Credit Balance</small><strong>'+money(credit)+'</strong></div></div>'+
+ '<h3 class="view-heading">Meal History – Kya Kya Khaya</h3>'+history+
+ '<h3 class="view-heading">Payment History</h3>'+(tx.length?tx.map(t=>'<div class="meal-entry">'+esc(t.date)+' · '+esc(t.type)+' <b style="float:right">'+money(t.amount)+'</b><div>'+esc(t.description)+'</div></div>').join(""):'<p>No payment entries yet.</p>');
+ document.getElementById("viewModal").style.display="block";
+}
+function viewMemberDocument(id){
+ const m=members.find(x=>String(x.id)===String(id)),doc=m&&m.document;
+ if(!doc||!doc.data){showToast("Member document nahi mila.","error");return}
+ if(String(doc.type||"").startsWith("image/")){
+  const old=document.getElementById("memberDocPreview");if(old)old.remove();
+  const wrap=document.createElement("div");wrap.id="memberDocPreview";wrap.style.cssText="position:fixed;inset:0;z-index:20000;background:#000e;display:flex;align-items:center;justify-content:center;padding:12px";
+  wrap.innerHTML='<button type="button" style="position:absolute;top:12px;right:12px;padding:10px 14px" onclick="this.parentElement.remove()">✕ Close</button><img src="'+doc.data+'" alt="Member document" style="max-width:100%;max-height:90%;object-fit:contain;background:#fff">';
+  document.body.appendChild(wrap);return;
+ }
+ try{
+  const raw=String(doc.data),comma=raw.indexOf(","),b64=comma>=0?raw.slice(comma+1):raw,binary=atob(b64),bytes=new Uint8Array(binary.length);
+  for(let i=0;i<binary.length;i++)bytes[i]=binary.charCodeAt(i);
+  const file=new File([bytes],doc.name||"member-document.pdf",{type:"application/pdf"});
+  if(typeof window.openLocalPdfFile==="function")window.openLocalPdfFile(file);
+  else showToast("PDF viewer load nahi hua. Page refresh karke try karein.","error");
+ }catch(e){showToast("Document open nahi hua: "+e.message,"error")}
+}
+function openLeaveCard(){
+ const m=members.find(x=>String(x.id)===String(viewingId));
+ if(!m){showToast("Member details nahi mile.","error");return}
+ document.getElementById("leaveMemberTitle").textContent=m.name+" · "+m.forceNo;
+ document.getElementById("leaveFrom").value=m.leaveFrom||new Date().toISOString().slice(0,10);
+ document.getElementById("leaveTo").value=m.leaveTo||"";
+ document.getElementById("leaveReason").value=m.leaveReason||"";
+ document.getElementById("leaveRemarks").value=m.leaveRemarks||"";
+ document.getElementById("leaveCurrentInfo").innerHTML="<b>Current Status:</b> "+esc(m.status||"Active")+(m.status==="Leave"?" · On leave":"");
+ document.getElementById("returnFromLeaveBtn").style.display=m.status==="Leave"?"inline-block":"none";
+ const history=Array.isArray(m.leaveHistory)?m.leaveHistory:[];
+ document.getElementById("leaveHistoryList").innerHTML=history.length?history.slice().reverse().map(h=>'<div class="meal-entry"><b>'+esc(h.from||"—")+' to '+esc(h.to||"—")+'</b><br>'+esc(h.reason||"No reason entered")+'<br><small>'+esc(h.status||"Leave")+(h.returnedDate?" · Returned: "+esc(h.returnedDate):"")+'</small></div>').join(""):"<p>No leave history recorded.</p>";
+ document.getElementById("leaveModal").style.display="block";
+}
+function closeLeaveCard(){document.getElementById("leaveModal").style.display="none"}
+function saveLeave(){
+ const from=document.getElementById("leaveFrom").value,to=document.getElementById("leaveTo").value;
+ if(!from||!to){showToast("Chhutti ki shuru aur wapas aane ki date dalein.","warning");return}
+ if(to<from){showToast("Wapas aane ki date pehle nahi ho sakti.","warning");return}
+ const d=getData();d.members=Array.isArray(d.members)?d.members:[];
+ const m=d.members.find(x=>String(x.id)===String(viewingId));
+ if(!m){showToast("Member details nahi mile.","error");return}
+ m.leaveHistory=Array.isArray(m.leaveHistory)?m.leaveHistory:[];
+ const open=m.leaveHistory.slice().reverse().find(h=>!h.returnedDate);
+ if(m.status==="Leave"&&open){open.from=from;open.to=to;open.reason=document.getElementById("leaveReason").value.trim();open.status="Updated"}
+ else m.leaveHistory.push({from,to,reason:document.getElementById("leaveReason").value.trim(),savedDate:new Date().toISOString().slice(0,10),status:"Leave"});
+ m.leaveFrom=from;m.leaveTo=to;m.leaveReason=document.getElementById("leaveReason").value.trim();m.leaveRemarks=document.getElementById("leaveRemarks").value.trim();m.status="Leave";
+ try{saveData(d)}catch(e){showToast("Leave save nahi hua. Dobara try karein.","error");return}
+ refresh();viewMember(viewingId);openLeaveCard();showToast("Leave card saved. Member status is Leave.","success");
+}
+function returnFromLeave(){
+ const d=getData();d.members=Array.isArray(d.members)?d.members:[];
+ const m=d.members.find(x=>String(x.id)===String(viewingId));
+ if(!m){showToast("Member details nahi mile.","error");return}
+ if(m.status!=="Leave"){showToast("Member abhi Leave par nahi hai.","info");return}
+ const history=Array.isArray(m.leaveHistory)?m.leaveHistory:[];
+ const open=history.slice().reverse().find(h=>!h.returnedDate);
+ if(open){open.returnedDate=new Date().toISOString().slice(0,10);open.status="Returned"}
+ m.status="Active";
+ try{saveData(d)}catch(e){showToast("Return status save nahi hua.","error");return}
+ refresh();viewMember(viewingId);openLeaveCard();showToast("Member marked Active / Returned.","success");
+}
+function memberBillSummary(memberId){
+ const d=getData();
+ const m=(d.members||[]).find(x=>String(x.id)===String(memberId));
+ if(!m)return {total:0,paid:0,due:0,status:"No member",transactions:[]};
+ const meals=(d.mealRecords||[]).filter(r=>(r.memberIds||[]).map(String).includes(String(memberId)));
+ const mealTotal=meals.reduce((s,r)=>s+Number(r.chargePerMember||0),0);
+ const tx=(d.transactions||[]).filter(t=>String(t.memberId)===String(memberId));
+ const collections=tx.filter(t=>t.type==="collection"||t.type==="cutting_collected").reduce((s,t)=>s+Number(t.amount||0),0);
+ const paid=collections;
+ const due=Math.max(0,mealTotal-paid);
+ return {total:mealTotal,paid,due,status:due<=0?"Paid":paid>0?"Part Paid":"Not Paid",transactions:tx};
+}
+function openPayment(){
+ const m=members.find(x=>String(x.id)===String(viewingId));
+ if(!m){showToast("Member details nahi mile.","error");return}
+ const b=memberBillSummary(m.id);
+ document.getElementById("paymentMemberTitle").textContent=m.name+" · "+m.forceNo;
+ document.getElementById("paymentMemberStatus").textContent="Member Status: "+(m.status||"Active");
+ document.getElementById("paymentBillTotal").textContent=money(b.total);
+ document.getElementById("paymentAlreadyPaid").textContent=money(b.paid);
+ document.getElementById("paymentBalanceDue").textContent=money(b.due);
+ document.getElementById("paymentBillStatus").textContent=b.status;
+ document.getElementById("paymentAutoDetails").innerHTML="<b>Member Status:</b> "+esc(m.status||"Active")+(m.transferLocation?" · "+esc(m.transferLocation):"")+(m.transferDate?" · "+esc(m.transferDate):"")+"<h4 style=\"margin:12px 0 6px;color:var(--yellow)\">Payment History</h4>"+(b.transactions.filter(t=>t.type==="collection"||t.type==="cutting_collected").length?b.transactions.filter(t=>t.type==="collection"||t.type==="cutting_collected").map(t=>"<div style=\"padding:7px 0;border-bottom:1px solid #dce5df\">"+esc(t.date)+" · "+money(t.amount)+"<br><small>"+esc(t.description||"Payment")+"</small></div>").join(""):"No payment record yet.");
+ const btn=document.getElementById("receivePaymentBtn");
+ btn.disabled=b.due<=0;
+ btn.textContent=b.due>0?"💰 Receive Full Due":"✓ No Balance Due";
+ btn.style.opacity=b.due>0?"1":".55";
+ document.getElementById("paymentModal").style.display="block";
+}
+function closePayment(){document.getElementById("paymentModal").style.display="none"}
+function receivePayment(){
+ const m=members.find(x=>String(x.id)===String(viewingId));
+ if(!m){showToast("Member details nahi mile.","error");return}
+ const amount=Number(document.getElementById("paymentAmount").value);
+ if(!Number.isFinite(amount)||amount<=0){showToast("Payment amount 0 se zyada dalein.","warning");return}
+ const d=getData();d.transactions=Array.isArray(d.transactions)?d.transactions:[];
+ d.transactions.push({id:"T"+Date.now(),date:new Date().toISOString().slice(0,10),type:"cutting_collected",memberId:m.id,memberName:m.name,description:"Member payment received",amount});
+ try{saveData(d)}catch(e){showToast("Payment save nahi hua. Dobara try karein.","error");return}
+ document.getElementById("paymentAmount").value="";
+ refresh();
+ openPayment();
+ showToast("Payment saved. Remaining due updated automatically.","success");
+}
+function whatsAppMember(){
+ const m=members.find(x=>x.id===viewingId);if(!m)return;
+ const phone=String(m.contact||"").replace(/\D/g,"");
+ if(!phone){showToast("Member ka WhatsApp mobile number pehle Contact Number mein add karein.");return}
+ const data=getData();
+ const records=(data.mealRecords||[]).filter(r=>(r.memberIds||[]).includes(m.id));
+ const tx=(data.transactions||[]).filter(t=>t.memberId===m.id);
+ const mealTotal=records.reduce((sum,r)=>sum+Number(r.chargePerMember||0),0);
+ const paid=tx.filter(t=>t.type==="collection"||t.type==="cutting_collected").reduce((sum,t)=>sum+Number(t.amount||0),0);
+ const due=Math.max(0,mealTotal-paid),credit=Math.max(0,paid-mealTotal);
+ const status=due>0?"UNPAID / DUE":credit>0?"CREDIT":"PAID";
+ const finalBill=Number(m.finalBillAmount||0);
+ const finalBillStatus=m.finalBillPaid||"Not Paid";
+ const transferText=m.status==="Transferred"?(m.transferLocation||"Location not entered")+" on "+(m.transferDate||"date not entered"):"Not transferred";
+ const msg="Namaste "+m.name+" ji,\\nCRPF Mess Account Statement\\nTotal Meal Charge: "+money(mealTotal)+"\\nTotal Mess Cutting Paid: "+money(paid)+"\\nUnpaid Due: "+money(due)+"\\nCredit Balance: "+money(credit)+"\\nStatus: "+status+"\\nTransfer: "+transferText+"\\nFinal Mess Bill: "+money(finalBill)+"\\nFinal Bill Status: "+finalBillStatus+"\\n\\nDhanyavaad.";
+ window.open("https://wa.me/"+phone+"?text="+encodeURIComponent(msg),"_blank");
+}
+function closeView(){document.getElementById("viewModal").style.display="none"}
+function printList(){
+ document.getElementById("printMess").textContent=
+  (getData().settings?.messName||"CRPF Mess")+" – Members Register";
+ document.getElementById("printDate").textContent=
+  "Generated: "+new Date().toLocaleString();
+ window.print();
+}
+function printMember(shareMode){
+ const m=members.find(x=>x.id===viewingId);if(!m)return;
+ const d=getData(),records=(d.mealRecords||[]).filter(r=>(r.memberIds||[]).includes(m.id)).sort((a,b)=>(a.date||"").localeCompare(b.date||""));
+ const tx=(d.transactions||[]).filter(t=>t.memberId===m.id);
+ const total=records.reduce((n,r)=>n+Number(r.chargePerMember||0),0);
+ const paid=tx.filter(t=>t.type==="collection"||t.type==="cutting_collected").reduce((n,t)=>n+Number(t.amount||0),0);
+ const w=window.open("","_blank");if(!w){showToast("Please allow pop-ups to print the member statement.");return}
+ const photoHtml=m.photo?'<div class="member-photo"><img src="'+m.photo+'" alt="Member photo"></div>':'<div class="member-photo placeholder">🛡️</div>';
+ const documentHtml=m.document&&m.document.data?'<h3>Movement Orders / Member Document</h3><div class="attached-document">'+(String(m.document.type||"").startsWith("image/")?'<img src="'+m.document.data+'" alt="Movement Orders / Member Document">':'<p>Attached PDF document is available in Member View. Open it there to view the original pages.</p>')+'</div>':'';
+ const mealRows=records.map(r=>{
+  // PDF must use the same one-serving ration calculation as Member View.
+  const recipes=(d.recipes||[]).filter(recipe=>(r.recipeIds||[]).some(recipeId=>String(recipeId)===String(recipe.id)));
+  let portions=[];
+  if(recipes.length){
+   const totals={};
+   recipes.forEach(recipe=>(recipe.ingredients||[]).forEach(ingredient=>{
+    const key=String(ingredient.itemName||ingredient.name)+"|"+String(ingredient.unit||"");
+    totals[key]=(totals[key]||0)+Number(ingredient.quantity||0);
+   }));
+   portions=Object.entries(totals).map(([key,quantity])=>{const parts=key.split("|");return {name:parts[0],quantity,unit:parts[1]}});
+  }else{
+   const count=Math.max(1,(r.memberIds||[]).length);
+   portions=(r.ingredientUsage||[]).map(i=>({name:i.itemName,quantity:i.recipeQuantity!=null?Number(i.recipeQuantity)/count:Number(i.quantity||0)/count,unit:i.recipeUnit||i.unit}));
+  }
+  const dish=(r.recipeNames||[]).join(" + ")||r.recipeName||r.items?.[0]||"Menu";
+  const ration=portions.map(i=>i.name+": "+Number(Number(i.quantity||0).toFixed(3))+" "+(i.unit||"")).join(", ");
+  return '<tr><td>'+esc(r.date)+'</td><td>'+esc(dish)+'</td><td>'+esc(ration)+'</td><td>'+money(r.chargePerMember)+'</td></tr>';
+ }).join("")||'<tr><td colspan="4" class="empty">No meal records</td></tr>';
+ const payRows=tx.map(t=>'<tr><td>'+esc(t.date)+'</td><td>'+esc(t.type)+'</td><td>'+esc(t.description)+'</td><td>'+money(t.amount)+'</td></tr>').join("")||'<tr><td colspan="4" class="empty">No payment records</td></tr>';
+ const messName=esc(d.settings?.messName||"CRPF MESS – COOKING HOUSE");
+ const statementHtml='<!doctype html><html><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Member Statement</title><style>*{box-sizing:border-box}body{font:14px Arial,sans-serif;padding:24px;color:#183b2c;background:#fff}.sheet{max-width:950px;margin:auto;border:3px solid #176747;padding:20px;border-radius:12px}.masthead{display:flex;align-items:center;gap:16px;padding:16px;background:linear-gradient(110deg,#10563e,#176747);color:#fff;border-bottom:5px solid #d8b33e;border-radius:8px}.seal{width:76px;height:76px;flex:0 0 76px;border:3px solid #f3d46b;border-radius:50%;display:flex;align-items:center;justify-content:center;text-align:center;font-weight:900;font-size:18px;color:#fff}.masthead h1{font-size:22px;margin:0}.masthead p{margin:5px 0 0;color:#e4f3e9}.subtitle{text-align:center;color:#176747;margin:18px 0;font-size:18px}.member-photo{text-align:center;margin:14px}.member-photo img{width:110px;height:110px;object-fit:cover;border:3px solid #d8b33e;border-radius:10px}.attached-document{display:inline-block;max-width:100%;margin:8px 0;padding:6px;border:1px solid #a9d0b8;border-radius:8px;background:#edf6f0}.attached-document img{display:block;width:auto;height:auto;max-width:100%;max-height:260px;max-width:48%;object-fit:contain;border-radius:5px}.placeholder{font-size:54px;color:#176747}.identity{background:#edf6f0;border:1px solid #a9d0b8;border-radius:8px;padding:12px;line-height:1.8}.summary{display:flex;gap:12px;flex-wrap:wrap;margin:16px 0}.summary div{flex:1;min-width:150px;padding:13px;border:1px solid #a9d0b8;border-top:4px solid #176747;border-radius:8px;background:#f0f8f3}.summary b{font-size:18px;color:#10563e}h3{color:#10563e;border-bottom:2px solid #d8b33e;padding-bottom:6px;margin-top:22px}table{width:100%;border-collapse:collapse;margin:12px 0}th{background:#176747;color:#fff}th,td{border:1px solid #9db9a7;padding:8px;text-align:left}tr:nth-child(even){background:#edf6f0}.empty{text-align:center;color:#718278}.generated{margin-top:20px;padding-top:10px;border-top:1px solid #a9d0b8;color:#64776c;font-size:12px}.foot{text-align:center;color:#176747;font-weight:bold;margin-top:12px}@media print{body{padding:0}.sheet{border:2px solid #176747;border-radius:0}*{-webkit-print-color-adjust:exact;print-color-adjust:exact}}@page{size:auto;margin:10mm}</style></head><body><div class="sheet"><div class="masthead"><img class="seal" src="https://upload.wikimedia.org/wikipedia/commons/f/f9/CRPF_Logo.svg" alt="CRPF Monogram" style="object-fit:contain;background:#fff;padding:4px"><div><h1>'+messName+'</h1><p>MEMBER MEAL & ACCOUNT STATEMENT</p></div></div><h2 class="subtitle">Individual Member Statement</h2>'+photoHtml+'<div class="identity"><b>Member Name:</b> '+esc(m.name)+' &nbsp; <b>Force No:</b> '+esc(m.forceNo)+'<br><b>Rank:</b> '+esc(m.rank)+'</div>'+documentHtml+'<div class="summary"><div>Total Meal Charges<br><b>'+money(total)+'</b></div><div>Mess Cutting Paid<br><b>'+money(paid)+'</b></div><div>Balance Due<br><b>'+money(Math.max(0,total-paid))+'</b></div></div><h3>Meal Details – What Member Ate</h3><table><tr><th>Date</th><th>Recipe</th><th>Ration Consumed</th><th>Charge</th></tr>'+mealRows+'</table><h3>Payment History</h3><table><tr><th>Date</th><th>Type</th><th>Details</th><th>Amount</th></tr>'+payRows+'</table><div class="generated">Generated: '+esc(new Date().toLocaleString())+'</div><div class="foot">CRPF MESS MANAGEMENT SYSTEM</div></div><script src="js/login-lock.js?v=20261110-nco-login1"><\/script></body></html>';
+ w.document.write(statementHtml);
+ 
+ if(shareMode){
+  w.document.close();
+  const waitImages=()=>Promise.all(Array.from(w.document.images).map(img=>img.complete?Promise.resolve():new Promise(resolve=>{img.onload=resolve;img.onerror=resolve;setTimeout(resolve,5000)})));
+  waitImages().then(async()=>{
+   try{
+    if(!window.html2pdf){
+     await new Promise((resolve,reject)=>{const sc=document.createElement("script");sc.src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js";sc.onload=resolve;sc.onerror=()=>reject(new Error("PDF sharing tool load nahi hua. Internet check karein."));document.head.appendChild(sc);});
+    }
+    const blob=await window.html2pdf().set({margin:8,filename:"Member-Statement-"+String(m.forceNo||m.name).replace(/[^a-z0-9_-]/gi,"_")+".pdf",image:{type:"jpeg",quality:0.88},html2canvas:{scale:1.5,useCORS:true,allowTaint:false,backgroundColor:"#ffffff"},jsPDF:{unit:"mm",format:"a4",orientation:"portrait"}}).from(w.document.querySelector(".sheet")).outputPdf("blob");
+    const file=new File([blob],"Member-Statement-"+String(m.forceNo||m.name).replace(/[^a-z0-9_-]/gi,"_")+".pdf",{type:"application/pdf"});
+    const shareText="Namaste "+m.name+" ji, aapka CRPF Mess Member Statement PDF bhej raha hoon.";
+    window.crpfReadyMemberPdf={file:file,text:shareText,phone:String(m.contact||"").replace(/\\D/g,"")};
+    showToast("PDF taiyar hai. Ab WhatsApp PDF button dobara dabayein.","success");
+   }catch(err){showToast(err.message||"PDF share nahi ho payi.","error");}
+   finally{w.close();}
+  });
+ }else{
+  w.document.close();const printAfterImages=()=>{const imgs=Array.from(w.document.images);Promise.all(imgs.map(img=>img.complete?Promise.resolve():new Promise(resolve=>{img.onload=resolve;img.onerror=resolve;setTimeout(resolve,4000);}))).then(()=>{w.focus();w.print();});};printAfterImages();
+ }
+}
+function shareMemberPdf(){
+ const ready=window.crpfReadyMemberPdf;
+ if(ready&&ready.file){
+  if(navigator.share&&navigator.canShare&&navigator.canShare({files:[ready.file]})){
+   const sharePromise=navigator.share({files:[ready.file],title:"CRPF Mess Member Statement",text:ready.text});
+   sharePromise.catch(err=>{if(err&&err.name!=="AbortError")showToast("Share nahi ho paya. Dobara try karein.","error");});
+  }else{
+   const url=URL.createObjectURL(ready.file),a=document.createElement("a");a.href=url;a.download=ready.file.name;a.click();setTimeout(()=>URL.revokeObjectURL(url),60000);
+   if(ready.phone)window.open("https://wa.me/"+ready.phone+"?text="+encodeURIComponent(ready.text+" PDF download karke yahan attach karein."),"_blank");
+   showToast("PDF download ho gayi. WhatsApp chat mein attach karein.","success");
+  }
+  return;
+ }
+ printMember(true);
+}
+document.getElementById("date").textContent=new Date().toLocaleDateString();
+document.getElementById("addMemberBtn").addEventListener("click",()=>openForm());
+refresh();
 </script>
-<script>
-(function(){
- const keys=["crpfMessProfessionalV1","crpfMessPrototypeV2"];
- let d={};
- for(const k of keys){try{const x=JSON.parse(localStorage.getItem(k)||"null");if(x&&typeof x==="object"){d=x;break}}catch(e){}}
- const s=d.settings&&typeof d.settings==="object"?d.settings:{};
- const values={mess:s.messName||"CRPF Smart Mess",nco:s.messNco||s.messNCO||"Not set",so:s.messSo||s.messSO||"Not set"};
- document.querySelectorAll("[data-office]").forEach(el=>{el.textContent=values[el.dataset.office]||"Not set"});
- function tick(){const n=new Date();const t=n.toLocaleTimeString("en-IN",{hour:"2-digit",minute:"2-digit",second:"2-digit",hour12:true});const day=n.toLocaleDateString("en-IN",{day:"2-digit",month:"2-digit",year:"numeric"});document.querySelectorAll("[data-clock]").forEach(x=>x.textContent=t);document.querySelectorAll("[data-date]").forEach(x=>x.textContent=day)}
- tick();setInterval(tick,1000);
-})();
-</script>
+<script src="js/pdf-tools.js?v=20261108-pdf-title8"></script>
+<script src="js/shared-header.js?v=20261109-desktop-drawer3"></script>
+<script src="js/mobile-nav.js?v=20261109-desktop-drawer3"></script>
 </body>
 </html>

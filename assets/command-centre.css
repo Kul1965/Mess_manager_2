@@ -126,3 +126,23 @@ tbody tr:hover{background:#f6faf6!important}
 .mm-stat *{color:#214d3b!important}
 .mm-stat small{color:#78857e!important}
 .mm-stat b{color:#176747!important}
+
+
+/* Hindi guide readability: light cards and dark text */
+.guide-card{
+ background:linear-gradient(145deg,#ffffff,#f3f7f3)!important;
+ color:#214d3b!important;border:1px solid #dce5df!important;
+ box-shadow:0 5px 18px rgba(25,58,39,.055)!important;
+}
+.guide-card h2{color:#176747!important}
+.guide-card h3{color:#10563e!important}
+.guide-card p,.guide-card li,.guide-card ol,.guide-card ul{
+ color:#344f42!important;line-height:1.8!important;
+}
+.guide-card b,.guide-card strong{color:#10563e!important}
+.guide-actions button{background:#176747!important;color:#fff!important}
+@media(max-width:600px){
+ .guide-card{padding:14px!important}
+ .guide-card p,.guide-card li{font-size:15px!important;line-height:1.8!important}
+ .guide-card h2{font-size:20px!important}
+}

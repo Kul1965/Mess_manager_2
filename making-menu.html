@@ -39,6 +39,15 @@ html,body{max-width:100%;overflow-x:hidden}
  cursor:not-allowed!important;
  filter:saturate(.9)!important;
 }
+
+/* Compact weekly menu Add buttons */
+@media(max-width:600px){
+ .slot{grid-template-columns:minmax(0,1fr) auto!important;align-items:center!important;column-gap:9px!important;row-gap:7px!important}
+ .slot>b{grid-column:1/-1!important}
+ .slot>select{grid-column:1/-1!important;width:100%!important;min-width:0!important}
+ .slot>button.addRecipe{grid-column:1!important;justify-self:start!important;width:auto!important;min-width:88px!important;max-width:112px!important;min-height:38px!important;height:38px!important;padding:7px 14px!important;flex:0 0 auto!important;font-size:14px!important;border-radius:9px!important}
+ .slot .picked{grid-column:1/-1!important}
+}
 </style><link rel="stylesheet" href="./assets/command-centre.css?v=20261113-header-attached">
 </head><body><div class="app"><aside class="sidebar"><div class="brand">🛡️<b>CRPF MESS</b><small>Cooking House System</small></div><nav class="nav"><a href="index.html">▦ Dashboard</a><a href="members.html">👥 Members</a><a href="ration-store.html">📦 Ration Store</a><a href="purchases.html">🛒 Purchases</a><a href="recipes.html">🍲 Recipes</a><a class="active" href="making-menu.html">🍽️ Weekly Menu & Hajiri</a><a href="mess-staff.html">👨‍🍳 Mess Staff</a><a href="accounts.html">💰 Accounts</a><a href="reports.html">📊 Reports</a><a href="mess-handover.html">🔄 Mess Handover</a><a href="settings.html">⚙️ Settings</a><a href="backup.html">💾 Backup & Restore</a><a href="software-guide.html">📖 हिन्दी उपयोग गाइड</a></nav></aside><main class="main"><header class="topbar"><div><h1>CRPF Mess Management System</h1><small>Weekly menu repeats until changed • Daily attendance & ration deduction</small></div><div id="dateNow"></div></header><div class="content mm"><div class="pagehead"><h2>🍽️ Weekly Menu + Daily Hajiri</h2><p class="mm-muted">Har din ke har meal mein Recipe page se dish dropdown se add karein. Ek baar save menu har hafte chalega, jab tak aap badlein nahi.</p></div>
 <section class="panel mm-card"><h3>1. Poore Hafte ka Menu Set Karein</h3><p class="mm-muted">Sunday se Saturday tak sabhi din yahin hain. Har meal mein dropdown se recipe chunein aur Add dabayein. Ek meal mein kai dishes add kar sakte hain.</p><div id="allDaysMenu"></div><div class="mm-actions"><button id="saveWholeWeek" class="mm-primary" type="button">✓ Save Complete Weekly Menu</button></div><p id="weekStatus" class="mm-muted"></p></section>

@@ -5,6 +5,18 @@ function notice(t,m,k){const w=document.createElement("div");w.className="mm-not
 function today(){const d=new Date();return[d.getFullYear(),String(d.getMonth()+1).padStart(2,"0"),String(d.getDate()).padStart(2,"0")].join("-")}
 function recipes(){return read().recipes||[]}function unitInfo(u){u=String(u||"").toLowerCase();if(["g","gram","grams"].includes(u))return["w",1];if(["kg","kgs"].includes(u))return["w",1000];if(u==="ml")return["v",1];if(["l","ltr","litre","liter"].includes(u))return["v",1000];if(["pcs","pc","piece","pieces"].includes(u))return["c",1];return null}function convert(q,a,b){const x=unitInfo(a),y=unitInfo(b);return!x||!y||x[0]!==y[0]?null:Number(q)*x[1]/y[1]}function baseUnit(i){const u=String(i?.unit||"").toLowerCase();return["kg","kgs","g","gram","grams"].includes(u)?"g":["ltr","l","litre","liter","ml"].includes(u)?"ml":"pcs"}
 let entryRecipeIds=[],entryMembers=[];
+function activeMembers(){
+ const list=read().members;
+ return Array.isArray(list)?list.filter(m=>String(m.status||"Active").toLowerCase()==="active"):[];
+}
+function recipeType(recipe){
+ const type=String(recipe?.foodType||recipe?.type||"Both").trim().toLowerCase();
+ return type==="non-veg"||type==="nonveg"?"Non-Veg":type==="veg"?"Veg":"Both";
+}
+function recipesForChoice(list,choice){
+ const wanted=String(choice||"Both").toLowerCase();
+ return (list||[]).filter(r=>{const type=recipeType(r).toLowerCase();return type==="both"||type===wanted;});
+}
 function currentRecipes(){return Array.isArray(read().recipes)?read().recipes:[]}
 function renderRecipeOptions(){const s=$("recipeSelect"),list=currentRecipes(),old=s.value;s.innerHTML='<option value="">Recipe select karein</option>'+list.map(r=>'<option value="'+esc(r.id)+'">'+esc(r.name||"Recipe")+' · '+esc(recipeType(r))+'</option>').join("");if(list.some(r=>String(r.id)===old))s.value=old}
 function renderMemberOptions(){const s=$("memberSelect"),list=activeMembers(),old=s.value;s.innerHTML='<option value="">Member select karein</option>'+list.map(m=>'<option value="'+esc(m.id)+'">'+esc(m.name||"Member")+(m.forceNo?" · ID "+esc(m.forceNo):"")+'</option>').join("");if(list.some(m=>String(m.id)===old))s.value=old}

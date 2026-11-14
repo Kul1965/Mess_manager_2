@@ -299,6 +299,10 @@ td.no-print{white-space:nowrap}
      <select id="status"><option>Active</option><option>Inactive</option><option>Transferred</option><option>Leave</option></select>
     </div>
     <div class="field">
+     <label>Food Preference</label>
+     <select id="foodPreference"><option value="Veg">Vegetarian (Veg)</option><option value="Non-Veg">Non-Vegetarian (Non-Veg)</option><option value="Both">Both</option></select>
+    </div>
+    <div class="field">
      <label>Member Photo</label>
      <div style="display:flex;gap:8px;flex-wrap:wrap;margin:6px 0">
       <button type="button" class="secondary" style="padding:11px 13px" onclick="document.getElementById('photoCamera').click()">📷 कैमरा</button>
@@ -507,6 +511,7 @@ function openForm(id=null){
   if(!m)return;
   ["forceNo","name","rank","contact","joiningDate","status","remarks"]
    .forEach(k=>document.getElementById(k).value=m[k]??"");
+  document.getElementById("foodPreference").value=m.foodPreference||"Both";
  }
  document.getElementById("formModal").style.display="block";
 }
@@ -596,6 +601,8 @@ document.getElementById("memberForm").addEventListener("submit",async e=>{
    contact:document.getElementById("contact").value.trim(),
    joiningDate:document.getElementById("joiningDate").value,
    status:document.getElementById("status").value,
+   foodPreference:document.getElementById("foodPreference").value||"Both",
+   foodPreferenceHistory:Array.isArray(old?.foodPreferenceHistory)?[...old.foodPreferenceHistory]:[],
     transferLocation:old?.transferLocation||"",
    transferDate:old?.transferDate||"",
    finalBillAmount:Number(old?.finalBillAmount||0),
@@ -604,6 +611,8 @@ document.getElementById("memberForm").addEventListener("submit",async e=>{
    photo:photo||(old?old.photo:""),
    document:memberDocument
   };
+  const previousPreference=old?.foodPreference||"Both";
+  if(old&&previousPreference!==member.foodPreference)member.foodPreferenceHistory.push({from:previousPreference,to:member.foodPreference,effectiveDate:new Date().toISOString().slice(0,10),recordedAt:new Date().toISOString()});
   if(!member.forceNo||!member.name){showToast("Enter force number and member name.");return}
   const duplicate=data.members.find(m=>m.forceNo.toLowerCase()===member.forceNo.toLowerCase()&&m.id!==member.id);
   if(duplicate){showToast("This force number is already registered.");return}
@@ -670,9 +679,10 @@ function viewMember(id){
   return '<div class="meal-entry"><div class="meal-head"><b>'+esc((r.recipeNames||[]).join(" + ")||r.recipeName||r.items?.[0]||"Menu")+'</b><b>'+money(r.chargePerMember)+'</b></div><small>'+esc(r.date)+'</small><div>'+portions.map(i=>esc(i.name)+': '+esc(Number(i.quantity.toFixed(3)))+' '+esc(i.unit)).join(' • ')+'</div></div>';
  }).join(""):'<p>No meal record yet.</p>';
  document.getElementById("memberDetails").innerHTML=(m.photo?'<img src="'+m.photo+'" alt="Member photo"><br>':'')+(m.document&&m.document.data?'<h3 class="view-heading">Movement Orders / Member Document</h3><div class="meal-entry" style="display:table;width:fit-content;max-width:100%;min-width:0;overflow:hidden;margin:8px 0;padding:5px">'+(String(m.document.type||"").startsWith("image/")?'<img src="'+m.document.data+'" alt="Member document" style="display:block;width:auto;height:auto;max-width:100%;max-height:240px;object-fit:contain;margin:8px 0;border-radius:8px;background:#f2f6f3">':'<iframe title="Member PDF Document" src="'+m.document.data+'" style="display:block;width:100%;height:220px;max-height:32vh;border:1px solid #dce5df;border-radius:8px;margin-top:10px;background:#fff"></iframe>')+'</div>':'')+
- '<b>Force Number:</b> '+esc(m.forceNo)+'<br><b>Name:</b> '+esc(m.name)+'<br><b>Rank:</b> '+esc(m.rank)+'<br><b>Contact:</b> '+esc(m.contact)+'<br><b>Joining Date:</b> '+esc(m.joiningDate)+'<br><b>Status:</b> '+esc(m.status)+'<br><b>Transfer Location:</b> '+esc(m.transferLocation||"—")+'<br><b>Transfer Date:</b> '+esc(m.transferDate||"—")+'<br><b>Final Mess Bill:</b> '+money(m.finalBillAmount)+'<br><b>Final Bill Status:</b> '+esc(m.finalBillPaid||"Not Paid")+'<br><b>Remarks:</b> '+esc(m.remarks)+
+ '<b>Force Number:</b> '+esc(m.forceNo)+'<br><b>Name:</b> '+esc(m.name)+'<br><b>Rank:</b> '+esc(m.rank)+'<br><b>Contact:</b> '+esc(m.contact)+'<br><b>Joining Date:</b> '+esc(m.joiningDate)+'<br><b>Status:</b> '+esc(m.status)+'<br><b>Food Preference:</b> '+esc(m.foodPreference||"Both")+'<br><b>Transfer Location:</b> '+esc(m.transferLocation||"—")+'<br><b>Transfer Date:</b> '+esc(m.transferDate||"—")+'<br><b>Final Mess Bill:</b> '+money(m.finalBillAmount)+'<br><b>Final Bill Status:</b> '+esc(m.finalBillPaid||"Not Paid")+'<br><b>Remarks:</b> '+esc(m.remarks)+
  '<h3 class="view-heading">Transfer History</h3>'+(Array.isArray(m.transferHistory)&&m.transferHistory.length?m.transferHistory.map(h=>'<div class="meal-entry">'+esc(h.date)+' · '+esc(h.location||"Location not entered")+'</div>').join(""):'<p>No transfer history recorded.</p>')+
  '<h3 class="view-heading">Leave / Chhutti Details</h3><div class="meal-entry"><b>Status:</b> '+(m.status==="Leave"?"On Leave":"Not on Leave")+'<br><b>From:</b> '+esc(m.leaveFrom||"—")+'<br><b>Return Date:</b> '+esc(m.leaveTo||"—")+'<br><b>Reason:</b> '+esc(m.leaveReason||"—")+'</div>'+
+ '<h3 class="view-heading">Food Preference History</h3>'+(Array.isArray(m.foodPreferenceHistory)&&m.foodPreferenceHistory.length?m.foodPreferenceHistory.slice().reverse().map(h=>'<div class="meal-entry"><b>'+esc(h.from||"Both")+' → '+esc(h.to||"Both")+'</b><br><small>Effective: '+esc(h.effectiveDate||"—")+' · Recorded: '+esc(h.recordedAt||"—")+'</small></div>').join(""):'<p>No food preference changes recorded.</p>')+
  '<h3 class="view-heading">Leave History</h3>'+(Array.isArray(m.leaveHistory)&&m.leaveHistory.length?m.leaveHistory.map(h=>'<div class="meal-entry"><b>'+esc(h.from||"—")+' to '+esc(h.to||"—")+'</b><br>'+esc(h.reason||"No reason entered")+'<br><small>Saved: '+esc(h.savedDate||"")+' · '+esc(h.status||"Leave")+'</small>'+(h.returnedDate?'<br><small>Returned: '+esc(h.returnedDate)+'</small>':'')+'</div>').join(""):'<p>No leave history recorded.</p>')+
  '<h3 class="view-heading">Account Summary</h3><div class="account-grid"><div><small>Total Meal Charge</small><strong>'+money(mealTotal)+'</strong></div><div><small>Total Mess Cutting Paid</small><strong>'+money(paid)+'</strong></div><div><small>Remaining Due</small><strong>'+money(due)+'</strong></div><div><small>Credit Balance</small><strong>'+money(credit)+'</strong></div></div>'+
  '<h3 class="view-heading">Meal History – Kya Kya Khaya</h3>'+history+

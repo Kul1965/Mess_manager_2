@@ -652,14 +652,33 @@ function deleteMember(id){
   showToast("Member deleted successfully.","success");
  });
 }
+function memberChargeForRecord(record,memberId,data){
+ const snaps=Array.isArray(record.memberSnapshots)?record.memberSnapshots:[];
+ const snap=snaps.find(x=>String(x.id)===String(memberId));
+ const saved=Number(snap?.charge);
+ if(Number.isFinite(saved)&&saved>0)return saved;
+ const dishNames=Array.isArray(snap?.dishes)&&snap.dishes.length?snap.dishes:(record.recipeNames||[]);
+ if(dishNames.length){
+  const fallback=dishNames.reduce((sum,name)=>{
+   const recipe=(data.recipes||[]).find(x=>String(x.name||"").trim().toLowerCase()===String(name).trim().toLowerCase());
+   return sum+Number(recipe?.costPerServing||recipe?.totalCost||0);
+  },0);
+  if(fallback>0)return fallback;
+ }
+ const per=Number(record.chargePerMember);
+ if(Number.isFinite(per)&&per>0)return per;
+ const count=Math.max(1,(record.memberIds||[]).length),total=Number(record.totalCost||0);
+ if(Number.isFinite(total)&&total>0)return total/count;
+ return Number.isFinite(saved)&&saved>0?saved:0;
+}
 function viewMember(id){
  viewingId=id;
  const m=members.find(x=>x.id===id);
  if(!m)return;
  const data=getData();
- const records=(data.mealRecords||[]).filter(r=>(r.memberIds||[]).includes(id)).sort((a,b)=>(b.date||"").localeCompare(a.date||""));
+ const records=(data.mealRecords||[]).filter(r=>(r.memberIds||[]).map(String).includes(String(id))).sort((a,b)=>(b.date||"").localeCompare(a.date||""));
  const tx=(data.transactions||[]).filter(t=>t.memberId===id);
- const mealTotal=records.reduce((s,r)=>{const snap=(r.memberSnapshots||[]).find(x=>String(x.id)===String(id));return s+Number(snap?.charge??r.chargePerMember??0)},0);
+ const mealTotal=records.reduce((s,r)=>s+memberChargeForRecord(r,id,data),0);
  const paid=tx.filter(t=>t.type==="collection"||t.type==="cutting_collected").reduce((s,t)=>s+Number(t.amount||0),0);
  const due=Math.max(0,mealTotal-paid),credit=Math.max(0,paid-mealTotal);
  const history=records.length?records.map(r=>{
@@ -684,10 +703,10 @@ function viewMember(id){
   }else{
    portions=(r.ingredientUsage||[]).map(i=>{const count=Math.max(1,(r.memberIds||[]).length);const perQty=i.recipeQuantity!=null?Number(i.recipeQuantity)/count:Number(i.quantity||0)/count;return {name:i.itemName,quantity:perQty,unit:i.recipeUnit||i.unit}});
   }
-  return '<div class="meal-entry"><div class="meal-head"><b>'+esc((memberSnap?.dishes||r.recipeNames||[]).join(" + ")||r.recipeName||r.items?.[0]||"Menu")+'</b><b>'+money(memberSnap?.charge??r.chargePerMember)+'</b></div><small>'+esc(r.date)+' · '+esc(r.mealType||"Meal")+' · '+esc(memberSnap?.foodChoice||r.foodType||memberSnap?.foodPreference||"—")+'</small><div><b>Per-member ration:</b> '+portions.map(i=>esc(i.name)+': '+esc(Number(i.quantity.toFixed(3)))+' '+esc(i.unit)).join(' • ')+'</div><small>Member: '+esc(memberSnap?.name||m.name)+' · Force No: '+esc(memberSnap?.forceNo||m.forceNo)+'</small><br><small>Total meal members: '+esc((r.memberIds||[]).length)+' · Total meal cost: '+money(r.totalCost??(Number(r.chargePerMember||0)*((r.memberIds||[]).length)))+'</small></div>';
+  return '<div class="meal-entry"><div class="meal-head"><b>'+esc((memberSnap?.dishes||r.recipeNames||[]).join(" + ")||r.recipeName||r.items?.[0]||"Menu")+'</b><b>'+money(memberChargeForRecord(r,id,data))+'</b></div><small>'+esc(r.date)+' · '+esc(r.mealType||"Meal")+' · '+esc(memberSnap?.foodChoice||r.foodType||memberSnap?.foodPreference||"—")+'</small><div><b>Per-member ration:</b> '+portions.map(i=>esc(i.name)+': '+esc(Number(i.quantity.toFixed(3)))+' '+esc(i.unit)).join(' • ')+'</div><small>Member: '+esc(memberSnap?.name||m.name)+' · Force No: '+esc(memberSnap?.forceNo||m.forceNo)+'</small><br><small>Total meal members: '+esc((r.memberIds||[]).length)+' · Total meal cost: '+money(r.totalCost??(Number(r.chargePerMember||0)*((r.memberIds||[]).length)))+'</small></div>';
  }).join(""):'<p>No meal record yet.</p>';
  document.getElementById("memberDetails").innerHTML=(m.photo?'<img src="'+m.photo+'" alt="Member photo"><br>':'')+(m.document&&m.document.data?'<h3 class="view-heading">Movement Orders / Member Document</h3><div class="meal-entry" style="display:table;width:fit-content;max-width:100%;min-width:0;overflow:hidden;margin:8px 0;padding:5px">'+(String(m.document.type||"").startsWith("image/")?'<img src="'+m.document.data+'" alt="Member document" style="display:block;width:auto;height:auto;max-width:100%;max-height:240px;object-fit:contain;margin:8px 0;border-radius:8px;background:#f2f6f3">':'<iframe title="Member PDF Document" src="'+m.document.data+'" style="display:block;width:100%;height:220px;max-height:32vh;border:1px solid #dce5df;border-radius:8px;margin-top:10px;background:#fff"></iframe>')+'</div>':'')+
- '<b>Force Number:</b> '+esc(m.forceNo)+'<br><b>Name:</b> '+esc(m.name)+'<br><b>Rank:</b> '+esc(m.rank)+'<br><b>Contact:</b> '+esc(m.contact)+'<br><b>Joining Date:</b> '+esc(m.joiningDate)+'<br><b>Status:</b> '+esc(m.status)+'<br><b>Food Preference:</b> '+esc(m.foodPreference||"Both")+'<br><b>Transfer Location:</b> '+esc(m.transferLocation||"—")+'<br><b>Transfer Date:</b> '+esc(m.transferDate||"—")+'<br><b>Final Mess Bill:</b> '+money(m.finalBillAmount)+'<br><b>Final Bill Status:</b> '+esc(m.finalBillPaid||"Not Paid")+'<br><b>Remarks:</b> '+esc(m.remarks)+
+ '<b>Force Number:</b> '+esc(m.forceNo)+'<br><b>Name:</b> '+esc(m.name)+'<br><b>Rank:</b> '+esc(m.rank)+'<br><b>Contact:</b> '+esc(m.contact)+'<br><b>Joining Date:</b> '+esc(m.joiningDate)+'<br><b>Status:</b> '+esc(m.status)+'<br><b>Food Preference:</b> '+esc(m.foodPreference||"Both")+'<br><b>Transfer Location:</b> '+esc(m.transferLocation||"—")+'<br><b>Transfer Date:</b> '+esc(m.transferDate||"—")+'<br><b>Final Mess Bill:</b> '+money(mealTotal)+'<br><b>Final Bill Status:</b> '+esc(due<=0?"Paid":paid>0?"Part Paid":"Not Paid")+'<br><b>Paid:</b> '+money(paid)+' · <b>Remaining Due:</b> '+money(due)+'<br><b>Remarks:</b> '+esc(m.remarks)+
  '<h3 class="view-heading">Transfer History</h3>'+(Array.isArray(m.transferHistory)&&m.transferHistory.length?m.transferHistory.map(h=>'<div class="meal-entry">'+esc(h.date)+' · '+esc(h.location||"Location not entered")+'</div>').join(""):'<p>No transfer history recorded.</p>')+
  '<h3 class="view-heading">Leave / Chhutti Details</h3><div class="meal-entry"><b>Status:</b> '+(m.status==="Leave"?"On Leave":"Not on Leave")+'<br><b>From:</b> '+esc(m.leaveFrom||"—")+'<br><b>Return Date:</b> '+esc(m.leaveTo||"—")+'<br><b>Reason:</b> '+esc(m.leaveReason||"—")+'</div>'+
  '<h3 class="view-heading">Food Preference History</h3>'+(Array.isArray(m.foodPreferenceHistory)&&m.foodPreferenceHistory.length?m.foodPreferenceHistory.slice().reverse().map(h=>'<div class="meal-entry"><b>'+esc(h.from||"Both")+' → '+esc(h.to||"Both")+'</b><br><small>Effective: '+esc(h.effectiveDate||"—")+' · Recorded: '+esc(h.recordedAt||"—")+'</small></div>').join(""):'<p>No food preference changes recorded.</p>')+

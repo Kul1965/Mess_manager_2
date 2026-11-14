@@ -839,7 +839,7 @@ function renderAccountOverview(list){
  const memberRows=members.map(m=>{
   const id=String(m.id);
   const memberMeals=meals.filter(r=>inMonth(r)&&(r.memberIds||[]).map(String).includes(id));
-  const bill=memberMeals.reduce((s,r)=>s+num(r.chargePerMember),0);
+  const bill=memberMeals.reduce((s,r)=>{const snap=(r.memberSnapshots||[]).find(x=>String(x.id)===id);return s+num(snap?.charge??r.chargePerMember)},0);
   const memberTx=tx.filter(t=>String(t.memberId)===id&&["collection","cutting_collected"].includes(String(t.type||"").toLowerCase()));
   const paid=memberTx.reduce((s,t)=>s+num(t.amount),0);
   return {name:m.name||"—",force:m.forceNo||m.forceNumber||"",bill,paid,due:Math.max(0,bill-paid),credit:Math.max(0,paid-bill)};

@@ -761,7 +761,7 @@ function memberBillSummary(memberId){
  const m=(d.members||[]).find(x=>String(x.id)===String(memberId));
  if(!m)return {total:0,paid:0,due:0,status:"No member",transactions:[]};
  const meals=(d.mealRecords||[]).filter(r=>(r.memberIds||[]).map(String).includes(String(memberId)));
- const mealTotal=meals.reduce((s,r)=>s+Number(r.chargePerMember||0),0);
+ const mealTotal=meals.reduce((s,r)=>{const snap=(r.memberSnapshots||[]).find(x=>String(x.id)===String(memberId));return s+Number(snap?.charge??r.chargePerMember??0)},0);
  const tx=(d.transactions||[]).filter(t=>String(t.memberId)===String(memberId));
  const collections=tx.filter(t=>t.type==="collection"||t.type==="cutting_collected").reduce((s,t)=>s+Number(t.amount||0),0);
  const paid=collections;
@@ -806,7 +806,7 @@ function whatsAppMember(){
  const data=getData();
  const records=(data.mealRecords||[]).filter(r=>(r.memberIds||[]).includes(m.id));
  const tx=(data.transactions||[]).filter(t=>t.memberId===m.id);
- const mealTotal=records.reduce((sum,r)=>sum+Number(r.chargePerMember||0),0);
+ const mealTotal=records.reduce((sum,r)=>{const snap=(r.memberSnapshots||[]).find(x=>String(x.id)===String(m.id));return sum+Number(snap?.charge??r.chargePerMember??0)},0);
  const paid=tx.filter(t=>t.type==="collection"||t.type==="cutting_collected").reduce((sum,t)=>sum+Number(t.amount||0),0);
  const due=Math.max(0,mealTotal-paid),credit=Math.max(0,paid-mealTotal);
  const status=due>0?"UNPAID / DUE":credit>0?"CREDIT":"PAID";
@@ -828,7 +828,7 @@ function printMember(shareMode){
  const m=members.find(x=>x.id===viewingId);if(!m)return;
  const d=getData(),records=(d.mealRecords||[]).filter(r=>(r.memberIds||[]).includes(m.id)).sort((a,b)=>(a.date||"").localeCompare(b.date||""));
  const tx=(d.transactions||[]).filter(t=>t.memberId===m.id);
- const total=records.reduce((n,r)=>n+Number(r.chargePerMember||0),0);
+ const total=records.reduce((n,r)=>{const snap=(r.memberSnapshots||[]).find(x=>String(x.id)===String(m.id));return n+Number(snap?.charge??r.chargePerMember??0)},0);
  const paid=tx.filter(t=>t.type==="collection"||t.type==="cutting_collected").reduce((n,t)=>n+Number(t.amount||0),0);
  const w=window.open("","_blank");if(!w){showToast("Please allow pop-ups to print the member statement.");return}
  const photoHtml=m.photo?'<div class="member-photo"><img src="'+m.photo+'" alt="Member photo"></div>':'<div class="member-photo placeholder">🛡️</div>';

@@ -1,4 +1,4 @@
-const CACHE_NAME = "crpf-mess-shell-v2";
+const CACHE_NAME = "crpf-mess-shell-v3";
 const APP_SHELL = ["./", "./index.html", "./manifest.webmanifest", "./icons/crpf-monogram-192.png", "./icons/crpf-monogram-512.svg"];
 self.addEventListener("install", event => {
   event.waitUntil(caches.open(CACHE_NAME).then(cache => cache.addAll(APP_SHELL)).then(() => self.skipWaiting()));

@@ -33,13 +33,13 @@ function saveWeeklyMenu(){
  const plan=days.map(day=>{const mealsMap={};$("weeklyEditor").querySelectorAll('.weekRecipe[data-day="'+day+'"]').forEach(s=>{if(s.value)mealsMap[s.dataset.meal]=[String(s.value)]});return {day,meals:mealsMap}});
  if(!plan.some(x=>Object.keys(x.meals).length)){notice("Menu Empty","Kam se kam ek meal ki recipe choose karein.","error");return}
  const d=read();d.weeklyMenus=Array.isArray(d.weeklyMenus)?d.weeklyMenus:[];
- const existing=d.weeklyMenus.find(x=>String(x.id)===String(editingWeekId));
+ const existing=editingWeekId?d.weeklyMenus.find(x=>String(x.id)===String(editingWeekId)):d.weeklyMenus.filter(x=>String(x.startDate||"")===String(start)).sort((a,b)=>String(b.updatedAt||"").localeCompare(String(a.updatedAt||"")))[0];
  const rec={...(existing||{}),id:editingWeekId||"WEEK"+Date.now(),name,startDate:start,endDate:new Date(new Date(start+"T12:00:00").getTime()+6*86400000).toISOString().slice(0,10),days:plan,updatedAt:new Date().toISOString()};
  if(editingWeekId){const i=d.weeklyMenus.findIndex(x=>String(x.id)===String(editingWeekId));if(i>=0)d.weeklyMenus[i]=rec}else d.weeklyMenus.push(rec);
  if(!write(d))return;notice("Weekly Menu Saved","7 din ka menu save ho gaya. Yeh tab tak rahega jab tak aap khud edit ya remove na karein.","success");resetWeekEditor();renderWeeklySaved();
 }
 function renderWeeklySaved(){
- const host=$("weeklySavedList");if(!host)return;const rows=weekStore().slice().sort((a,b)=>String(b.startDate).localeCompare(String(a.startDate)));
+ const host=$("weeklySavedList");if(!host)return;const all=weekStore().filter(w=>w&&/^\\d{4}-\\d{2}-\\d{2}$/.test(String(w.startDate||""))&&Array.isArray(w.days));const latestByDate=new Map();all.forEach(w=>{const old=latestByDate.get(w.startDate);if(!old||String(w.updatedAt||"")>String(old.updatedAt||""))latestByDate.set(w.startDate,w)});const rows=[...latestByDate.values()].sort((a,b)=>String(b.startDate).localeCompare(String(a.startDate)));
  host.innerHTML=rows.map(w=>'<article class="saved-meal-card" style="border:1px solid var(--border);border-radius:12px;padding:12px;margin:9px 0"><b>'+esc(w.name||"Weekly Menu")+'</b><div class="mm-muted">'+esc(w.startDate)+' to '+esc(w.endDate||"")+'</div><div class="mm-actions"><button type="button" class="viewWeek" data-id="'+esc(w.id)+'">View</button><button type="button" class="editWeek" data-id="'+esc(w.id)+'">Edit</button><button type="button" class="removeWeek" data-id="'+esc(w.id)+'">Remove</button></div><div class="weekDetails" id="weekDetails_'+esc(w.id)+'" hidden></div></article>').join("")||'<p class="mm-muted">Abhi weekly menu save nahi hua.</p>';
 }
 function showWeek(id){const w=weekStore().find(x=>String(x.id)===String(id));const box=$("weekDetails_"+id);if(!w||!box)return;box.hidden=!box.hidden;if(!box.hidden)box.innerHTML=(w.days||[]).map(x=>'<p><b>'+esc(x.day)+':</b> '+meals.map(m=>(x.meals?.[m]||[]).map(id=>currentRecipes().find(r=>String(r.id)===String(id))?.name).filter(Boolean).join(", ")?m+": "+(x.meals[m]||[]).map(id=>currentRecipes().find(r=>String(r.id)===String(id))?.name||"").join(", "):"").filter(Boolean).join(" · ")+'</p>').join("")}

@@ -676,9 +676,14 @@ function viewMember(id){
  const m=members.find(x=>x.id===id);
  if(!m)return;
  const data=getData();
- const records=(data.mealRecords||[]).filter(r=>(r.memberIds||[]).map(String).includes(String(id))).sort((a,b)=>(b.date||"").localeCompare(a.date||""));
+ const archiveKey=r=>String(r.id??[r.date||"",r.time||"",r.mealType||"",JSON.stringify(r.recipeIds||[]),JSON.stringify(r.memberIds||[])].join("|"));
+ const archived=Array.isArray(data.archivedMealHistory)?data.archivedMealHistory:[];
+ const isArchived=r=>archived.some(x=>String(x.memberId)===String(id)&&x.recordKey===archiveKey(r));
+ const allMemberRecords=(data.mealRecords||[]).filter(r=>(r.memberIds||[]).map(String).includes(String(id)));
+ const records=allMemberRecords.filter(r=>!isArchived(r)).sort((a,b)=>(b.date||"").localeCompare(a.date||""));
+ const archivedRecords=allMemberRecords.filter(isArchived).sort((a,b)=>(b.date||"").localeCompare(a.date||""));
  const tx=(data.transactions||[]).filter(t=>t.memberId===id);
- const mealTotal=records.reduce((s,r)=>s+memberChargeForRecord(r,id,data),0);
+ const mealTotal=allMemberRecords.reduce((s,r)=>s+memberChargeForRecord(r,id,data),0);
  const paid=tx.filter(t=>t.type==="collection"||t.type==="cutting_collected").reduce((s,t)=>s+Number(t.amount||0),0);
  const due=Math.max(0,mealTotal-paid),credit=Math.max(0,paid-mealTotal);
  const history=records.length?records.map(r=>{
@@ -703,7 +708,7 @@ function viewMember(id){
   }else{
    portions=(r.ingredientUsage||[]).map(i=>{const count=Math.max(1,(r.memberIds||[]).length);const perQty=i.recipeQuantity!=null?Number(i.recipeQuantity)/count:Number(i.quantity||0)/count;return {name:i.itemName,quantity:perQty,unit:i.recipeUnit||i.unit}});
   }
-  return '<div class="meal-entry"><div class="meal-head"><b>'+esc((memberSnap?.dishes||r.recipeNames||[]).join(" + ")||r.recipeName||r.items?.[0]||"Menu")+'</b><b>'+money(memberChargeForRecord(r,id,data))+'</b></div><small>'+esc(r.date)+' · '+esc(r.mealType||"Meal")+' · '+esc(memberSnap?.foodChoice||r.foodType||memberSnap?.foodPreference||"—")+'</small><div><b>Per-member ration:</b> '+portions.map(i=>esc(i.name)+': '+esc(Number(i.quantity.toFixed(3)))+' '+esc(i.unit)).join(' • ')+'</div><small>Member: '+esc(memberSnap?.name||m.name)+' · Force No: '+esc(memberSnap?.forceNo||m.forceNo)+'</small><br><small>Total meal members: '+esc((r.memberIds||[]).length)+' · Total meal cost: '+money(r.totalCost??(Number(r.chargePerMember||0)*((r.memberIds||[]).length)))+'</small></div>';
+  return '<div class="meal-entry"><div class="meal-head"><b>'+esc((memberSnap?.dishes||r.recipeNames||[]).join(" + ")||r.recipeName||r.items?.[0]||"Menu")+'</b><b>'+money(memberChargeForRecord(r,id,data))+'</b></div><small>'+esc(r.date)+' · '+esc(r.mealType||"Meal")+' · '+esc(memberSnap?.foodChoice||r.foodType||memberSnap?.foodPreference||"—")+'</small><div><b>Per-member ration:</b> '+portions.map(i=>esc(i.name)+': '+esc(Number(i.quantity.toFixed(3)))+' '+esc(i.unit)).join(' • ')+'</div><small>Member: '+esc(memberSnap?.name||m.name)+' · Force No: '+esc(memberSnap?.forceNo||m.forceNo)+'</small><br><small>Total meal members: '+esc((r.memberIds||[]).length)+' · Total meal cost: '+money(r.totalCost??(Number(r.chargePerMember||0)*((r.memberIds||[]).length)))+'</small><button type="button" onclick="archiveMemberMealHistory(\\''+esc(id)+'\\',\\''+esc(archiveKey(r))+'\\')">Archive</button></div>';
  }).join(""):'<p>No meal record yet.</p>';
  document.getElementById("memberDetails").innerHTML=(m.photo?'<img src="'+m.photo+'" alt="Member photo"><br>':'')+(m.document&&m.document.data?'<h3 class="view-heading">Movement Orders / Member Document</h3><div class="meal-entry" style="display:table;width:fit-content;max-width:100%;min-width:0;overflow:hidden;margin:8px 0;padding:5px">'+(String(m.document.type||"").startsWith("image/")?'<img src="'+m.document.data+'" alt="Member document" style="display:block;width:auto;height:auto;max-width:100%;max-height:240px;object-fit:contain;margin:8px 0;border-radius:8px;background:#f2f6f3">':'<iframe title="Member PDF Document" src="'+m.document.data+'" style="display:block;width:100%;height:220px;max-height:32vh;border:1px solid #dce5df;border-radius:8px;margin-top:10px;background:#fff"></iframe>')+'</div>':'')+
  '<b>Force Number:</b> '+esc(m.forceNo)+'<br><b>Name:</b> '+esc(m.name)+'<br><b>Rank:</b> '+esc(m.rank)+'<br><b>Contact:</b> '+esc(m.contact)+'<br><b>Joining Date:</b> '+esc(m.joiningDate)+'<br><b>Status:</b> '+esc(m.status)+'<br><b>Food Preference:</b> '+esc(m.foodPreference||"Both")+'<br><b>Transfer Location:</b> '+esc(m.transferLocation||"—")+'<br><b>Transfer Date:</b> '+esc(m.transferDate||"—")+'<br><b>Final Mess Bill:</b> '+money(mealTotal)+'<br><b>Final Bill Status:</b> '+esc(due<=0?"Paid":paid>0?"Part Paid":"Not Paid")+'<br><b>Paid:</b> '+money(paid)+' · <b>Remaining Due:</b> '+money(due)+'<br><b>Remarks:</b> '+esc(m.remarks)+
@@ -713,8 +718,19 @@ function viewMember(id){
  '<h3 class="view-heading">Leave History</h3>'+(Array.isArray(m.leaveHistory)&&m.leaveHistory.length?m.leaveHistory.map(h=>'<div class="meal-entry"><b>'+esc(h.from||"—")+' to '+esc(h.to||"—")+'</b><br>'+esc(h.reason||"No reason entered")+'<br><small>Saved: '+esc(h.savedDate||"")+' · '+esc(h.status||"Leave")+'</small>'+(h.returnedDate?'<br><small>Returned: '+esc(h.returnedDate)+'</small>':'')+'</div>').join(""):'<p>No leave history recorded.</p>')+
  '<h3 class="view-heading">Account Summary</h3><div class="account-grid"><div><small>Total Meal Charge</small><strong>'+money(mealTotal)+'</strong></div><div><small>Total Mess Cutting Paid</small><strong>'+money(paid)+'</strong></div><div><small>Remaining Due</small><strong>'+money(due)+'</strong></div><div><small>Credit Balance</small><strong>'+money(credit)+'</strong></div></div>'+
  '<h3 class="view-heading">Meal History – Kya Kya Khaya</h3>'+history+
- '<h3 class="view-heading">Payment History</h3>'+(tx.length?tx.map(t=>'<div class="meal-entry">'+esc(t.date)+' · '+esc(t.type)+' <b style="float:right">'+money(t.amount)+'</b><div>'+esc(t.description)+'</div></div>').join(""):'<p>No payment entries yet.</p>');
+ '<details class="meal-entry archive-history-panel"><summary style="cursor:pointer;font-weight:800;color:#176747;padding:7px 2px">📦 Archive History ('+archivedRecords.length+') ▼</summary><div>'+ (archivedRecords.length?archivedRecords.map(r=>'<div class="meal-entry"><b>'+esc(r.date||"—")+'</b> · '+esc((r.recipeNames||[]).join(" + ")||r.recipeName||r.mealType||"Meal")+' <button type="button" onclick="restoreMemberMealHistory(\\''+esc(id)+'\\',\\''+esc(archiveKey(r))+'\\')">↩ Restore</button></div>').join(""):'<p>No archived history.</p>')+'</div></details>'+ '<h3 class="view-heading">Payment History</h3>'+(tx.length?tx.map(t=>'<div class="meal-entry">'+esc(t.date)+' · '+esc(t.type)+' <b style="float:right">'+money(t.amount)+'</b><div>'+esc(t.description)+'</div></div>').join(""):'<p>No payment entries yet.</p>');
  document.getElementById("viewModal").style.display="block";
+}
+function archiveMemberMealHistory(memberId,recordKey){
+ if(!confirm("Meal history ko Archive mein bhejein? Charge aur ration record safe rahenge."))return;
+ const d=getData();d.archivedMealHistory=Array.isArray(d.archivedMealHistory)?d.archivedMealHistory:[];
+ if(!d.archivedMealHistory.some(x=>String(x.memberId)===String(memberId)&&x.recordKey===recordKey))d.archivedMealHistory.push({memberId:String(memberId),recordKey,archivedAt:new Date().toISOString()});
+ saveData(d);viewMember(memberId);
+}
+function restoreMemberMealHistory(memberId,recordKey){
+ const d=getData();d.archivedMealHistory=Array.isArray(d.archivedMealHistory)?d.archivedMealHistory:[];
+ d.archivedMealHistory=d.archivedMealHistory.filter(x=>!(String(x.memberId)===String(memberId)&&x.recordKey===recordKey));
+ saveData(d);viewMember(memberId);
 }
 function viewMemberDocument(id){
  const m=members.find(x=>String(x.id)===String(id)),doc=m&&m.document;

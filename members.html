@@ -1041,6 +1041,8 @@ function shareMemberPdf(){
 document.getElementById("date").textContent=new Date().toLocaleDateString();
 document.getElementById("addMemberBtn").addEventListener("click",()=>openForm());
 refresh();
+renderFoodRecords();
+renderRationDeductionRegister();
 </script>
 <script src="js/pdf-tools.js?v=20261108-pdf-title8"></script>
 <script src="js/shared-header.js?v=20261113-no-flash1"></script>

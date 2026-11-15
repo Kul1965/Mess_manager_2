@@ -54,23 +54,35 @@ html,body{max-width:100%;overflow-x:hidden}
 <link rel="apple-touch-icon" href="./icons/crpf-monogram-192.png?v=sky-png-1">
 <link rel="stylesheet" href="./assets/sidebar-boot.css?v=20261114-homeheaderfix">
 </head><body>
-<div class="app">
-<aside class="sidebar">
-<div class="brand">🛡️<b>CRPF MESS</b><small>Cooking House System</small></div>
-<nav class="nav">
+<div class="app"><aside class="sidebar"><div class="brand">🛡️<b>CRPF MESS</b><small>Cooking House System</small></div><nav class="nav">
 <a href="index.html">▦ Dashboard</a><a href="members.html">👥 Members</a><a href="ration-store.html">📦 Ration Store</a><a href="purchases.html">🛒 Purchases</a><a href="recipes.html">🍲 Recipes</a><a class="active" href="making-menu.html">🍽️ Making Menu</a><a href="mess-staff.html">👨‍🍳 Mess Staff</a><a href="accounts.html">💰 Accounts</a><a href="reports.html">📊 Reports</a><a href="mess-handover.html">🔄 Mess Handover</a><a href="settings.html">⚙️ Settings</a><a href="backup.html">💾 Backup & Restore</a><a href="software-guide.html">📖 हिन्दी उपयोग गाइड</a>
-</nav>
-</aside>
-<main class="main">
-<header class="topbar"><div><h1>Making Menu</h1><small>New page setup</small></div><div id="dateNow"></div></header>
+</nav></aside><main class="main">
+<header class="topbar"><div><h1>Daily Making Menu</h1><small>Daily Hajiri • Member Food Choice • Ration & Mess Cutting</small></div><div id="dateNow"></div></header>
 <div class="content mm">
-<div class="pagehead"><h2>🍽️ Making Menu</h2><p class="mm-muted">Purana Making Menu layout hata diya gaya hai. Naya page yahan banega.</p></div>
-</div>
-<footer class="footer">Cooking House System</footer>
-</main>
-</div>
-<script>document.getElementById("dateNow").textContent=new Date().toLocaleDateString();</script>
-<script src="js/shared-header.js?v=20261113-no-flash1"></script>
-<script src="js/mobile-nav.js?v=20261109-desktop-drawer3"></script>
-<script src="js/login-lock.js?v=20261110-nco-login1"></script>
+<div class="pagehead"><h2>🍽️ Daily Making & Hajiri</h2><p class="mm-muted">Date aur meal chunein, members search karein, har member ke dishes select karein. Save karne par ration stock aur member meal account update hoga.</p></div>
+<section class="panel mm-card">
+<h3>1. Meal Details</h3><div class="mm-grid">
+<label>Date<input id="entryDate" type="date"></label>
+<label>Day<input id="entryDay" type="text" readonly></label>
+<label>Meal<select id="entryMeal"><option>Morning Tea</option><option>Breakfast</option><option>Midday Tea</option><option>Lunch</option><option>Evening Tea</option><option>Dinner</option></select></label>
+<label>Available Recipes<select id="recipeSelect"><option value="">Recipe select karein</option></select></label>
+</div><div class="mm-actions"><button type="button" id="addRecipeBtn">＋ Add Recipe</button></div>
+<div id="selectedRecipes" class="picked" style="margin-top:10px"><span>Recipe abhi add nahi hui</span></div>
+</section>
+<section class="panel mm-card">
+<h3>2. Members Search & Hajiri</h3>
+<label>Member Search — Naam ya Force Number<input id="memberSearch" type="search" placeholder="Naam ya Force Number likhein..." autocomplete="off"></label>
+<label style="display:block;margin-top:10px">Member<select id="memberSelect"><option value="">Member select karein</option></select></label>
+<div class="mm-actions"><button type="button" id="addMemberBtn">＋ Add Member</button><button type="button" id="addAllMembersBtn">👥 All Active Members Add</button></div>
+<div id="selectedMembers" style="margin-top:12px"><p class="mm-muted">Abhi member add nahi hua.</p></div>
+<p class="mm-muted">Har member ke liye Veg/Non-Veg aur uske khane wale dishes chunein. Bill aur ration usi hisaab se calculate hoga.</p>
+</section>
+<section class="panel mm-card">
+<h3>3. Daily Summary</h3><div id="entrySummary" class="mm-muted">Recipes aur members add karein.</div>
+<div class="mm-actions"><button type="button" class="mm-primary" id="saveEntryBtn">✓ Aaj ki Hajiri Save & Ration Deduct</button><button type="button" id="resetEntryBtn">Clear Form</button></div>
+</section>
+<section class="panel mm-card"><h3>4. Saved Daily Records</h3><div id="savedMealCards"></div></section>
+</div><footer class="footer">Cooking House System • Saved locally in this browser</footer></main></div>
+<script src="js/making-menu-v5.js?v=20261115-daily-fresh1"></script>
+<script src="js/shared-header.js?v=20261113-no-flash1"></script><script src="js/mobile-nav.js?v=20261109-desktop-drawer3"></script><script src="js/login-lock.js?v=20261110-nco-login1"></script>
 </body></html>

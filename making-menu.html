@@ -55,6 +55,14 @@ html,body{max-width:100%;overflow-x:hidden}
 <link rel="stylesheet" href="./assets/sidebar-boot.css?v=20261114-homeheaderfix">
 </head><body><div class="app"><aside class="sidebar"><div class="brand">🛡️<b>CRPF MESS</b><small>Cooking House System</small></div><nav class="nav"><a href="index.html">▦ Dashboard</a><a href="members.html">👥 Members</a><a href="ration-store.html">📦 Ration Store</a><a href="purchases.html">🛒 Purchases</a><a href="recipes.html">🍲 Recipes</a><a class="active" href="making-menu.html">🍽️ Weekly Menu & Hajiri</a><a href="mess-staff.html">👨‍🍳 Mess Staff</a><a href="accounts.html">💰 Accounts</a><a href="reports.html">📊 Reports</a><a href="mess-handover.html">🔄 Mess Handover</a><a href="settings.html">⚙️ Settings</a><a href="backup.html">💾 Backup & Restore</a><a href="software-guide.html">📖 हिन्दी उपयोग गाइड</a></nav></aside><main class="main"><header class="topbar"><div><h1>CRPF Mess Management System</h1><small>Weekly menu repeats until changed • Daily attendance & ration deduction</small></div><div id="dateNow"></div></header><div class="content mm"><div class="pagehead"><h2>🍽️ Daily Making Menu & Member Meal Entry</h2><p class="mm-muted">Date aur day chunein, meal aur recipes Add karein, phir khana khane wale members select karein. Har member ki Veg/Non-Veg choice ke hisaab se ration aur kharcha calculate hoga.</p></div>
 <section class="panel mm-card">
+<h3>📅 Weekly Menu — 7 Din Ka Plan</h3>
+<p class="mm-muted">Week ki start date chunein, har din aur meal ki recipe set karein, phir Save Weekly Menu dabayein. Saved menu apne aap delete nahi hoga.</p>
+<div class="mm-grid"><label>Week Starting Date<input id="weekStart" type="date"></label><label>Menu Name<input id="weekName" type="text" placeholder="e.g. Week 1"></label></div>
+<div id="weeklyEditor" style="overflow-x:auto;margin-top:12px"></div>
+<div class="mm-actions"><button type="button" id="saveWeekBtn" class="mm-primary">💾 Save Weekly Menu</button><button type="button" id="cancelWeekEditBtn" style="display:none">Cancel Edit</button></div>
+<h4>Saved Weekly Menus</h4><div id="weeklySavedList"></div>
+</section>
+<section class="panel mm-card">
 <h3>1. Meal Details</h3>
 <div class="mm-grid">
 <label>Date<input id="entryDate" type="date"></label>

@@ -63,7 +63,7 @@ html,body{max-width:100%;overflow-x:hidden}
 <h4>Saved Weekly Menus</h4><div id="weeklySavedList"></div>
 </section>
 <section class="panel mm-card">
-<h3>1. Meal Details</h3>
+<h3>1. Daily Making — Meal Details</h3>
 <div class="mm-grid">
 <label>Date<input id="entryDate" type="date"></label>
 <label>Day<select id="entryDay"><option>Sunday</option><option>Monday</option><option>Tuesday</option><option>Wednesday</option><option>Thursday</option><option>Friday</option><option>Saturday</option></select></label>
@@ -75,13 +75,13 @@ html,body{max-width:100%;overflow-x:hidden}
 </section>
 <section class="panel mm-card">
 <h3>2. Khana Khane Wale Members</h3>
-<label>Member List<select id="memberSelect"><option value="">Member select karein</option></select></label>
-<div class="mm-actions"><button type="button" id="addMemberBtn">＋ Add Member</button></div>
+<label>Search Member — Name ya Force Number<input id="memberSearch" type="search" placeholder="Naam ya Force Number likhein..." autocomplete="off"></label><label>Member List<select id="memberSelect"><option value="">Member select karein</option></select></label>
+<div class="mm-actions"><button type="button" id="addMemberBtn">＋ Add Selected Member</button><button type="button" id="addAllMembersBtn">👥 All Active Members Add</button></div>
 <div id="selectedMembers" style="margin-top:12px"><p class="mm-muted">Abhi member add nahi hua.</p></div>
 <p class="mm-muted">Har member ke liye Veg ya Non-Veg chunein. Usi choice ki recipes aur ration hi calculate hoga.</p>
 </section>
 <section class="panel mm-card">
-<h3>3. Save Meal & Deduct Ration</h3>
+<h3>3. Hajiri Save & Ration Deduct</h3>
 <div id="entrySummary" class="mm-muted">Recipe aur members add karne ke baad total yahan dikhega.</div>
 <div class="mm-actions"><button type="button" class="mm-primary" id="saveEntryBtn">✓ Save Meal, Member Details & Deduct Ration</button></div>
 </section>

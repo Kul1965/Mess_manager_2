@@ -53,38 +53,24 @@ html,body{max-width:100%;overflow-x:hidden}
 <link rel="icon" type="image/png" href="./icons/crpf-monogram-192.png?v=sky-png-1">
 <link rel="apple-touch-icon" href="./icons/crpf-monogram-192.png?v=sky-png-1">
 <link rel="stylesheet" href="./assets/sidebar-boot.css?v=20261114-homeheaderfix">
-</head><body><div class="app"><aside class="sidebar"><div class="brand">🛡️<b>CRPF MESS</b><small>Cooking House System</small></div><nav class="nav"><a href="index.html">▦ Dashboard</a><a href="members.html">👥 Members</a><a href="ration-store.html">📦 Ration Store</a><a href="purchases.html">🛒 Purchases</a><a href="recipes.html">🍲 Recipes</a><a class="active" href="making-menu.html">🍽️ Weekly Menu & Hajiri</a><a href="mess-staff.html">👨‍🍳 Mess Staff</a><a href="accounts.html">💰 Accounts</a><a href="reports.html">📊 Reports</a><a href="mess-handover.html">🔄 Mess Handover</a><a href="settings.html">⚙️ Settings</a><a href="backup.html">💾 Backup & Restore</a><a href="software-guide.html">📖 हिन्दी उपयोग गाइड</a></nav></aside><main class="main"><header class="topbar"><div><h1>CRPF Mess Management System</h1><small>Weekly menu repeats until changed • Daily attendance & ration deduction</small></div><div id="dateNow"></div></header><div class="content mm"><div class="pagehead"><h2>🍽️ Daily Making Menu & Member Meal Entry</h2><p class="mm-muted">Date aur day chunein, meal aur recipes Add karein, phir khana khane wale members select karein. Har member ki Veg/Non-Veg choice ke hisaab se ration aur kharcha calculate hoga.</p></div>
-<section class="panel mm-card">
-<h3>📅 Weekly Menu — 7 Din Ka Plan</h3>
-<p class="mm-muted">Week ki start date chunein, har din aur meal ki recipe set karein, phir Save Weekly Menu dabayein. Saved menu apne aap delete nahi hoga.</p>
-<div class="mm-grid"><label>Week Starting Date<input id="weekStart" type="date"></label><label>Menu Name<input id="weekName" type="text" placeholder="e.g. Week 1"></label></div>
-<div id="weeklyEditor" style="overflow-x:auto;margin-top:12px"></div>
-<div class="mm-actions"><button type="button" id="saveWeekBtn" class="mm-primary">💾 Save Weekly Menu</button><button type="button" id="cancelWeekEditBtn" style="display:none">Cancel Edit</button></div>
-<h4>Saved Weekly Menus</h4><div id="weeklySavedList"></div>
-</section>
-<section class="panel mm-card">
-<h3>1. Daily Making — Meal Details</h3>
-<div class="mm-grid">
-<label>Date<input id="entryDate" type="date"></label>
-<label>Day<select id="entryDay"><option>Sunday</option><option>Monday</option><option>Tuesday</option><option>Wednesday</option><option>Thursday</option><option>Friday</option><option>Saturday</option></select></label>
-<label>Meal<select id="entryMeal"><option>Morning Tea</option><option>Breakfast</option><option>Midday Tea</option><option>Lunch</option><option>Evening Tea</option><option>Dinner</option></select></label>
-<label>Recipe List<select id="recipeSelect"><option value="">Recipe select karein</option></select></label>
+</head><body>
+<div class="app">
+<aside class="sidebar">
+<div class="brand">🛡️<b>CRPF MESS</b><small>Cooking House System</small></div>
+<nav class="nav">
+<a href="index.html">▦ Dashboard</a><a href="members.html">👥 Members</a><a href="ration-store.html">📦 Ration Store</a><a href="purchases.html">🛒 Purchases</a><a href="recipes.html">🍲 Recipes</a><a class="active" href="making-menu.html">🍽️ Making Menu</a><a href="mess-staff.html">👨‍🍳 Mess Staff</a><a href="accounts.html">💰 Accounts</a><a href="reports.html">📊 Reports</a><a href="mess-handover.html">🔄 Mess Handover</a><a href="settings.html">⚙️ Settings</a><a href="backup.html">💾 Backup & Restore</a><a href="software-guide.html">📖 हिन्दी उपयोग गाइड</a>
+</nav>
+</aside>
+<main class="main">
+<header class="topbar"><div><h1>Making Menu</h1><small>New page setup</small></div><div id="dateNow"></div></header>
+<div class="content mm">
+<div class="pagehead"><h2>🍽️ Making Menu</h2><p class="mm-muted">Purana Making Menu layout hata diya gaya hai. Naya page yahan banega.</p></div>
 </div>
-<div class="mm-actions"><button type="button" id="addRecipeBtn">＋ Add Recipe</button></div>
-<h4 style="margin-top:14px">Added Recipes</h4><div id="selectedRecipes" class="picked"><span>Abhi recipe add nahi hui</span></div>
-</section>
-<section class="panel mm-card">
-<h3>2. Khana Khane Wale Members</h3>
-<label>Search Member — Name ya Force Number<input id="memberSearch" type="search" placeholder="Naam ya Force Number likhein..." autocomplete="off"></label><label>Member List<select id="memberSelect"><option value="">Member select karein</option></select></label>
-<div class="mm-actions"><button type="button" id="addMemberBtn">＋ Add Selected Member</button><button type="button" id="addAllMembersBtn">👥 All Active Members Add</button></div>
-<div id="selectedMembers" style="margin-top:12px"><p class="mm-muted">Abhi member add nahi hua.</p></div>
-<p class="mm-muted">Har member ke liye Veg ya Non-Veg chunein. Usi choice ki recipes aur ration hi calculate hoga.</p>
-</section>
-<section class="panel mm-card">
-<h3>3. Hajiri Save & Ration Deduct</h3>
-<div id="entrySummary" class="mm-muted">Recipe aur members add karne ke baad total yahan dikhega.</div>
-<div class="mm-actions"><button type="button" class="mm-primary" id="saveEntryBtn">✓ Save Meal, Member Details & Deduct Ration</button></div>
-</section>
-<section class="panel mm-card"><h3>4. Cook ko WhatsApp Ration</h3><div class="mm-grid"><label>Cook Select Karein<select id="cookSelect"></select></label><label>Cook WhatsApp Number<input id="cookPhone" readonly placeholder="Automatic number"></label></div><p class="mm-muted">Saved meal record se WhatsApp Ration bhejein.</p></section>
-<section class="panel mm-card"><h3>5. Saved Records — Member ke Naam se Full Details</h3><p class="mm-muted">Har saved meal mein member ka naam, Veg/Non-Veg choice, selected dish, member ka kharcha, total ration aur total bill dekhein.</p><div id="savedMealCards" class="saved-meal-cards"></div></section>
-</div><footer class="footer">CRPF Mess Management System • Saved locally in this browser</footer></main></div><script src="js/making-menu-v5.js?v=20261115-multiselect-original1"></script><script src="js/shared-header.js?v=20261113-no-flash1"></script><script src="js/mobile-nav.js?v=20261109-desktop-drawer3"></script><script src="js/login-lock.js?v=20261110-nco-login1"></script></body></html>
+<footer class="footer">Cooking House System</footer>
+</main>
+</div>
+<script>document.getElementById("dateNow").textContent=new Date().toLocaleDateString();</script>
+<script src="js/shared-header.js?v=20261113-no-flash1"></script>
+<script src="js/mobile-nav.js?v=20261109-desktop-drawer3"></script>
+<script src="js/login-lock.js?v=20261110-nco-login1"></script>
+</body></html>

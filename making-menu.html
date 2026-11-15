@@ -1,90 +1,22 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Making Menu | CRPF Cooking House</title><link rel="stylesheet" href="css/app.css?v=20261109-audit-refresh1"><style>
-.mm{max-width:1100px;margin:auto}.mm-card{margin:14px 0;padding:15px}.day-card{border:1px solid var(--border);border-radius:12px;padding:13px;margin:12px 0;background:#09291e}.day-card h3{margin:0 0 12px;padding:12px 14px;display:flex;align-items:center;min-height:26px;border-left:5px solid #45df91;border-radius:9px;background:linear-gradient(100deg,#176747 0%,#0d3b2b 72%,#09291e 100%);color:#f1fff6;font-size:20px;font-weight:900;letter-spacing:.7px;text-transform:uppercase;text-shadow:0 1px 2px #0008;box-shadow:inset 0 1px 0 #ffffff18,0 3px 9px #0003}.slot{display:grid;grid-template-columns:minmax(120px,.8fr) minmax(160px,1.4fr) auto;gap:8px;align-items:center;padding:7px 0;border-bottom:1px solid #234b3a}.slot select{min-width:0}.picked{grid-column:1/-1;display:flex;gap:6px;flex-wrap:wrap}.picked span{background:#12452f;padding:4px 8px;border-radius:7px;font-size:13px}.mm-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.mm-grid label{display:block;font-weight:700}.mm-grid input,.mm-grid select{margin-top:7px}.mm-choice{display:flex;align-items:center;gap:9px;padding:10px;border:1px solid var(--border);border-radius:9px;background:#09291e;margin:6px 0}.mm-choice input{width:auto;margin:0}.mm-stats{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:12px 0}.mm-stat{padding:12px;border:1px solid var(--border);border-radius:10px}.mm-stat small{display:block;color:var(--muted)}.mm-stat b{display:block;font-size:20px;margin-top:4px}.mm-actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:12px}.mm-actions button{flex:1;min-width:170px}.mm-primary{background:#00a94b!important;color:#062719!important}.mm-table{width:100%;min-width:520px;border-collapse:collapse}.mm-table th,.mm-table td{padding:9px;border-bottom:1px solid var(--border);text-align:left}.mm-muted{font-size:13px;color:var(--muted);line-height:1.5}.mm-notice{position:fixed;inset:0;background:#0009;z-index:9999;display:grid;place-items:center;padding:18px}.mm-notice-box{width:min(100%,390px);background:#fff;color:#1c3327;border-radius:18px;padding:22px;text-align:center}.mm-notice-box h3{color:#176747}.mm-notice-box button{padding:11px 24px;background:#176747;color:white;border:0;border-radius:9px}@media(max-width:600px){.mm-grid,.mm-stats{grid-template-columns:1fr}.slot{grid-template-columns:1fr 1.4fr auto}.mm-card{padding:12px}}
-
-/* Mobile fit fix — weekly menu */
-html,body{max-width:100%;overflow-x:hidden}
-.mm,.mm-card,.day-card{width:100%;max-width:100%;min-width:0;box-sizing:border-box}
-.mm-card{overflow:hidden}
-.day-card{padding:10px}
-.slot{min-width:0;grid-template-columns:minmax(0,1fr);gap:7px;padding:11px 0}
-.slot>*{min-width:0;max-width:100%}
-.slot select,.slot input{width:100%;min-width:0;max-width:100%;box-sizing:border-box}
-.picked{min-width:0;max-width:100%;overflow-wrap:anywhere}
-.mm-grid>*{min-width:0}
-.mm-grid input,.mm-grid select{width:100%;min-width:0;max-width:100%;box-sizing:border-box}
-.tablewrap{width:100%;max-width:100%;overflow-x:auto}
-.mm-table{width:100%;min-width:520px}
-@media(max-width:600px){
- .content.mm{padding:10px!important;width:100%;max-width:100%;overflow-x:hidden}
- .mm-card{padding:11px!important;margin:10px 0!important}
- .day-card{padding:9px!important;margin:9px 0!important}
- .day-card h3{font-size:17px!important;padding:10px!important}
- .slot{grid-template-columns:minmax(0,1fr)!important}
- .slot select{font-size:14px!important}
- .mm-actions button{min-width:0!important;width:100%;flex:1 1 100%}
-}
-
-/* Weekly menu Add button contrast fix */
-.mm-actions button,.slot button,.day-card button{
- color:#ffffff!important;
- text-shadow:0 1px 2px rgba(0,0,0,.45)!important;
- font-weight:800!important;
-}
-.mm-actions button:disabled,.slot button:disabled,.day-card button:disabled{
- color:#f4fff8!important;
- background:linear-gradient(180deg,#23845d 0%,#176747 58%,#10563e 100%)!important;
- border:1px solid #72b995!important;
- opacity:1!important;
- text-shadow:0 1px 2px rgba(0,0,0,.5)!important;
- cursor:not-allowed!important;
- filter:saturate(.9)!important;
-}
-
-/* Compact weekly menu Add buttons */
-@media(max-width:600px){
- .slot{grid-template-columns:minmax(0,1fr) auto!important;align-items:center!important;column-gap:9px!important;row-gap:7px!important}
- .slot>b{grid-column:1/-1!important}
- .slot>select{grid-column:1/-1!important;width:100%!important;min-width:0!important}
- .slot>button.addRecipe{grid-column:1!important;justify-self:start!important;width:auto!important;min-width:88px!important;max-width:112px!important;min-height:38px!important;height:38px!important;padding:7px 14px!important;flex:0 0 auto!important;font-size:14px!important;border-radius:9px!important}
- .slot .picked{grid-column:1/-1!important}
-}
-</style><link rel="stylesheet" href="./assets/command-centre.css?v=20261113-soft3d-buttons">
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Making Menu | Santos Cooking House</title>
+<link rel="stylesheet" href="css/app.css?v=20261109-audit-refresh1">
+<link rel="stylesheet" href="./assets/command-centre.css?v=20261113-soft3d-buttons">
 <link rel="manifest" href="./manifest.webmanifest?v=sky-png-1">
 <link rel="icon" type="image/png" href="./icons/crpf-monogram-192.png?v=sky-png-1">
 <link rel="apple-touch-icon" href="./icons/crpf-monogram-192.png?v=sky-png-1">
 <link rel="stylesheet" href="./assets/sidebar-boot.css?v=20261114-homeheaderfix">
-</head><body><div class="app"><aside class="sidebar"><div class="brand">🛡️<b>CRPF MESS</b><small>Cooking House System</small></div><nav class="nav"><a href="index.html">▦ Dashboard</a><a href="members.html">👥 Members</a><a href="ration-store.html">📦 Ration Store</a><a href="purchases.html">🛒 Purchases</a><a href="recipes.html">🍲 Recipes</a><a class="active" href="making-menu.html">🍽️ Weekly Menu & Hajiri</a><a href="mess-staff.html">👨‍🍳 Mess Staff</a><a href="accounts.html">💰 Accounts</a><a href="reports.html">📊 Reports</a><a href="mess-handover.html">🔄 Mess Handover</a><a href="settings.html">⚙️ Settings</a><a href="backup.html">💾 Backup & Restore</a><a href="software-guide.html">📖 हिन्दी उपयोग गाइड</a></nav></aside><main class="main"><header class="topbar"><div><h1>CRPF Mess Management System</h1><small>Weekly menu repeats until changed • Daily attendance & ration deduction</small></div><div id="dateNow"></div></header><div class="content mm"><div class="pagehead"><h2>🍽️ Daily Making Menu & Member Meal Entry</h2><p class="mm-muted">Date aur day chunein, meal aur recipes Add karein, phir khana khane wale members select karein. Har member ki Veg/Non-Veg choice ke hisaab se ration aur kharcha calculate hoga.</p></div>
-<section class="panel mm-card">
-<h3>📅 Weekly Menu — 7 Din Ka Plan</h3>
-<p class="mm-muted">Week ki start date chunein, har din aur meal ki recipe set karein, phir Save Weekly Menu dabayein. Saved menu apne aap delete nahi hoga.</p>
-<div class="mm-grid"><label>Week Starting Date<input id="weekStart" type="date"></label><label>Menu Name<input id="weekName" type="text" placeholder="e.g. Week 1"></label></div>
-<div id="weeklyEditor" style="overflow-x:auto;margin-top:12px"></div>
-<div class="mm-actions"><button type="button" id="saveWeekBtn" class="mm-primary">💾 Save Weekly Menu</button><button type="button" id="cancelWeekEditBtn" style="display:none">Cancel Edit</button></div>
-<h4>Saved Weekly Menus</h4><div id="weeklySavedList"></div>
-</section>
-<section class="panel mm-card">
-<h3>1. Daily Making — Meal Details</h3>
-<div class="mm-grid">
-<label>Date<input id="entryDate" type="date"></label>
-<label>Day<select id="entryDay"><option>Sunday</option><option>Monday</option><option>Tuesday</option><option>Wednesday</option><option>Thursday</option><option>Friday</option><option>Saturday</option></select></label>
-<label>Meal<select id="entryMeal"><option>Morning Tea</option><option>Breakfast</option><option>Midday Tea</option><option>Lunch</option><option>Evening Tea</option><option>Dinner</option></select></label>
-<label>Recipe List<select id="recipeSelect"><option value="">Recipe select karein</option></select></label>
-</div>
-<div class="mm-actions"><button type="button" id="addRecipeBtn">＋ Add Recipe</button></div>
-<h4 style="margin-top:14px">Added Recipes</h4><div id="selectedRecipes" class="picked"><span>Abhi recipe add nahi hui</span></div>
-</section>
-<section class="panel mm-card">
-<h3>2. Khana Khane Wale Members</h3>
-<label>Search Member — Name ya Force Number<input id="memberSearch" type="search" placeholder="Naam ya Force Number likhein..." autocomplete="off"></label><label>Member List<select id="memberSelect"><option value="">Member select karein</option></select></label>
-<div class="mm-actions"><button type="button" id="addMemberBtn">＋ Add Selected Member</button><button type="button" id="addAllMembersBtn">👥 All Active Members Add</button></div>
-<div id="selectedMembers" style="margin-top:12px"><p class="mm-muted">Abhi member add nahi hua.</p></div>
-<p class="mm-muted">Har member ke liye Veg ya Non-Veg chunein. Usi choice ki recipes aur ration hi calculate hoga.</p>
-</section>
-<section class="panel mm-card">
-<h3>3. Hajiri Save & Ration Deduct</h3>
-<div id="entrySummary" class="mm-muted">Recipe aur members add karne ke baad total yahan dikhega.</div>
-<div class="mm-actions"><button type="button" class="mm-primary" id="saveEntryBtn">✓ Save Meal, Member Details & Deduct Ration</button></div>
-</section>
-<section class="panel mm-card"><h3>4. Cook ko WhatsApp Ration</h3><div class="mm-grid"><label>Cook Select Karein<select id="cookSelect"></select></label><label>Cook WhatsApp Number<input id="cookPhone" readonly placeholder="Automatic number"></label></div><p class="mm-muted">Saved meal record se WhatsApp Ration bhejein.</p></section>
-<section class="panel mm-card"><h3>5. Saved Records — Member ke Naam se Full Details</h3><p class="mm-muted">Har saved meal mein member ka naam, Veg/Non-Veg choice, selected dish, member ka kharcha, total ration aur total bill dekhein.</p><div id="savedMealCards" class="saved-meal-cards"></div></section>
-</div><footer class="footer">CRPF Mess Management System • Saved locally in this browser</footer></main></div><script src="js/making-menu-v5.js?v=20261115-multiselect-original1"></script><script src="js/shared-header.js?v=20261113-no-flash1"></script><script src="js/mobile-nav.js?v=20261109-desktop-drawer3"></script><script src="js/login-lock.js?v=20261110-nco-login1"></script></body></html>
+<style>
+body{background:var(--bg)}.mm-wrap{max-width:1100px;margin:auto}.mm-panel{background:linear-gradient(145deg,#fff,#f2f6f3);color:#214d3b;border:1px solid var(--border);border-radius:13px;padding:15px;margin:12px 0}.mm-panel h3{color:#176747;margin:0 0 12px}.mm-help{color:#78857e;font-size:13px;line-height:1.5}.mm-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.mm-grid label{display:block;color:#78857e;font-size:12px}.mm-grid input,.mm-grid select,.mm-panel input,.mm-panel select{background:#fff;color:#214d3b;border:1px solid #dce5df;width:100%;border-radius:7px;padding:11px;margin-top:6px}.mm-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.mm-actions button{flex:1;min-width:130px}.mm-table-wrap{overflow:auto}.mm-week{width:100%;min-width:650px;border-collapse:collapse}.mm-week th,.mm-week td{padding:8px;border-bottom:1px solid #dce5df;text-align:left;color:#214d3b}.mm-week select{min-width:125px;min-height:70px}.mm-member{display:grid;grid-template-columns:minmax(0,1fr) 120px auto;gap:8px;align-items:center;padding:10px;background:#f2f6f3;border:1px solid #dce5df;border-radius:9px;margin:7px 0}.mm-member select{margin:0}.mm-chip{display:inline-block;background:#e2f2e6;color:#176747;padding:5px 9px;border-radius:20px;margin:3px;font-size:12px}.mm-record{background:#fff;border:1px solid #dce5df;border-radius:11px;padding:12px;margin:10px 0;color:#214d3b}.mm-record h4{margin:0 0 6px;color:#176747}.mm-record-row{display:flex;justify-content:space-between;gap:10px;padding:7px 0;border-bottom:1px solid #edf1ee}.mm-notice{position:fixed;inset:0;background:#0008;z-index:9999;display:grid;place-items:center;padding:16px}.mm-notice-box{width:min(100%,380px);background:#fff;color:#214d3b;border-radius:15px;padding:20px;text-align:center}.mm-notice-box button{margin-top:12px}@media(max-width:600px){.mm-grid{grid-template-columns:1fr}.mm-member{grid-template-columns:minmax(0,1fr) 105px}.mm-member button{grid-column:1/-1}.mm-panel{padding:12px}.mm-actions button{min-width:0}}
+</style></head><body><div class="app">
+<aside class="sidebar"><div class="brand">🛡️<b>CRPF MESS</b><small>Cooking House System</small></div><nav class="nav">
+<a href="index.html">▦ Dashboard</a><a href="members.html">👥 Members</a><a href="ration-store.html">📦 Ration Store</a><a href="purchases.html">🛒 Purchases</a><a href="recipes.html">🍲 Recipes</a><a class="active" href="making-menu.html">🍽️ Making Menu</a><a href="mess-staff.html">👨‍🍳 Mess Staff</a><a href="accounts.html">💰 Accounts</a><a href="reports.html">📊 Reports</a><a href="mess-handover.html">🔄 Mess Handover</a><a href="settings.html">⚙️ Settings</a><a href="backup.html">💾 Backup & Restore</a><a href="software-guide.html">📖 हिन्दी उपयोग गाइड</a></nav></aside>
+<main class="main"><header class="topbar"><div><h1>SANTOS Cooking 🔪 House 🏠</h1><small>Weekly planning • Daily meal entry • Ration control</small></div><div id="dateNow"></div></header>
+<div class="content mm-wrap"><div class="pagehead"><h2>🍽️ Making Menu</h2><p class="mm-help">Weekly menu banayein, roz ki hajiri lagayein aur ration stock ka hisaab rakhein.</p></div>
+<section class="mm-panel"><h3>📅 Weekly Menu Planner</h3><div class="mm-grid"><label>Week Starting Date<input id="weekStart" type="date"></label><label>Menu Name<input id="weekName" placeholder="Weekly Menu"></label></div><div class="mm-table-wrap" id="weeklyEditor" style="margin-top:12px"></div><div class="mm-actions"><button id="saveWeekBtn" type="button">💾 Save Weekly Menu</button><button id="cancelWeekBtn" type="button" class="alt" hidden>Cancel Edit</button></div><h4 style="margin-top:16px;color:#176747">Saved Weekly Menus</h4><div id="weeklySaved"></div></section>
+<section class="mm-panel"><h3>1. Daily Meal Entry</h3><div class="mm-grid"><label>Date<input id="mealDate" type="date"></label><label>Meal<select id="mealType"><option>Morning Tea</option><option>Breakfast</option><option>Midday Tea</option><option>Lunch</option><option>Evening Tea</option><option>Dinner</option></select></label><label>Recipe<select id="recipeSelect"><option value="">Recipe select karein</option></select></label><label>Member Search<input id="memberSearch" placeholder="Name ya Force Number"></label></div><div class="mm-actions"><button id="addRecipe" type="button">＋ Add Recipe</button></div><div id="chosenRecipes" style="margin-top:9px"></div><div class="mm-grid" style="margin-top:12px"><label>Active Member<select id="memberSelect"><option value="">Member select karein</option></select></label><div style="display:flex;align-items:end;gap:8px"><button id="addMember" type="button" style="width:100%">＋ Add Member</button><button id="addAll" type="button" class="alt" style="width:100%">All Members</button></div></div><div id="chosenMembers" style="margin-top:10px"></div><div id="mealSummary" class="mm-help" style="margin-top:12px"></div><div class="mm-actions"><button id="saveMeal" type="button">✓ Save Hajiri & Deduct Ration</button></div></section>
+<section class="mm-panel"><h3>2. Cook WhatsApp Ration</h3><div class="mm-grid"><label>Cook<select id="cookSelect"></select></label><label>Cook WhatsApp<input id="cookPhone" readonly placeholder="Cook number"></label></div><p class="mm-help">Saved meal ke ration details WhatsApp par bhejein.</p></section>
+<section class="mm-panel"><h3>3. Saved Meal Records</h3><div id="savedRecords"></div></section>
+</div><footer class="footer">Santos Cooking House • Saved locally in this browser</footer></main></div>
+<script src="js/making-menu-v5.js?v=20261115-newbuild1"></script><script src="js/shared-header.js?v=20261113-no-flash1"></script><script src="js/mobile-nav.js?v=20261109-desktop-drawer3"></script><script src="js/login-lock.js?v=20261110-nco-login1"></script></body></html>

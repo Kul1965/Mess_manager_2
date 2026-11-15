@@ -24,13 +24,13 @@ function weekOptions(selected=""){return '<option value="">— Recipe choose —
 function renderWeeklyEditor(source){
  const host=$("weeklyEditor");if(!host)return;
  const week=source||{days:[]};
- host.innerHTML='<table style="width:100%;min-width:650px;border-collapse:collapse"><thead><tr><th>Day</th>'+meals.map(m=>'<th>'+esc(m)+'</th>').join("")+'</tr></thead><tbody>'+days.map(day=>'<tr><th>'+day+'</th>'+meals.map(meal=>{const found=(week.days||[]).find(x=>x.day===day),ids=found?.meals?.[meal]||[];return '<td><select class="weekRecipe" data-day="'+day+'" data-meal="'+meal+'" style="min-width:125px">'+weekOptions(ids[0]||"")+'</select></td>'}).join("")+'</tr>').join("")+'</tbody></table>';
+ host.innerHTML='<table style="width:100%;min-width:650px;border-collapse:collapse"><thead><tr><th>Day</th>'+meals.map(m=>'<th>'+esc(m)+'</th>').join("")+'</tr></thead><tbody>'+days.map(day=>'<tr><th>'+day+'</th>'+meals.map(meal=>{const found=(week.days||[]).find(x=>x.day===day),ids=found?.meals?.[meal]||[];return '<td><select multiple class="weekRecipe" data-day="'+day+'" data-meal="'+meal+'" style="min-width:125px;min-height:78px">'+currentRecipes().map(r=>'<option value="'+esc(r.id)+'" '+(ids.map(String).includes(String(r.id))?'selected':'')+'>'+esc(r.name||"Recipe")+' ('+esc(recipeType(r))+')</option>').join("")+'</select><small style="display:block;color:var(--muted)">Multiple recipes select karein</small></td>'}).join("")+'</tr>').join("")+'</tbody></table>';
 }
 function resetWeekEditor(){editingWeekId=null;$("weekName").value="";$("weekStart").value=today();$("saveWeekBtn").textContent="💾 Save Weekly Menu";$("cancelWeekEditBtn").style.display="none";renderWeeklyEditor()}
 function saveWeeklyMenu(){
  const start=$("weekStart").value,name=$("weekName").value.trim()||"Weekly Menu";
  if(!start){notice("Date Required","Week starting date choose karein.","error");return}
- const plan=days.map(day=>{const mealsMap={};$("weeklyEditor").querySelectorAll('.weekRecipe[data-day="'+day+'"]').forEach(s=>{if(s.value)mealsMap[s.dataset.meal]=[String(s.value)]});return {day,meals:mealsMap}});
+ const plan=days.map(day=>{const mealsMap={};$("weeklyEditor").querySelectorAll('.weekRecipe[data-day="'+day+'"]').forEach(s=>{const ids=[...s.selectedOptions].map(o=>String(o.value)).filter(Boolean);if(ids.length)mealsMap[s.dataset.meal]=ids});return {day,meals:mealsMap}});
  if(!plan.some(x=>Object.keys(x.meals).length)){notice("Menu Empty","Kam se kam ek meal ki recipe choose karein.","error");return}
  const d=read();d.weeklyMenus=Array.isArray(d.weeklyMenus)?d.weeklyMenus:[];
  const existing=editingWeekId?d.weeklyMenus.find(x=>String(x.id)===String(editingWeekId)):d.weeklyMenus.filter(x=>String(x.startDate||"")===String(start)).sort((a,b)=>String(b.updatedAt||"").localeCompare(String(a.updatedAt||"")))[0];

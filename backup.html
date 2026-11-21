@@ -47,7 +47,7 @@ async function updateExistingBackup(){
  try{
   if(window.showOpenFilePicker){
    const handles=await window.showOpenFilePicker({multiple:false,types:[{description:"CRPF Mess Backup JSON",accept:{"application/json":[".json"]}}]});
-   const handle=handles[0];
+   const handle=handles && handles[0];
    if(!handle)return;
    const writable=await handle.createWritable();
    await writable.write(blob);
@@ -64,38 +64,40 @@ async function updateExistingBackup(){
    return;
   }
   downloadBackup(blob,fixedName);
-  setMessage("✓ Full backup download hua. Is browser mein existing file ko direct overwrite karna supported nahi hai; Downloads mein purani file replace karein.");
+  setMessage("✓ Full backup download shuru ho gaya. Downloads folder mein CRPF-Mess-Backup.json check karein.");
  }catch(e){
-  if(e.name==="AbortError")return;
-  setMessage("Backup update nahi hua: "+e.message,true);
- }
-}
-async function createBackup(){
- const blob=backupBlob(),fixedName="CRPF-Mess-Backup.json";
- try{
-  const file=new File([blob],fixedName,{type:"application/json"});
-  if(navigator.share && navigator.canShare && navigator.canShare({files:[file]})){
-   await navigator.share({files:[file],title:"CRPF Mess Full Backup",text:"CRPF Mess ka complete data backup"});
-   setMessage("✓ Backup file share/save ke liye taiyar hai. Share menu mein Save to Files/Downloads chunein.");
-   return;
-  }
-  downloadBackup(blob,fixedName);
-  setMessage("✓ Backup download shuru ho gaya. Phone ke Downloads folder mein CRPF-Mess-Backup.json check karein.");
- }catch(e){
-  if(e.name==="AbortError")return;
-  // Android share sheets can reject with Permission denied. Fall back to a normal file download.
+  if(e && e.name==="AbortError")return;
   try{
    downloadBackup(blob,fixedName);
-   setMessage("✓ Backup download dobara try kiya gaya. Phone ke Downloads folder mein CRPF-Mess-Backup.json check karein. Agar prompt aaye to Allow/Download chunein.");
+   setMessage("✓ File picker ne access nahi diya, isliye nayi backup file Downloads mein download kar di. Purani backup file safe hai; nayi file ko uske badle rakh sakte hain.");
   }catch(downloadError){
-   setMessage("Backup save nahi hua: "+downloadError.message+". Chrome Settings > Site settings > Automatic downloads allow karein, phir dobara try karein.",true);
+   setMessage("Backup download nahi hua: "+(downloadError.message||downloadError)+". Chrome mein Downloads permission check karke dobara try karein.",true);
   }
+ }
+}
+function createBackup(){
+ const fixedName="CRPF-Mess-Backup.json";
+ try{
+  const blob=backupBlob();
+  // Use a normal browser download directly. Android share sheets can return
+  // "Permission denied", so do not route backup creation through navigator.share.
+  downloadBackup(blob,fixedName);
+  setMessage("✓ Full backup download shuru ho gaya. Phone ke Downloads folder mein CRPF-Mess-Backup.json check karein.");
+ }catch(e){
+  setMessage("Backup download nahi hua: "+(e.message||e)+". Chrome Downloads permission check karke dobara try karein.",true);
  }
 }
 function downloadBackup(blob,name){
- const url=URL.createObjectURL(blob),a=document.createElement("a");
- a.href=url;a.download=name;document.body.appendChild(a);a.click();a.remove();
- setTimeout(()=>URL.revokeObjectURL(url),2000);
+ const url=URL.createObjectURL(blob);
+ const a=document.createElement("a");
+ a.href=url;
+ a.download=name;
+ a.rel="noopener";
+ a.style.display="none";
+ document.body.appendChild(a);
+ a.click();
+ // Keep the Blob URL alive long enough for Android Chrome to finish the download.
+ setTimeout(()=>{URL.revokeObjectURL(url);a.remove();},60000);
 }
 function restore(){
  const file=$("backupFile").files[0];

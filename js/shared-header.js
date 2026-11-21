@@ -130,3 +130,150 @@
 }
 `;
 document.head.appendChild(s);const sideNav=document.querySelector(".sidebar .nav");if(sideNav){const navItems=[["index.html","▦ Dashboard"],["members.html","👥 Members"],["ration-store.html","📦 Ration Store"],["purchases.html","🛒 Purchases"],["recipes.html","🍲 Recipes"],["mess-staff.html","👨‍🍳 Mess Staff"],["accounts.html","💰 Accounts"],["reports.html","📊 Reports"],["mess-handover.html","🔄 Mess Handover"],["settings.html","⚙️ Settings"],["backup.html","💾 Backup & Restore"],["software-guide.html","📖 हिन्दी गाइड"]];const current=location.pathname.split("/").pop()||"index.html";sideNav.innerHTML=navItems.map(([href,label])=>'<a href="'+href+'"'+(current===href?' class="active" aria-current="page"':'')+'>'+label+'</a>').join("");}const sideBrand=document.querySelector(".sidebar .brand");if(sideBrand){sideBrand.innerHTML=`<div class="side-emblem-row"><img class="side-crpf-logo" src="https://commons.wikimedia.org/wiki/Special:Redirect/file/CRPF_Logo.svg" alt="CRPF monogram"><span class="side-flag flag-art" role="img" aria-label="Indian flag"><i></i><i></i><i></i><b>✺</b></span></div><h2>CRPF MESS</h2><p>Cooking House System</p>`;}b.innerHTML=`<div class="dh-brand"><img class="dh-logo" src="https://commons.wikimedia.org/wiki/Special:Redirect/file/CRPF_Logo.svg" alt="CRPF emblem"><span class="dh-divider"></span><div class="dh-title"><h1>CRPF</h1><h2>Cooking House System</h2><div class="dh-date" id="dhClock"></div><div class="dh-tri"><i></i><i></i><i></i></div></div><span class="dh-flag flag-art" role="img" aria-label="Indian flag"><i></i><i></i><i></i><b>✺</b></span></div><div class="dh-info"><div class="dh-pill dh-mess">🏛️ Mess: <strong id="dhMess">A Coy (CRPF)</strong></div><div class="dh-pill dh-role">👤 NCO: <strong id="dhNco">Not Set</strong></div><div class="dh-pill dh-role">📋 SO: <strong id="dhSo">Not Set</strong></div></div>`;if(legacy)legacy.classList.add("legacy-date-hidden");if(legacyNow)legacyNow.classList.add("legacy-date-hidden");const navItemsTop=[["index.html","⌂","Home"],["members.html","👥","Members"],["ration-store.html","📦","Ration Store"],["purchases.html","🛒","Purchases"],["recipes.html","🍲","Recipes"],["mess-staff.html","👨‍🍳","Mess Staff"],["accounts.html","💰","Accounts"],["reports.html","📊","Reports"],["mess-handover.html","🔄","Handover"],["settings.html","⚙️","Settings"],["backup.html","💾","Backup"],["software-guide.html","📖","हिन्दी गाइड"]],curTop=location.pathname.split("/").pop()||"index.html",topNav=document.createElement("nav");topNav.className="top-nav";topNav.setAttribute("aria-label","Main navigation");topNav.innerHTML='<button type="button" class="tab-menu" aria-label="Open navigation menu" aria-expanded="false">☰</button>'+navItemsTop.map(x=>'<a href="'+x[0]+'" '+(curTop===x[0]?'class="selected" aria-current="page"':'')+'><span class="top-nav-icon">'+x[1]+'</span><span>'+x[2]+'</span></a>').join("");b.insertAdjacentElement("afterend",topNav);function tick(){const d=new Date(),e=document.getElementById("dhClock");if(e)e.textContent="🕒 "+d.toLocaleTimeString("en-GB",{hour12:false})+" | "+d.toLocaleDateString("en-GB")}tick();setInterval(tick,1000);try{const d=JSON.parse(localStorage.getItem("crpfMessData")||"{}"),st=d.settings||{},staff=Array.isArray(d.staff)?d.staff:[],a=staff.filter(x=>String(x.status||"Active").toLowerCase()==="active"),role=k=>a.filter(x=>String(x.duty||"").trim().toLowerCase()===k).map(x=>x.name).filter(Boolean).join(", ")||"Not Set";document.getElementById("dhMess").textContent=st.messName||"A Coy (CRPF)";document.getElementById("dhNco").textContent=role("mess nco");document.getElementById("dhSo").textContent=role("mess so")}catch(e){}document.body.dataset.dashHeader="1";}if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",init);else init()})();
+/* Shared PWA updater: checks for published app changes without clearing app data. */
+(function () {
+  "use strict";
+  if (!("serviceWorker" in navigator) || window.__appUpdaterStarted) return;
+  window.__appUpdaterStarted = true;
+
+  const STYLE_ID = "app-update-control-style";
+  const BUTTON_ID = "app-update-control";
+  let registration = null;
+  let reloading = false;
+  let updateFound = false;
+
+  function addControl() {
+    if (document.getElementById(BUTTON_ID)) return;
+    if (!document.getElementById(STYLE_ID)) {
+      const style = document.createElement("style");
+      style.id = STYLE_ID;
+      style.textContent =
+        "#" + BUTTON_ID + "{position:fixed;right:12px;bottom:18px;z-index:2147483000;border:1px solid #d6b54d;border-radius:28px;padding:11px 16px;background:linear-gradient(180deg,#176747,#06452f);color:#fff;font:700 13px Arial,sans-serif;box-shadow:0 3px 0 #9c7d2e,0 7px 18px rgba(0,0,0,.25);cursor:pointer}" +
+        "#" + BUTTON_ID + ":disabled{opacity:.75;cursor:wait}" +
+        "#" + BUTTON_ID + ".available{background:linear-gradient(180deg,#e7c85b,#c99d25);color:#183d2a;border-color:#f4df91}" +
+        "@media(max-width:850px){#" + BUTTON_ID + "{bottom:calc(76px + env(safe-area-inset-bottom));right:10px;padding:10px 13px;font-size:12px}}";
+      document.head.appendChild(style);
+    }
+    const button = document.createElement("button");
+    button.type = "button";
+    button.id = BUTTON_ID;
+    button.textContent = "↻ Update App";
+    button.setAttribute("aria-label", "Check for app updates and refresh");
+    button.addEventListener("click", runManualUpdate);
+    document.body.appendChild(button);
+  }
+
+  function setButton(text, available, disabled) {
+    const button = document.getElementById(BUTTON_ID);
+    if (!button) return;
+    button.textContent = text;
+    button.classList.toggle("available", !!available);
+    button.disabled = !!disabled;
+  }
+
+  function reloadOnce() {
+    if (reloading) return;
+    reloading = true;
+    setButton("✓ Updated — opening…", false, true);
+    window.setTimeout(function () { window.location.reload(); }, 350);
+  }
+
+  function watchRegistration(reg) {
+    registration = reg;
+    if (reg.waiting && navigator.serviceWorker.controller) {
+      updateFound = true;
+      setButton("⬆ New update — tap", true, false);
+    }
+    reg.addEventListener("updatefound", function () {
+      const worker = reg.installing;
+      if (!worker) return;
+      worker.addEventListener("statechange", function () {
+        if (worker.state === "installed" && navigator.serviceWorker.controller) {
+          updateFound = true;
+          setButton("⬆ New update — tap", true, false);
+          // The app shell activates the new worker automatically; reload after activation.
+          if (reg.waiting) reg.waiting.postMessage({ type: "SKIP_WAITING" });
+        }
+      });
+    });
+  }
+
+  navigator.serviceWorker.addEventListener("controllerchange", reloadOnce);
+
+  async function getRegistration() {
+    try {
+      const existing = await navigator.serviceWorker.getRegistration("./");
+      if (existing) {
+        watchRegistration(existing);
+        return existing;
+      }
+      const created = await navigator.serviceWorker.register("./service-worker.js", { updateViaCache: "none" });
+      watchRegistration(created);
+      return created;
+    } catch (error) {
+      console.warn("App update check unavailable:", error);
+      return null;
+    }
+  }
+
+  async function checkForUpdate() {
+    const reg = registration || await getRegistration();
+    if (!reg) return false;
+    try {
+      await reg.update();
+      if (reg.waiting && navigator.serviceWorker.controller) {
+        updateFound = true;
+        setButton("⬆ New update — tap", true, false);
+        return true;
+      }
+    } catch (error) {
+      console.warn("App update check failed:", error);
+    }
+    return false;
+  }
+
+  async function runManualUpdate() {
+    setButton("Checking update…", false, true);
+    const hadUpdate = await checkForUpdate();
+    const reg = registration;
+    if (reg && reg.waiting && navigator.serviceWorker.controller) {
+      setButton("Installing update…", true, true);
+      reg.waiting.postMessage({ type: "SKIP_WAITING" });
+      window.setTimeout(function () {
+        if (!reloading) reloadOnce();
+      }, 1800);
+      return;
+    }
+    if (reg && reg.installing) {
+      setButton("Installing update…", true, true);
+      reg.installing.addEventListener("statechange", function () {
+        if (reg.installing && reg.installing.state === "activated") reloadOnce();
+      });
+      window.setTimeout(function () {
+        if (!reloading) reloadOnce();
+      }, 3500);
+      return;
+    }
+    setButton(hadUpdate || updateFound ? "↻ Refresh App" : "↻ Update App", false, false);
+    // Manual refresh also fetches the latest page and static assets.
+    window.location.reload();
+  }
+
+  function start() {
+    addControl();
+    getRegistration().then(function (reg) {
+      if (reg) checkForUpdate();
+    });
+    window.addEventListener("focus", checkForUpdate);
+    document.addEventListener("visibilitychange", function () {
+      if (!document.hidden) checkForUpdate();
+    });
+    window.setInterval(checkForUpdate, 5 * 60 * 1000);
+  }
+
+  if (document.readyState === "loading") {
+    document.addEventListener("DOMContentLoaded", start, { once: true });
+  } else {
+    start();
+  }
+})();

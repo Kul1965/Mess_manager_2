@@ -636,6 +636,24 @@ body.mobile-nav-open{overflow:hidden!important}
 </style>
 <link rel="stylesheet" href="./assets/sidebar-boot.css?v=20261114-homeheaderfix">
 <link rel="icon" type="image/png" href="./icons/crpf-monogram-192.png?v=sky-png-1">
+<style id="home-header-scroll-fix">
+/* Home page only: make the Mess/NCO/SO + Login/Logout strip truly swipe-scrollable on phones */
+@media(max-width:850px){
+  .topbar{display:flex!important;flex-direction:row!important;align-items:center!important;min-width:0!important;overflow:visible!important}
+  .topbar>.brand-lockup{flex:0 0 auto!important;min-width:0!important}
+  .topbar>.top-info{
+    display:flex!important;flex:1 1 0%!important;width:0!important;min-width:0!important;max-width:100%!important;
+    flex-direction:row!important;flex-wrap:nowrap!important;justify-content:flex-start!important;align-items:center!important;
+    overflow-x:scroll!important;overflow-y:hidden!important;white-space:nowrap!important;
+    -webkit-overflow-scrolling:touch!important;overscroll-behavior-x:contain!important;touch-action:pan-x!important;
+    scrollbar-width:none!important;scroll-behavior:smooth!important;padding:3px 2px 7px!important;
+  }
+  .topbar>.top-info::-webkit-scrollbar{display:none!important;width:0!important;height:0!important}
+  .topbar>.top-info>.info-pill,.topbar>.top-info>#messLoginControls{flex:0 0 auto!important;white-space:nowrap!important}
+  .topbar>.top-info>#messLoginControls{display:inline-flex!important;width:max-content!important;margin-left:5px!important}
+  .topbar>.top-info>#messLoginControls button{flex:0 0 auto!important;white-space:nowrap!important}
+}
+</style>
 </head>
 
 <body>

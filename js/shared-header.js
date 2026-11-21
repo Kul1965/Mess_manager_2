@@ -128,6 +128,60 @@
  .sidebar .nav{padding:8px 7px!important}
  .sidebar .nav a{padding:10px 9px!important;margin:3px 0!important}
 }
+
+/* FINAL mobile header correction: full title on first row, swipeable controls below */
+@media(max-width:850px){
+ .topbar{
+  display:flex!important;flex-direction:column!important;align-items:stretch!important;
+  justify-content:flex-start!important;gap:6px!important;padding:8px 9px!important;
+  min-width:0!important;overflow:visible!important;
+ }
+ .topbar>.dh-brand{
+  position:relative!important;display:flex!important;align-items:center!important;
+  width:100%!important;min-width:0!important;flex:0 0 auto!important;
+  gap:7px!important;padding-right:0!important;
+ }
+ .topbar .dh-logo{width:39px!important;height:43px!important;flex:0 0 39px!important}
+ .topbar .dh-divider{height:39px!important;flex:0 0 2px!important}
+ .topbar .dh-title{
+  display:block!important;flex:1 1 auto!important;min-width:0!important;
+  width:auto!important;max-width:none!important;overflow:visible!important;
+ }
+ .topbar .dh-title h1{font-size:18px!important;line-height:1!important;margin:0 0 2px!important}
+ .topbar .dh-title h2{
+  display:block!important;font-size:clamp(11px,3.3vw,14px)!important;
+  line-height:1.12!important;white-space:nowrap!important;overflow:visible!important;
+  text-overflow:clip!important;letter-spacing:0!important;max-width:none!important;
+ }
+ .topbar .dh-date{font-size:8px!important;margin-top:3px!important;white-space:nowrap!important}
+ .topbar .dh-tri{height:3px!important;margin-top:4px!important;max-width:145px!important}
+ .topbar .dh-flag{
+  display:inline-flex!important;position:absolute!important;right:2px!important;top:50%!important;
+  transform:translateY(-50%)!important;width:35px!important;height:23px!important;
+  margin:0!important;font-size:0!important;flex:0 0 35px!important;
+ }
+ .topbar .dh-flag b{font-size:11px!important}
+ .topbar .dh-title{padding-right:38px!important}
+ .topbar>.dh-info{
+  display:flex!important;flex:0 0 auto!important;width:100%!important;min-width:0!important;
+  max-width:100%!important;flex-direction:row!important;flex-wrap:nowrap!important;
+  align-items:center!important;justify-content:flex-start!important;gap:5px!important;
+  overflow-x:auto!important;overflow-y:hidden!important;white-space:nowrap!important;
+  -webkit-overflow-scrolling:touch!important;overscroll-behavior-x:contain!important;
+  touch-action:pan-x!important;scrollbar-width:none!important;padding:3px 2px 7px!important;
+ }
+ .topbar>.dh-info::-webkit-scrollbar{display:none!important;width:0!important;height:0!important}
+ .topbar>.dh-info>.dh-pill,.topbar>.dh-info>#messLoginControls,.topbar>.dh-info>#crpfAppUpdateButton{
+  flex:0 0 auto!important;white-space:nowrap!important
+ }
+ .topbar #messLoginControls{display:inline-flex!important;flex:0 0 auto!important;width:max-content!important}
+}
+@media(max-width:380px){
+ .topbar .dh-logo{width:34px!important;height:39px!important;flex-basis:34px!important}
+ .topbar .dh-title h2{font-size:11px!important}
+ .topbar .dh-flag{width:31px!important;height:21px!important;flex-basis:31px!important}
+ .topbar .dh-title{padding-right:34px!important}
+}
 `;
 document.head.appendChild(s);const sideNav=document.querySelector(".sidebar .nav");if(sideNav){const navItems=[["index.html","▦ Dashboard"],["members.html","👥 Members"],["ration-store.html","📦 Ration Store"],["purchases.html","🛒 Purchases"],["recipes.html","🍲 Recipes"],["mess-staff.html","👨‍🍳 Mess Staff"],["accounts.html","💰 Accounts"],["reports.html","📊 Reports"],["mess-handover.html","🔄 Mess Handover"],["settings.html","⚙️ Settings"],["backup.html","💾 Backup & Restore"],["software-guide.html","📖 हिन्दी गाइड"]];const current=location.pathname.split("/").pop()||"index.html";sideNav.innerHTML=navItems.map(([href,label])=>'<a href="'+href+'"'+(current===href?' class="active" aria-current="page"':'')+'>'+label+'</a>').join("");}const sideBrand=document.querySelector(".sidebar .brand");if(sideBrand){sideBrand.innerHTML=`<div class="side-emblem-row"><img class="side-crpf-logo" src="https://commons.wikimedia.org/wiki/Special:Redirect/file/CRPF_Logo.svg" alt="CRPF monogram"><span class="side-flag flag-art" role="img" aria-label="Indian flag"><i></i><i></i><i></i><b>✺</b></span></div><h2>CRPF MESS</h2><p>Cooking House System</p>`;}b.innerHTML=`<div class="dh-brand"><img class="dh-logo" src="https://commons.wikimedia.org/wiki/Special:Redirect/file/CRPF_Logo.svg" alt="CRPF emblem"><span class="dh-divider"></span><div class="dh-title"><h1>CRPF</h1><h2>Cooking House System</h2><div class="dh-date" id="dhClock"></div><div class="dh-tri"><i></i><i></i><i></i></div></div><span class="dh-flag flag-art" role="img" aria-label="Indian flag"><i></i><i></i><i></i><b>✺</b></span></div><div class="dh-info"><div class="dh-pill dh-mess">🏛️ Mess: <strong id="dhMess">A Coy (CRPF)</strong></div><div class="dh-pill dh-role">👤 NCO: <strong id="dhNco">Not Set</strong></div><div class="dh-pill dh-role">📋 SO: <strong id="dhSo">Not Set</strong></div></div>`;if(legacy)legacy.classList.add("legacy-date-hidden");if(legacyNow)legacyNow.classList.add("legacy-date-hidden");const navItemsTop=[["index.html","⌂","Home"],["members.html","👥","Members"],["ration-store.html","📦","Ration Store"],["purchases.html","🛒","Purchases"],["recipes.html","🍲","Recipes"],["mess-staff.html","👨‍🍳","Mess Staff"],["accounts.html","💰","Accounts"],["reports.html","📊","Reports"],["mess-handover.html","🔄","Handover"],["settings.html","⚙️","Settings"],["backup.html","💾","Backup"],["software-guide.html","📖","हिन्दी गाइड"]],curTop=location.pathname.split("/").pop()||"index.html",topNav=document.createElement("nav");topNav.className="top-nav";topNav.setAttribute("aria-label","Main navigation");topNav.innerHTML='<button type="button" class="tab-menu" aria-label="Open navigation menu" aria-expanded="false">☰</button>'+navItemsTop.map(x=>'<a href="'+x[0]+'" '+(curTop===x[0]?'class="selected" aria-current="page"':'')+'><span class="top-nav-icon">'+x[1]+'</span><span>'+x[2]+'</span></a>').join("");b.insertAdjacentElement("afterend",topNav);function tick(){const d=new Date(),e=document.getElementById("dhClock");if(e)e.textContent="🕒 "+d.toLocaleTimeString("en-GB",{hour12:false})+" | "+d.toLocaleDateString("en-GB")}tick();setInterval(tick,1000);try{const d=JSON.parse(localStorage.getItem("crpfMessData")||"{}"),st=d.settings||{},staff=Array.isArray(d.staff)?d.staff:[],a=staff.filter(x=>String(x.status||"Active").toLowerCase()==="active"),role=k=>a.filter(x=>String(x.duty||"").trim().toLowerCase()===k).map(x=>x.name).filter(Boolean).join(", ")||"Not Set";document.getElementById("dhMess").textContent=st.messName||"A Coy (CRPF)";document.getElementById("dhNco").textContent=role("mess nco");document.getElementById("dhSo").textContent=role("mess so")}catch(e){}document.body.dataset.dashHeader="1";}if(document.readyState==="loading")document.addEventListener("DOMContentLoaded",init);else init()})();
 /* Shared PWA updater: checks for published app changes without clearing app data. */
